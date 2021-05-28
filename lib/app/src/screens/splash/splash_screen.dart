@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../../../constraint.dart';
 
-import 'tablet/splash_body.dart' as tablet;
-import 'phone/splash_body.dart' as phone;
-import 'mini/splash_body.dart' as mini;
+import 'tablet/body.dart' as tablet;
+import 'phone/body.dart' as phone;
+import 'mini/body.dart' as mini;
 
 class SplashScreen extends StatefulWidget {
   static const routeName = '/splash-screen';
@@ -53,7 +53,7 @@ class _SplashScreenState extends State<SplashScreen> {
         _controller = PageController(initialPage: _page);
 
         if (constraints.maxWidth > TabletThreshold) {
-          return tablet.SplashBody(
+          return tablet.Body(
             items: _items,
             page: _page,
             pageController: _controller,
@@ -61,14 +61,14 @@ class _SplashScreenState extends State<SplashScreen> {
           );
         } else if (constraints.maxWidth > PhoneThreshold &&
             constraints.maxWidth <= TabletThreshold) {
-          return phone.SplashBody(
+          return phone.Body(
             items: _items,
             page: _page,
             pageController: _controller,
             onPageViewChange: _onPageViewChange,
           );
         } else {
-          return mini.SplashBody(
+          return mini.Body(
             items: _items,
             page: _page,
             pageController: _controller,

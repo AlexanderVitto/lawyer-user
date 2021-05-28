@@ -3,19 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../enum.dart';
-import '../../../../../constraint.dart';
 import '../../../../helpers/helpers.dart' as helpers;
 import '../../../../utils/utils.dart' as utils;
 
 import '../../shared/shared.dart';
 
-import '../providers/signin_provider.dart';
+import '../provider/signin_provider.dart';
 
-class SigninBody extends StatelessWidget {
+class Body extends StatelessWidget {
+  final ScreenSize screenSize = ScreenSize.phone;
+
   @override
   Widget build(BuildContext context) {
     final localization = helpers.AppLocalizations.of(context);
-    final size = MediaQuery.of(context).size;
 
     return Stack(
       alignment: Alignment.topCenter,
@@ -26,7 +26,11 @@ class SigninBody extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _TopImage(localization: localization),
+                TopImage(
+                    name: 'assets/images/login.png',
+                    containerHeight: 300,
+                    logoHeight: 35,
+                    localization: localization),
                 const SizedBox(height: 15),
                 _Label(localization: localization),
                 const SizedBox(
@@ -34,70 +38,34 @@ class SigninBody extends StatelessWidget {
                 ),
                 _LabelDescription(localization: localization),
                 _InputText(localization: localization),
-                SizedBox(
-                  height: size.height * 0.05,
-                ),
-                Consumer<SigninProvider>(
+                Consumer<SignInProvider>(
                   builder: (_, signinProvider, __) => Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 10),
                     child: signinProvider.isLogineWithEmail
                         ? CustomeElevatedButton(
                             onPresses: () => signinProvider.loginWithEmail(
-                                context, ScreenSize.phone),
+                                context, screenSize),
                             localization: localization,
                             text: 'Login')
                         : CustomeElevatedButton(
-                            onPresses: signinProvider.nextButton,
+                            onPresses: () => signinProvider.nextButton(context),
                             localization: localization,
                             text: 'Next'),
                   ),
                 ),
                 _NavigateToSignUp(localization: localization),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 35, vertical: 8),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Divider(
-                          color: Colors.white,
-                          height: 1.5,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        localization
-                            .translate('Or connect using')
-                            .toUpperCase(),
-                        style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                        child: Divider(
-                          color: Colors.white,
-                          height: 1.5,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Consumer<SigninProvider>(
-                    builder: (_, signinProvider, __) => _MediaSocialIcon(
-                          signinProvider: signinProvider,
+                ConnectingDivider(localization: localization),
+                Consumer<SignInProvider>(
+                    builder: (_, signinProvider, __) => MediaSocialIcon(
+                          facebook: () => signinProvider.loginWithGoogle(
+                              context, screenSize),
+                          google: () => signinProvider.loginWithGoogle(
+                              context, screenSize),
                         ))
               ]),
         ),
-        Consumer<SigninProvider>(
+        Consumer<SignInProvider>(
           builder: (_, signinProvider, __) => signinProvider.isBusy
               ? helpers.LoadingPouringHourGlass()
               : Container(),
@@ -106,36 +74,6 @@ class SigninBody extends StatelessWidget {
           iconSize: 18,
           fontSize: 14,
         )
-      ],
-    );
-  }
-}
-
-class _MediaSocialIcon extends StatelessWidget {
-  const _MediaSocialIcon({
-    Key key,
-    this.signinProvider,
-  }) : super(key: key);
-
-  final SigninProvider signinProvider;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SocialMediaIcon(
-          asset: 'assets/icons/google.png',
-          iconColor: Colors.red,
-          onTap: () =>
-              signinProvider.loginWithGoogle(context, ScreenSize.phone),
-        ),
-        SocialMediaIcon(
-          asset: 'assets/icons/facebook.png',
-          iconColor: Colors.blue,
-          onTap: () =>
-              signinProvider.loginWithFacebook(context, ScreenSize.phone),
-        ),
       ],
     );
   }
@@ -151,6 +89,7 @@ class _NavigateToSignUp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final signinProvider = Provider.of<SignInProvider>(context, listen: false);
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
@@ -163,7 +102,7 @@ class _NavigateToSignUp extends StatelessWidget {
             style: TextStyle(
                 fontSize: 12, color: Colors.white, fontWeight: FontWeight.w600),
             recognizer: TapGestureRecognizer()
-              ..onTap = () => print('Tap Here onTap'),
+              ..onTap = () => signinProvider.navigateToSignUp(context),
           ),
         ],
       ),
@@ -181,7 +120,10 @@ class _InputText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SigninProvider>(
+    final size = MediaQuery.of(context).size;
+    final signinProvider = Provider.of<SignInProvider>(context, listen: false);
+
+    return Consumer<SignInProvider>(
       builder: (_, signinProvider, child) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Column(
@@ -218,7 +160,12 @@ class _InputText extends StatelessWidget {
               const SizedBox(
                 height: 5,
               ),
-              child
+              child,
+              SizedBox(
+                height: signinProvider.isLogineWithEmail
+                    ? size.height * 0.03
+                    : size.height * 0.05,
+              ),
             ]),
       ),
       child: RichText(
@@ -232,7 +179,7 @@ class _InputText extends StatelessWidget {
             decoration: TextDecoration.underline,
           ),
           recognizer: TapGestureRecognizer()
-            ..onTap = () => print('Tap Here onTap'),
+            ..onTap = () => signinProvider.navigateToForgotPassword(context),
         ),
       ),
     );
@@ -273,53 +220,6 @@ class _Label extends StatelessWidget {
       style: TextStyle(
           color: Colors.white, fontSize: 28, fontWeight: FontWeight.w700),
       textAlign: TextAlign.center,
-    );
-  }
-}
-
-class _TopImage extends StatelessWidget {
-  const _TopImage({
-    Key key,
-    @required this.localization,
-  }) : super(key: key);
-
-  final helpers.AppLocalizations localization;
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          height: 300,
-          width: double.infinity,
-          color: Colors.white,
-          child: Image.asset(
-            'assets/images/login.png',
-            alignment: Alignment.bottomCenter,
-          ),
-        ),
-        Positioned(
-          top: 45,
-          left: 0,
-          right: 0,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/images/logo.png',
-                height: 35,
-              ),
-              Text(
-                  localization.translate('Trusted Verified Online Counselling'),
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                      color: PsykayGreenColor))
-            ],
-          ),
-        )
-      ],
     );
   }
 }

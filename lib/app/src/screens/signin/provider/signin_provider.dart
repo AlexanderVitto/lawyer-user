@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../enum.dart';
+
 import '../../../../config/config.dart' as config;
 import '../../../../helpers/helpers.dart' as helpers;
 import '../../../../utils/utils.dart' as utils;
-import '../../../providers/providers.dart' as providers;
-import '../../shared/shared.dart';
 
-class SigninProvider with ChangeNotifier {
+import '../../../providers/providers.dart' as providers;
+
+import '../../shared/shared.dart';
+import '../../signup/signup_screen.dart';
+import '../../forgot_password/forgot_password_screen.dart';
+import '../../mobile_number_verification/mobile_number_verification_screen.dart';
+
+class SignInProvider with ChangeNotifier {
   static const fileName =
       'lib/app/src/screens/signin/providers/signin_provider.dart';
 
@@ -34,11 +40,12 @@ class SigninProvider with ChangeNotifier {
   bool _passwordIsObsecure = true;
   bool get passwordIsObsecure => _passwordIsObsecure;
 
-  SigninProvider() {
+  SignInProvider(providers.Auth auth) {
     this._log = config.locator<utils.LogUtils>(param1: fileName, param2: true);
     this._regex = RegExp(_pattern);
     this._userController = TextEditingController();
     this._passwordController = TextEditingController();
+    this._authProvider = auth;
   }
 
   update(providers.Auth auth) {
@@ -85,7 +92,18 @@ class SigninProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future nextButton() async {
+  navigateToSignUp(BuildContext context) {
+    Navigator.of(context).pushNamed(SignUpScreen.routeName);
+  }
+
+  navigateToForgotPassword(BuildContext context) {
+    Navigator.of(context).pushNamed(ForgotPasswordScreen.routeName);
+  }
+
+  Future nextButton(BuildContext context) async {
+    assert(context != null);
+    _authProvider.setIsRegister(false);
+
     if (_userController.text.isEmpty) {
       _isUserControllerEmpty = true;
     } else {
@@ -93,6 +111,15 @@ class SigninProvider with ChangeNotifier {
         _isUserControllerEmpty = false;
 
         _isLoginWithEmail = false;
+
+        String number = _userController.text.substring(1);
+
+        _authProvider.setCallingCode('62');
+        _authProvider.setMobileNumber(number);
+
+        Navigator.of(context).pushNamed(
+          MobileNumberVerificationScreen.routeName,
+        );
       } else {
         _isUserControllerEmpty = false;
         _isLoginWithEmail = true;
@@ -135,40 +162,40 @@ class SigninProvider with ChangeNotifier {
 
         switch (screenSize) {
           case ScreenSize.mini:
-            if (_authProvider.loginResult ==
+            if (_authProvider.authStatus ==
                 helpers.AuthResultStatus.successful) {
               successDialog(
                   context: context,
                   barrierDismissible: false,
                   iconSize: 72,
                   title: 'Login Success!',
-                  titleFontSize: 14,
+                  titleFontSize: 12,
                   description: 'Click the button to go to our page',
-                  descriptionFontSize: 12,
+                  descriptionFontSize: 10,
                   buttonText: 'Okay',
-                  buttonFontSize: 12,
-                  sizedBox1: 15,
+                  buttonFontSize: 10,
+                  sizedBox1: 12,
                   sizedBox2: 5,
-                  sizedBox3: 20);
+                  sizedBox3: 10);
             } else {
               errorDialog(
                   context: context,
                   iconSize: 45,
                   title: 'Login Error!',
-                  titleFontSize: 14,
+                  titleFontSize: 12,
                   description:
                       helpers.AuthExceptionHandler.generateExceptionMessage(
-                          _authProvider.loginResult),
-                  descriptionFontSize: 12,
+                          _authProvider.authStatus),
+                  descriptionFontSize: 10,
                   buttonText: 'Okay',
-                  buttonFontSize: 12,
-                  sizedBox1: 15,
+                  buttonFontSize: 10,
+                  sizedBox1: 12,
                   sizedBox2: 5,
-                  sizedBox3: 20);
+                  sizedBox3: 10);
             }
             break;
           case ScreenSize.phone:
-            if (_authProvider.loginResult ==
+            if (_authProvider.authStatus ==
                 helpers.AuthResultStatus.successful) {
               successDialog(
                   context: context,
@@ -182,12 +209,12 @@ class SigninProvider with ChangeNotifier {
                   title: 'Login Error!',
                   description:
                       helpers.AuthExceptionHandler.generateExceptionMessage(
-                          _authProvider.loginResult),
+                          _authProvider.authStatus),
                   buttonText: 'Okay');
             }
             break;
           case ScreenSize.tablet:
-            if (_authProvider.loginResult ==
+            if (_authProvider.authStatus ==
                 helpers.AuthResultStatus.successful) {
               successDialog(
                   context: context,
@@ -210,7 +237,7 @@ class SigninProvider with ChangeNotifier {
                   titleFontSize: 18,
                   description:
                       helpers.AuthExceptionHandler.generateExceptionMessage(
-                          _authProvider.loginResult),
+                          _authProvider.authStatus),
                   descriptionFontSize: 16,
                   buttonText: 'Okay',
                   buttonFontSize: 16,
@@ -236,7 +263,7 @@ class SigninProvider with ChangeNotifier {
 
     switch (screenSize) {
       case ScreenSize.mini:
-        if (_authProvider.loginResult == helpers.AuthResultStatus.successful) {
+        if (_authProvider.authStatus == helpers.AuthResultStatus.successful) {
           successDialog(
               context: context,
               barrierDismissible: false,
@@ -244,31 +271,31 @@ class SigninProvider with ChangeNotifier {
               title: 'Login Success!',
               titleFontSize: 14,
               description: 'Click the button to go to our page',
-              descriptionFontSize: 12,
+              descriptionFontSize: 10,
               buttonText: 'Okay',
-              buttonFontSize: 12,
-              sizedBox1: 15,
+              buttonFontSize: 10,
+              sizedBox1: 12,
               sizedBox2: 5,
-              sizedBox3: 20);
+              sizedBox3: 10);
         } else {
           errorDialog(
               context: context,
               iconSize: 45,
               title: 'Login Error!',
-              titleFontSize: 14,
+              titleFontSize: 12,
               description:
                   helpers.AuthExceptionHandler.generateExceptionMessage(
-                      _authProvider.loginResult),
-              descriptionFontSize: 12,
+                      _authProvider.authStatus),
+              descriptionFontSize: 10,
               buttonText: 'Okay',
-              buttonFontSize: 12,
-              sizedBox1: 15,
+              buttonFontSize: 10,
+              sizedBox1: 12,
               sizedBox2: 5,
-              sizedBox3: 20);
+              sizedBox3: 10);
         }
         break;
       case ScreenSize.phone:
-        if (_authProvider.loginResult == helpers.AuthResultStatus.successful) {
+        if (_authProvider.authStatus == helpers.AuthResultStatus.successful) {
           successDialog(
               context: context,
               barrierDismissible: false,
@@ -281,12 +308,12 @@ class SigninProvider with ChangeNotifier {
               title: 'Login Error!',
               description:
                   helpers.AuthExceptionHandler.generateExceptionMessage(
-                      _authProvider.loginResult),
+                      _authProvider.authStatus),
               buttonText: 'Okay');
         }
         break;
       case ScreenSize.tablet:
-        if (_authProvider.loginResult == helpers.AuthResultStatus.successful) {
+        if (_authProvider.authStatus == helpers.AuthResultStatus.successful) {
           successDialog(
               context: context,
               barrierDismissible: false,
@@ -308,7 +335,7 @@ class SigninProvider with ChangeNotifier {
               titleFontSize: 18,
               description:
                   helpers.AuthExceptionHandler.generateExceptionMessage(
-                      _authProvider.loginResult),
+                      _authProvider.authStatus),
               descriptionFontSize: 16,
               buttonText: 'Okay',
               buttonFontSize: 16,
@@ -332,7 +359,7 @@ class SigninProvider with ChangeNotifier {
 
     switch (screenSize) {
       case ScreenSize.mini:
-        if (_authProvider.loginResult == helpers.AuthResultStatus.successful) {
+        if (_authProvider.authStatus == helpers.AuthResultStatus.successful) {
           successDialog(
               context: context,
               barrierDismissible: false,
@@ -340,31 +367,31 @@ class SigninProvider with ChangeNotifier {
               title: 'Login Success!',
               titleFontSize: 14,
               description: 'Click the button to go to our page',
-              descriptionFontSize: 12,
+              descriptionFontSize: 10,
               buttonText: 'Okay',
-              buttonFontSize: 12,
-              sizedBox1: 15,
+              buttonFontSize: 10,
+              sizedBox1: 12,
               sizedBox2: 5,
-              sizedBox3: 20);
+              sizedBox3: 10);
         } else {
           errorDialog(
               context: context,
               iconSize: 45,
               title: 'Login Error!',
-              titleFontSize: 14,
+              titleFontSize: 12,
               description:
                   helpers.AuthExceptionHandler.generateExceptionMessage(
-                      _authProvider.loginResult),
-              descriptionFontSize: 12,
+                      _authProvider.authStatus),
+              descriptionFontSize: 10,
               buttonText: 'Okay',
-              buttonFontSize: 12,
-              sizedBox1: 15,
+              buttonFontSize: 10,
+              sizedBox1: 12,
               sizedBox2: 5,
-              sizedBox3: 20);
+              sizedBox3: 10);
         }
         break;
       case ScreenSize.phone:
-        if (_authProvider.loginResult == helpers.AuthResultStatus.successful) {
+        if (_authProvider.authStatus == helpers.AuthResultStatus.successful) {
           successDialog(
               context: context,
               barrierDismissible: false,
@@ -377,12 +404,12 @@ class SigninProvider with ChangeNotifier {
               title: 'Login Error!',
               description:
                   helpers.AuthExceptionHandler.generateExceptionMessage(
-                      _authProvider.loginResult),
+                      _authProvider.authStatus),
               buttonText: 'Okay');
         }
         break;
       case ScreenSize.tablet:
-        if (_authProvider.loginResult == helpers.AuthResultStatus.successful) {
+        if (_authProvider.authStatus == helpers.AuthResultStatus.successful) {
           successDialog(
               context: context,
               barrierDismissible: false,
@@ -404,7 +431,7 @@ class SigninProvider with ChangeNotifier {
               titleFontSize: 18,
               description:
                   helpers.AuthExceptionHandler.generateExceptionMessage(
-                      _authProvider.loginResult),
+                      _authProvider.authStatus),
               descriptionFontSize: 16,
               buttonText: 'Okay',
               buttonFontSize: 16,

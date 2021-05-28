@@ -36,7 +36,7 @@ class Production implements UserProfileAPI {
   @override
   Future<utils.ApiReturn<models.StringResponse>> checkEmail(
       String email, String token) async {
-    String method = 'checkEmail';
+    final String method = 'checkEmail';
     models.StringResponse result;
 
     final url =
@@ -72,7 +72,7 @@ class Production implements UserProfileAPI {
   @override
   Future<utils.ApiReturn<models.StringResponse>> checkMobileNumber(
       String mobileNumber, String token) async {
-    String method = 'checkMobileNumber';
+    final String method = 'checkMobileNumber';
     models.StringResponse result;
 
     final url =
@@ -84,7 +84,7 @@ class Production implements UserProfileAPI {
 
     if (!response.status) {
       _log.error(method: method, message: 'response ${response.status}');
-      
+
       if (response.value != null) {
         return utils.ApiReturn<models.StringResponse>(
             status: false,
@@ -108,7 +108,7 @@ class Production implements UserProfileAPI {
   @override
   Future<utils.ApiReturn<models.UserResponse>> create2(
       models.User body, String token) async {
-    String method = 'create2';
+    final String method = 'create2';
     models.UserResponse result;
 
     final url =
@@ -144,7 +144,7 @@ class Production implements UserProfileAPI {
   @override
   Future<utils.ApiReturn<models.UserResponse>> getUserProfile(
       String id, String token) async {
-    String method = 'getUserProfile';
+    final String method = 'getUserProfile';
     models.UserResponse result;
 
     final url =
@@ -180,7 +180,7 @@ class Production implements UserProfileAPI {
   @override
   Future<utils.ApiReturn<models.StringResponse>> update(
       models.User user, String token) async {
-    String method = 'update';
+    final String method = 'update';
     models.StringResponse result;
 
     final url =

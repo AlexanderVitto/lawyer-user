@@ -1,5 +1,32 @@
 import 'package:flutter/material.dart';
 
+class MediaSocialIcon extends StatelessWidget {
+  const MediaSocialIcon({Key key, this.facebook, this.google})
+      : super(key: key);
+
+  final Function facebook;
+  final Function google;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SocialMediaIcon(
+          asset: 'assets/icons/google.png',
+          iconColor: Colors.red,
+          onTap: facebook,
+        ),
+        SocialMediaIcon(
+          asset: 'assets/icons/facebook.png',
+          iconColor: Colors.blue,
+          onTap: google,
+        ),
+      ],
+    );
+  }
+}
+
 class SocialMediaIcon extends StatelessWidget {
   final String asset;
   final Color iconColor;

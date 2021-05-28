@@ -7,7 +7,7 @@ import '../../../../helpers/helpers.dart' as helpers;
 
 import '../splash_screen.dart';
 
-class SplashBody extends StatelessWidget {
+class Body extends StatelessWidget {
   final List<Item> items;
   final int page;
   final PageController pageController;
@@ -16,7 +16,7 @@ class SplashBody extends StatelessWidget {
   static const _kDuration = const Duration(milliseconds: 300);
   static const _kCurve = Curves.ease;
 
-  const SplashBody(
+  const Body(
       {Key key,
       this.items,
       this.page,
@@ -39,11 +39,11 @@ class SplashBody extends StatelessWidget {
                   controller: pageController,
                   itemCount: items.length,
                   onPageChanged: onPageViewChange,
-                  itemBuilder: (_, __) => _ItemContainer(
-                      imageAsset: items[page].imageAsset,
-                      title: localization.translate(items[page].title),
+                  itemBuilder: (_, index) => _ItemContainer(
+                      imageAsset: items[index].imageAsset,
+                      title: localization.translate(items[index].title),
                       description:
-                          localization.translate(items[page].description))),
+                          localization.translate(items[index].description))),
             ),
             Center(
                 child: SmoothPageIndicator(
@@ -83,8 +83,8 @@ class SplashBody extends StatelessWidget {
                                             color: PsykayOrangeColor)),
                                     onPressed: () {
                                       pageController.previousPage(
-                                          duration: SplashBody._kDuration,
-                                          curve: SplashBody._kCurve);
+                                          duration: Body._kDuration,
+                                          curve: Body._kCurve);
                                     }))),
                     page == 0 ? Container() : SizedBox(width: 15.0),
                     AnimatedContainer(
@@ -122,8 +122,8 @@ class SplashBody extends StatelessWidget {
                                             color: PsykayGreenColor)),
                                     onPressed: () {
                                       pageController.nextPage(
-                                          duration: SplashBody._kDuration,
-                                          curve: SplashBody._kCurve);
+                                          duration: Body._kDuration,
+                                          curve: Body._kCurve);
                                     })))
                   ]),
             )

@@ -3,32 +3,32 @@ import 'package:provider/provider.dart';
 
 import '../../../../constraint.dart';
 import '../../../utils/utils.dart' as utils;
-import '../../../splash_animation.dart';
+import '../../../helpers/helpers.dart' as helpers;
 
 import '../../providers/providers.dart';
 
-import 'provider/signup_provider.dart';
-
+import 'provider/forgot_password_provider.dart';
 import 'tablet/body.dart' as tablet;
 import 'phone/body.dart' as phone;
 import 'mini/body.dart' as mini;
 
-class SignUpScreen extends StatelessWidget {
-  static const routeName = '/signup-screen';
+class ForgotPasswordScreen extends StatelessWidget {
+  static const routeName = '/forgot-password-screen';
 
   @override
   Widget build(BuildContext context) {
     final connection = Provider.of<utils.Connection>(context, listen: false);
-    return ChangeNotifierProxyProvider<Auth, SignUpProvider>(
-      create: (ctx) => SignUpProvider(ctx.read<Auth>()),
+
+    return ChangeNotifierProxyProvider<Auth, ForgotPasswordProvider>(
+      create: (ctx) => ForgotPasswordProvider(ctx.read<Auth>()),
       update: (_, auth, prevProvider) => prevProvider..update(auth),
       child: Scaffold(
-        backgroundColor: PsykayGreenColor,
+        backgroundColor: Colors.white,
         body: FutureBuilder<bool>(
           future: connection.init(),
           builder: (_, AsyncSnapshot<bool> snapshot) =>
               snapshot.connectionState == ConnectionState.waiting
-                  ? SplashAnimation()
+                  ? helpers.LoadingPouringHourGlass()
                   : LayoutBuilder(
                       builder:
                           (BuildContext context, BoxConstraints constraints) {

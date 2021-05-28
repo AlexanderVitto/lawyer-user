@@ -23,7 +23,7 @@ class ConnectionInfo extends StatelessWidget {
     final localization = helpers.AppLocalizations.of(context);
 
     return Consumer<Connection>(
-        builder: (_, connectionProvider, __) => !connectionProvider.isConnected
+        builder: (_, connectionProvider, __) => connectionProvider.isConnected
             ? Container()
             : Positioned(
                 top: topMargin,

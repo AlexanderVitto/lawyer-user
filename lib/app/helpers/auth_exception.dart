@@ -1,5 +1,6 @@
 enum AuthResultStatus {
   successful,
+  phoneVerified,
   emailAlreadyExists,
   mobileNumberAlreadyExists,
   mobileNumberNotRegistered,
@@ -48,40 +49,44 @@ enum UserProfileStatus {
 class AuthExceptionHandler {
   static AuthResultStatus handleException(e) {
     AuthResultStatus status = AuthResultStatus.undefined;
-    if (e.code != null) {
-      print(e.code);
+    try {
+      if (e.code != null) {
+        print(e.code);
 
-      switch (e.code) {
-        case "invalid-email":
-          status = AuthResultStatus.invalidEmail;
-          break;
-        case "wrong-password":
-          status = AuthResultStatus.wrongPassword;
-          break;
-        case "user-not-found":
-          status = AuthResultStatus.userNotFound;
-          break;
-        case "user-disabled":
-          status = AuthResultStatus.userDisabled;
-          break;
-        case "ERROR_TOO_MANY_REQUESTS":
-          status = AuthResultStatus.tooManyRequests;
-          break;
-        case "operation-not-allowed":
-          status = AuthResultStatus.operationNotAllowed;
-          break;
-        case "email-already-in-use":
-          status = AuthResultStatus.emailAlreadyExists;
-          break;
-        case "ERROR_REQUIRES_RECENT_LOGIN":
-          status = AuthResultStatus.requiresRecentLogin;
-          break;
-        case "weak-password":
-          status = AuthResultStatus.weakPassword;
-          break;
-        default:
-          status = AuthResultStatus.undefined;
+        switch (e.code) {
+          case "invalid-email":
+            status = AuthResultStatus.invalidEmail;
+            break;
+          case "wrong-password":
+            status = AuthResultStatus.wrongPassword;
+            break;
+          case "user-not-found":
+            status = AuthResultStatus.userNotFound;
+            break;
+          case "user-disabled":
+            status = AuthResultStatus.userDisabled;
+            break;
+          case "too-many-requests":
+            status = AuthResultStatus.tooManyRequests;
+            break;
+          case "operation-not-allowed":
+            status = AuthResultStatus.operationNotAllowed;
+            break;
+          case "email-already-exists":
+            status = AuthResultStatus.emailAlreadyExists;
+            break;
+          case "requires-recent-login":
+            status = AuthResultStatus.requiresRecentLogin;
+            break;
+          case "weak-password":
+            status = AuthResultStatus.weakPassword;
+            break;
+          default:
+            status = AuthResultStatus.undefined;
+        }
       }
+    } catch (error) {
+      // if error does not contain a definition for 'code'
     }
 
     return status;

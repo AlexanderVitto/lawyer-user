@@ -22,7 +22,7 @@ class Production implements ApplicationAPI {
 
   @override
   Future registerDevice(models.ApplicationBody body, String token) async {
-    String method = 'registerDevice';
+    final String method = 'registerDevice';
 
     final url =
         "${config.FlavorConfig.instance.values.host}/api/Application/RegisterDevice";

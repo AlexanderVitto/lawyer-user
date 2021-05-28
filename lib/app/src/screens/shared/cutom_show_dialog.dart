@@ -10,7 +10,7 @@ Future<T> successDialog<T>(
     @required String title,
     double titleFontSize = 16,
     String description = '',
-    double descriptionFontSize = 14,
+    double descriptionFontSize = 12,
     @required buttonText,
     double buttonFontSize = 14,
     double sizedBox1 = 20,
@@ -55,6 +55,7 @@ Future<T> successDialog<T>(
                     localization.translate(description),
                     style: TextStyle(
                         fontSize: descriptionFontSize,
+                        color: Colors.black54,
                         fontWeight: FontWeight.w400),
                   ),
                   SizedBox(

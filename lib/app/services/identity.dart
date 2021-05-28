@@ -24,7 +24,7 @@ class Production implements IdentityAPI {
   @override
   Future<utils.ApiReturn<models.ChannelResponse>> updateUser(
       models.Channel body, String token) async {
-    String method = 'updateUser';
+    final String method = 'updateUser';
     models.ChannelResponse result;
 
     final url =

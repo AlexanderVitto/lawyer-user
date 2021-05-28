@@ -48,7 +48,7 @@ class Connection with ChangeNotifier {
 
   bool _isBusy = false;
 
-  Future init() async {
+  Future<bool> init() async {
     try {
       final result = await InternetAddress.lookup('example.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
@@ -62,6 +62,7 @@ class Connection with ChangeNotifier {
 
     _isBusy = false;
     notifyListeners();
+    return true;
   }
 
   Future check() async {
