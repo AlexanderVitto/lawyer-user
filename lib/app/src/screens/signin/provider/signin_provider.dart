@@ -12,6 +12,7 @@ import '../../shared/shared.dart';
 import '../../signup/signup_screen.dart';
 import '../../forgot_password/forgot_password_screen.dart';
 import '../../mobile_number_verification/mobile_number_verification_screen.dart';
+import '../../main/main_screen.dart';
 
 class SignInProvider with ChangeNotifier {
   static const fileName =
@@ -164,7 +165,7 @@ class SignInProvider with ChangeNotifier {
           case ScreenSize.mini:
             if (_authProvider.authStatus ==
                 helpers.AuthResultStatus.successful) {
-              successDialog(
+              await successDialog(
                   context: context,
                   barrierDismissible: false,
                   iconSize: 72,
@@ -177,6 +178,11 @@ class SignInProvider with ChangeNotifier {
                   sizedBox1: 12,
                   sizedBox2: 5,
                   sizedBox3: 10);
+
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  MainScreen.routeName, (route) => false,
+                  arguments: helpers.ScreenArguments(
+                      mainScreenTab: MainScreenTab.home));
             } else {
               errorDialog(
                   context: context,
@@ -197,12 +203,17 @@ class SignInProvider with ChangeNotifier {
           case ScreenSize.phone:
             if (_authProvider.authStatus ==
                 helpers.AuthResultStatus.successful) {
-              successDialog(
+              await successDialog(
                   context: context,
                   barrierDismissible: false,
                   title: 'Login Success!',
                   description: 'Click the button to go to our page',
                   buttonText: 'Okay');
+
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  MainScreen.routeName, (route) => false,
+                  arguments: helpers.ScreenArguments(
+                      mainScreenTab: MainScreenTab.home));
             } else {
               errorDialog(
                   context: context,
@@ -216,7 +227,7 @@ class SignInProvider with ChangeNotifier {
           case ScreenSize.tablet:
             if (_authProvider.authStatus ==
                 helpers.AuthResultStatus.successful) {
-              successDialog(
+              await successDialog(
                   context: context,
                   barrierDismissible: false,
                   iconSize: 100,
@@ -229,6 +240,11 @@ class SignInProvider with ChangeNotifier {
                   sizedBox1: 25,
                   sizedBox2: 10,
                   sizedBox3: 40);
+
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  MainScreen.routeName, (route) => false,
+                  arguments: helpers.ScreenArguments(
+                      mainScreenTab: MainScreenTab.home));
             } else {
               errorDialog(
                   context: context,
@@ -264,7 +280,7 @@ class SignInProvider with ChangeNotifier {
     switch (screenSize) {
       case ScreenSize.mini:
         if (_authProvider.authStatus == helpers.AuthResultStatus.successful) {
-          successDialog(
+          await successDialog(
               context: context,
               barrierDismissible: false,
               iconSize: 72,
@@ -277,6 +293,11 @@ class SignInProvider with ChangeNotifier {
               sizedBox1: 12,
               sizedBox2: 5,
               sizedBox3: 10);
+
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              MainScreen.routeName, (route) => false,
+              arguments:
+                  helpers.ScreenArguments(mainScreenTab: MainScreenTab.home));
         } else {
           errorDialog(
               context: context,
@@ -296,12 +317,17 @@ class SignInProvider with ChangeNotifier {
         break;
       case ScreenSize.phone:
         if (_authProvider.authStatus == helpers.AuthResultStatus.successful) {
-          successDialog(
+          await successDialog(
               context: context,
               barrierDismissible: false,
               title: 'Login Success!',
               description: 'Click the button to go to our page',
               buttonText: 'Okay');
+
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              MainScreen.routeName, (route) => false,
+              arguments:
+                  helpers.ScreenArguments(mainScreenTab: MainScreenTab.home));
         } else {
           errorDialog(
               context: context,
@@ -314,7 +340,7 @@ class SignInProvider with ChangeNotifier {
         break;
       case ScreenSize.tablet:
         if (_authProvider.authStatus == helpers.AuthResultStatus.successful) {
-          successDialog(
+          await successDialog(
               context: context,
               barrierDismissible: false,
               iconSize: 100,
@@ -327,6 +353,11 @@ class SignInProvider with ChangeNotifier {
               sizedBox1: 25,
               sizedBox2: 10,
               sizedBox3: 40);
+
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              MainScreen.routeName, (route) => false,
+              arguments:
+                  helpers.ScreenArguments(mainScreenTab: MainScreenTab.home));
         } else {
           errorDialog(
               context: context,
@@ -360,7 +391,7 @@ class SignInProvider with ChangeNotifier {
     switch (screenSize) {
       case ScreenSize.mini:
         if (_authProvider.authStatus == helpers.AuthResultStatus.successful) {
-          successDialog(
+          await successDialog(
               context: context,
               barrierDismissible: false,
               iconSize: 72,
@@ -373,6 +404,11 @@ class SignInProvider with ChangeNotifier {
               sizedBox1: 12,
               sizedBox2: 5,
               sizedBox3: 10);
+
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              MainScreen.routeName, (route) => false,
+              arguments:
+                  helpers.ScreenArguments(mainScreenTab: MainScreenTab.home));
         } else {
           errorDialog(
               context: context,
@@ -392,12 +428,17 @@ class SignInProvider with ChangeNotifier {
         break;
       case ScreenSize.phone:
         if (_authProvider.authStatus == helpers.AuthResultStatus.successful) {
-          successDialog(
+          await successDialog(
               context: context,
               barrierDismissible: false,
               title: 'Login Success!',
               description: 'Click the button to go to our page',
               buttonText: 'Okay');
+
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              MainScreen.routeName, (route) => false,
+              arguments:
+                  helpers.ScreenArguments(mainScreenTab: MainScreenTab.home));
         } else {
           errorDialog(
               context: context,
@@ -410,7 +451,7 @@ class SignInProvider with ChangeNotifier {
         break;
       case ScreenSize.tablet:
         if (_authProvider.authStatus == helpers.AuthResultStatus.successful) {
-          successDialog(
+          await successDialog(
               context: context,
               barrierDismissible: false,
               iconSize: 100,
@@ -423,6 +464,11 @@ class SignInProvider with ChangeNotifier {
               sizedBox1: 25,
               sizedBox2: 10,
               sizedBox3: 40);
+
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              MainScreen.routeName, (route) => false,
+              arguments:
+                  helpers.ScreenArguments(mainScreenTab: MainScreenTab.home));
         } else {
           errorDialog(
               context: context,

@@ -42,6 +42,7 @@ dependencies:
   mime_type: ^0.3.2
   path_provider: ^1.6.28
   provider: ^4.3.3
+  pull_to_refresh: 1.6.2
   rxdart: ^0.24.0
   shared_preferences: ^0.5.10
   smooth_page_indicator: ^0.2.3

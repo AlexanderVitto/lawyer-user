@@ -4,6 +4,12 @@ import '../../../../constraint.dart';
 
 import '../../../helpers/helpers.dart' as helpers;
 
+import 'chat/chat_screen.dart';
+import 'home/home_screen.dart';
+import 'profile/profile_screen.dart';
+import 'schedule/schedule_screen.dart';
+import 'transaction/transaction_screen.dart';
+
 class MainScreen extends StatefulWidget {
   static const routeName = '/main-screen';
 
@@ -78,6 +84,25 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController();
+    return DefaultTabController(
+      initialIndex: widget.arguments.mainScreenTab.index,
+      length: 5,
+      child: Scaffold(
+        body: TabBarView(
+          physics: NeverScrollableScrollPhysics(),
+          children: [
+            HomeScreen(),
+            ScheduleScreen(),
+            TransactionScreen(),
+            ChatScreen(),
+            ProfileScreen()
+          ],
+        ),
+        bottomNavigationBar: Container(
+          color: Colors.white,
+          child: _tab,
+        ),
+      ),
+    );
   }
 }

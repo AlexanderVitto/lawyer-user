@@ -12,13 +12,13 @@ abstract class UserProfileAPI {
   Future<utils.ApiReturn<models.UserResponse>> create2(
       models.User body, String token);
 
-  Future<utils.ApiReturn<models.StringResponse>> update(
-      models.User user, String token);
+  Future<utils.ApiReturn<models.ResponseString>> update(
+      models.User body, String token);
 
-  Future<utils.ApiReturn<models.StringResponse>> checkEmail(
+  Future<utils.ApiReturn<models.ResponseString>> checkEmail(
       String email, String token);
 
-  Future<utils.ApiReturn<models.StringResponse>> checkMobileNumber(
+  Future<utils.ApiReturn<models.ResponseString>> checkMobileNumber(
       String mobileNumber, String token);
 }
 
@@ -34,10 +34,10 @@ class Production implements UserProfileAPI {
   }
 
   @override
-  Future<utils.ApiReturn<models.StringResponse>> checkEmail(
+  Future<utils.ApiReturn<models.ResponseString>> checkEmail(
       String email, String token) async {
     final String method = 'checkEmail';
-    models.StringResponse result;
+    models.ResponseString result;
 
     final url =
         '${config.FlavorConfig.instance.values.host}/api/UserProfile/checkemail?email=$email';
@@ -50,30 +50,30 @@ class Production implements UserProfileAPI {
       _log.error(method: method, message: 'response ${response.status}');
 
       if (response.value != null) {
-        return utils.ApiReturn<models.StringResponse>(
+        return utils.ApiReturn<models.ResponseString>(
             status: false,
-            value: models.StringResponse(
+            value: models.ResponseString(
                 code: response.value.statusCode.toString()));
       } else {
-        return utils.ApiReturn<models.StringResponse>(
+        return utils.ApiReturn<models.ResponseString>(
             status: false,
-            value: models.StringResponse(message: response.message));
+            value: models.ResponseString(message: response.message));
       }
     }
 
     Map responseMap = await utils.ResponseParser().from(response, _log, method);
-    result = models.StringResponse.fromJson(responseMap);
+    result = models.ResponseString.fromJson(responseMap);
 
     _log.info(method: method, message: 'result status: ${result.status}');
 
-    return utils.ApiReturn<models.StringResponse>(status: true, value: result);
+    return utils.ApiReturn<models.ResponseString>(status: true, value: result);
   }
 
   @override
-  Future<utils.ApiReturn<models.StringResponse>> checkMobileNumber(
+  Future<utils.ApiReturn<models.ResponseString>> checkMobileNumber(
       String mobileNumber, String token) async {
     final String method = 'checkMobileNumber';
-    models.StringResponse result;
+    models.ResponseString result;
 
     final url =
         '${config.FlavorConfig.instance.values.host}/api/UserProfile/checkmobileNumber?mobileNumber=$mobileNumber';
@@ -86,23 +86,23 @@ class Production implements UserProfileAPI {
       _log.error(method: method, message: 'response ${response.status}');
 
       if (response.value != null) {
-        return utils.ApiReturn<models.StringResponse>(
+        return utils.ApiReturn<models.ResponseString>(
             status: false,
-            value: models.StringResponse(
+            value: models.ResponseString(
                 code: response.value.statusCode.toString()));
       } else {
-        return utils.ApiReturn<models.StringResponse>(
+        return utils.ApiReturn<models.ResponseString>(
             status: false,
-            value: models.StringResponse(message: response.message));
+            value: models.ResponseString(message: response.message));
       }
     }
 
     Map responseMap = await utils.ResponseParser().from(response, _log, method);
-    result = models.StringResponse.fromJson(responseMap);
+    result = models.ResponseString.fromJson(responseMap);
 
     _log.info(method: method, message: 'result status: ${result.status}');
 
-    return utils.ApiReturn<models.StringResponse>(status: true, value: result);
+    return utils.ApiReturn<models.ResponseString>(status: true, value: result);
   }
 
   @override
@@ -178,38 +178,38 @@ class Production implements UserProfileAPI {
   }
 
   @override
-  Future<utils.ApiReturn<models.StringResponse>> update(
-      models.User user, String token) async {
+  Future<utils.ApiReturn<models.ResponseString>> update(
+      models.User body, String token) async {
     final String method = 'update';
-    models.StringResponse result;
+    models.ResponseString result;
 
     final url =
         "${config.FlavorConfig.instance.values.host}/api/UserProfile/Update";
     _log.info(method: method, message: 'url $url');
 
     utils.ApiReturn<HttpClientResponse> response =
-        await _request.postRequest(url, user.toJson(), token);
+        await _request.postRequest(url, body.toJson(), token);
 
     if (!response.status) {
       _log.error(method: method, message: 'response ${response.status}');
 
       if (response.value != null) {
-        return utils.ApiReturn<models.StringResponse>(
+        return utils.ApiReturn<models.ResponseString>(
             status: false,
-            value: models.StringResponse(
+            value: models.ResponseString(
                 code: response.value.statusCode.toString()));
       } else {
-        return utils.ApiReturn<models.StringResponse>(
+        return utils.ApiReturn<models.ResponseString>(
             status: false,
-            value: models.StringResponse(message: response.message));
+            value: models.ResponseString(message: response.message));
       }
     }
 
     Map responseMap = await utils.ResponseParser().from(response, _log, method);
-    result = models.StringResponse.fromJson(responseMap);
+    result = models.ResponseString.fromJson(responseMap);
 
     _log.info(method: method, message: 'result status: ${result.status}');
 
-    return utils.ApiReturn<models.StringResponse>(status: true, value: result);
+    return utils.ApiReturn<models.ResponseString>(status: true, value: result);
   }
 }

@@ -6,6 +6,7 @@ import '../src/screens/signup/signup_screen.dart';
 import '../src/screens/forgot_password/forgot_password_screen.dart';
 import '../src/screens/mobile_number_verification/mobile_number_verification_screen.dart';
 import '../src/screens/otp/otp_screen.dart';
+import '../src/screens/main/main_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   // Here we'll handle all the routing
@@ -15,7 +16,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     ForgotPasswordScreen.routeName: (_) => ForgotPasswordScreen(),
     MobileNumberVerificationScreen.routeName: (_) =>
         MobileNumberVerificationScreen(),
-    OTPScreen.routeName: (_) => OTPScreen()
+    OTPScreen.routeName: (_) => OTPScreen(),
+    MainScreen.routeName: (_) => MainScreen(settings.arguments)
   };
 
   WidgetBuilder builder = routes[settings.name];

@@ -54,6 +54,8 @@ class Auth with ChangeNotifier {
   models.User _userData;
   models.User get userData => _userData;
 
+  bool _isAuth = false;
+  bool get isAuth => _isAuth;
   bool _isRegister;
   bool get isRegister => _isRegister;
   String _deviceToken;
@@ -168,7 +170,7 @@ class Auth with ChangeNotifier {
     await _connection.check();
 
     if (_connection.isConnected) {
-      utils.ApiReturn<models.StringResponse> apiRequest =
+      utils.ApiReturn<models.ResponseString> apiRequest =
           await _userProfileAPI.checkEmail(email, _token);
 
       if (!apiRequest.status) {
@@ -421,7 +423,7 @@ class Auth with ChangeNotifier {
 
     if (_connection.isConnected) {
       try {
-        utils.ApiReturn<models.StringResponse> apiRequest =
+        utils.ApiReturn<models.ResponseString> apiRequest =
             await _userProfileAPI.checkMobileNumber(number, _token);
 
         if (!apiRequest.status) {
@@ -516,6 +518,98 @@ class Auth with ChangeNotifier {
 
       _authStatus = helpers.AuthExceptionHandler.handleException(error);
     }
+
+    notifyListeners();
+  }
+
+  Future tryAutoLogin() async {
+    final String method = 'tryAutoLogin';
+
+    if (_sharedPreferences == null)
+      _sharedPreferences = await SharedPreferences.getInstance();
+
+    if (!_sharedPreferences.containsKey('userSession') ||
+        !_sharedPreferences.containsKey('userData')) {
+      _isAuth = false;
+
+      return false;
+    }
+
+    final Map extractedUserSession =
+        jsonDecode(_sharedPreferences.getString('userSession'));
+
+    _token = extractedUserSession['token'];
+    _userId = extractedUserSession['userId'];
+    _loginMethod = extractedUserSession['method'];
+
+    if (_sharedPreferences.getString('userData') == null) {
+      await logout();
+      _isAuth = false;
+
+      return false;
+    }
+
+    if (_firebaseAuth.currentUser == null) {
+      _isAuth = false;
+
+      return false;
+    }
+
+    final futures = <Future>[
+      _firebaseAuth.currentUser.getIdToken().then((result) {
+        _token = token;
+      })
+    ];
+
+    await Future.wait(futures);
+
+    final userSession = jsonEncode({
+      'token': _token,
+      'userId': _userId,
+      'method': _loginMethod,
+    });
+
+    _sharedPreferences.setString('userSession', userSession);
+
+    final Map extractedUserData =
+        jsonDecode(_sharedPreferences.getString('userData'));
+
+    _userData = models.User.fromJson(extractedUserData);
+
+    _isAuth = true;
+
+    notifyListeners();
+    return true;
+  }
+
+  Future logout() async {
+    final String method = 'logout';
+
+    var futures = <Future>[_firebaseAuth.signOut()];
+
+    if (_sharedPreferences != null) {
+      if (_sharedPreferences.containsKey('userSession')) {
+        final extractedUserSession =
+            jsonDecode(_sharedPreferences.getString('userSession'))
+                as Map<String, Object>;
+
+        switch (extractedUserSession['method']) {
+          case LoginMethod.FACEBOOK:
+            futures.add(_facebook.logOut());
+            break;
+          case LoginMethod.GOOGLE:
+            futures.add(_google.signOut());
+            break;
+          default:
+        }
+      }
+    }
+
+    await Future.wait(futures);
+
+    _resetField();
+
+    if (_sharedPreferences != null) _sharedPreferences.clear();
 
     notifyListeners();
   }
@@ -643,7 +737,7 @@ class Auth with ChangeNotifier {
       final photoUrl = responseData['users'][0]['photoUrl'];
 
       // Check email in database
-      utils.ApiReturn<models.StringResponse> apiRequest =
+      utils.ApiReturn<models.ResponseString> apiRequest =
           await _userProfileAPI.checkEmail(email, _token);
 
       if (!apiRequest.status) {
@@ -751,5 +845,22 @@ class Auth with ChangeNotifier {
       'utsname.version:': data.utsname.version,
       'utsname.machine:': data.utsname.machine,
     };
+  }
+
+  _resetField() {
+    _userData = null;
+    _isAuth = false;
+    _isRegister = null;
+    _deviceToken = null;
+    _firstName = null;
+    _lastName = null;
+    _loginMethod = null;
+
+    _callingCode = null;
+    _mobileNumber = null;
+    _token = null;
+    _userId = null;
+    _verificationId = null;
+    _resendToken = null;
   }
 }

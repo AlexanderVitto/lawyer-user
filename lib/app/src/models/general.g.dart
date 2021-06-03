@@ -6,8 +6,8 @@ part of 'general.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-StringResponse _$StringResponseFromJson(Map<String, dynamic> json) {
-  return StringResponse(
+ResponseString _$ResponseStringFromJson(Map<String, dynamic> json) {
+  return ResponseString(
     status: json['Status'] as bool,
     message: json['Messages'] as String,
     code: json['Code'] as String,
@@ -15,7 +15,7 @@ StringResponse _$StringResponseFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$StringResponseToJson(StringResponse instance) =>
+Map<String, dynamic> _$ResponseStringToJson(ResponseString instance) =>
     <String, dynamic>{
       'Status': instance.status,
       'Messages': instance.message,
@@ -23,8 +23,25 @@ Map<String, dynamic> _$StringResponseToJson(StringResponse instance) =>
       'Result': instance.result,
     };
 
-BoolResponse _$BoolResponseFromJson(Map<String, dynamic> json) {
-  return BoolResponse(
+ResponseListString _$ResponseListStringFromJson(Map<String, dynamic> json) {
+  return ResponseListString(
+    status: json['Status'] as bool,
+    message: json['Messages'] as String,
+    code: json['Code'] as String,
+    result: (json['Result'] as List)?.map((e) => e as String)?.toList(),
+  );
+}
+
+Map<String, dynamic> _$ResponseListStringToJson(ResponseListString instance) =>
+    <String, dynamic>{
+      'Status': instance.status,
+      'Messages': instance.message,
+      'Code': instance.code,
+      'Result': instance.result,
+    };
+
+ResponseBool _$ResponseBoolFromJson(Map<String, dynamic> json) {
+  return ResponseBool(
     status: json['Status'] as bool,
     message: json['Messages'] as String,
     code: json['Code'] as String,
@@ -32,7 +49,7 @@ BoolResponse _$BoolResponseFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$BoolResponseToJson(BoolResponse instance) =>
+Map<String, dynamic> _$ResponseBoolToJson(ResponseBool instance) =>
     <String, dynamic>{
       'Status': instance.status,
       'Messages': instance.message,

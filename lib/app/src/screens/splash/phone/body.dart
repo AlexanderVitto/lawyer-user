@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../../../constraint.dart';
-import '../../../../../enum.dart';
 import '../../../../helpers/helpers.dart' as helpers;
+
+import '../../signin/signin_screen.dart';
 
 import '../splash_screen.dart';
 
@@ -110,8 +111,8 @@ class Body extends StatelessWidget {
                                                 ? Colors.white
                                                 : PsykayGreenColor)),
                                     onPressed: () {
-                                      // Navigator.of(context)
-                                      //     .pushNamed(SignInScreen.routeName);
+                                      Navigator.of(context)
+                                          .pushNamed(SignInScreen.routeName);
                                     }))
                             : Center(
                                 child: FlatButton(

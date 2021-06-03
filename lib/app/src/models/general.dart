@@ -3,41 +3,61 @@ import 'package:json_annotation/json_annotation.dart';
 part 'general.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class StringResponse {
-  @JsonKey(name: 'Status')
+class ResponseString {
+  @JsonKey(name: 'Status', defaultValue: null, nullable: true)
   final bool status;
 
-  @JsonKey(name: 'Messages')
+  @JsonKey(name: 'Messages', defaultValue: null, nullable: true)
   final String message;
 
-  @JsonKey(name: 'Code')
+  @JsonKey(name: 'Code', defaultValue: null, nullable: true)
   final String code;
 
-  @JsonKey(name: 'Result', defaultValue: null)
+  @JsonKey(name: 'Result', defaultValue: null, nullable: true)
   final String result;
 
-  StringResponse({this.status, this.message, this.code, this.result});
-  factory StringResponse.fromJson(Map<String, dynamic> json) =>
-      _$StringResponseFromJson(json);
-  Map<String, dynamic> toJson() => _$StringResponseToJson(this);
+  ResponseString({this.status, this.message, this.code, this.result});
+  factory ResponseString.fromJson(Map<String, dynamic> json) =>
+      _$ResponseStringFromJson(json);
+  Map<String, dynamic> toJson() => _$ResponseStringToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class BoolResponse {
-  @JsonKey(name: 'Status')
+class ResponseListString {
+  @JsonKey(name: 'Status', defaultValue: null, nullable: true)
   final bool status;
 
-  @JsonKey(name: 'Messages')
+  @JsonKey(name: 'Messages', defaultValue: null, nullable: true)
   final String message;
 
-  @JsonKey(name: 'Code')
+  @JsonKey(name: 'Code', defaultValue: null, nullable: true)
   final String code;
 
-  @JsonKey(name: 'Result', defaultValue: null)
+  @JsonKey(name: 'Result', defaultValue: null, nullable: true)
+  final List<String> result;
+
+  ResponseListString({this.status, this.message, this.code, this.result});
+  factory ResponseListString.fromJson(Map<String, dynamic> json) =>
+      _$ResponseListStringFromJson(json);
+  Map<String, dynamic> toJson() => _$ResponseListStringToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ResponseBool {
+  @JsonKey(name: 'Status', defaultValue: null, nullable: true)
+  final bool status;
+
+  @JsonKey(name: 'Messages', defaultValue: null, nullable: true)
+  final String message;
+
+  @JsonKey(name: 'Code', defaultValue: null, nullable: true)
+  final String code;
+
+  @JsonKey(name: 'Result', defaultValue: null, nullable: true)
   final bool result;
 
-  BoolResponse({this.status, this.message, this.code, this.result});
-  factory BoolResponse.fromJson(Map<String, dynamic> json) =>
-      _$BoolResponseFromJson(json);
-  Map<String, dynamic> toJson() => _$BoolResponseToJson(this);
+  ResponseBool({this.status, this.message, this.code, this.result});
+  factory ResponseBool.fromJson(Map<String, dynamic> json) =>
+      _$ResponseBoolFromJson(json);
+  Map<String, dynamic> toJson() => _$ResponseBoolToJson(this);
 }

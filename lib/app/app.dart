@@ -3,13 +3,16 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 import '../constraint.dart';
+import '../enum.dart';
+
 import 'helpers/helpers.dart' as helpers;
 import 'utils/utils.dart' as utils;
 import 'config/config.dart' as config;
-import 'splash_animation.dart';
+import 'src/providers/providers.dart' as providers;
+import 'src/screens/main/main_screen.dart';
 import 'src/screens/splash/splash_screen.dart';
-import 'src/screens/testing_screen.dart';
-import 'src/screens/signin/signin_screen.dart';
+
+import 'splash_animation.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -54,7 +57,16 @@ class MyApp extends StatelessWidget {
         // home: TestingScreen(),
         // home: SplashAnimation(),
         // home: SplashScreen(),
-        home: SignInScreen(),
+        home: Consumer<providers.Auth>(
+            builder: (_, provider, __) => provider.isAuth
+                ? MainScreen(
+                    helpers.ScreenArguments(mainScreenTab: MainScreenTab.home))
+                : FutureBuilder(
+                    future: provider.tryAutoLogin(),
+                    builder: (_, snapshot) =>
+                        snapshot.connectionState == ConnectionState.waiting
+                            ? SplashAnimation()
+                            : SplashScreen())),
         onGenerateRoute: config.generateRoute,
       ),
     );
