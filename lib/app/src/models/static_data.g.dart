@@ -32,3 +32,25 @@ Map<String, dynamic> _$StaticDataToJson(StaticData instance) {
   writeNotNull('Icon', instance.icon);
   return val;
 }
+
+ResponseListStaticData _$ResponseListStaticDataFromJson(
+    Map<String, dynamic> json) {
+  return ResponseListStaticData(
+    status: json['Status'] as bool,
+    message: json['Messages'] as String,
+    code: json['Code'] as String,
+    result: (json['Result'] as List)
+        ?.map((e) =>
+            e == null ? null : StaticData.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+  );
+}
+
+Map<String, dynamic> _$ResponseListStaticDataToJson(
+        ResponseListStaticData instance) =>
+    <String, dynamic>{
+      'Status': instance.status,
+      'Messages': instance.message,
+      'Code': instance.code,
+      'Result': instance.result?.map((e) => e?.toJson())?.toList(),
+    };

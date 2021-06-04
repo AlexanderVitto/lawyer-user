@@ -11,7 +11,7 @@ class Person {
   @JsonKey(name: 'Salutation', defaultValue: null, includeIfNull: false)
   String salutation;
   @JsonKey(name: 'SexId', defaultValue: null, includeIfNull: false)
-  int sex;
+  int sexId;
   @JsonKey(name: 'DateOfBirth', defaultValue: null, includeIfNull: false)
   String dateOfBirth;
   @JsonKey(
@@ -40,11 +40,11 @@ class Person {
   String zipCode;
 
   @JsonKey(name: 'MaritalStatusId', defaultValue: null, includeIfNull: false)
-  int maritalStatus;
+  int maritalStatusId;
   @JsonKey(name: 'Ethnic', defaultValue: null, includeIfNull: false)
   String ethnic;
   @JsonKey(name: 'ReligionId', defaultValue: null, includeIfNull: false)
-  int religion;
+  int religionId;
   @JsonKey(name: 'OccupationId', defaultValue: null, includeIfNull: false)
   int occupation;
   @JsonKey(name: 'PictureUrl', defaultValue: null, includeIfNull: false)
@@ -56,16 +56,16 @@ class Person {
     this.firstName,
     this.lastName,
     this.salutation,
-    this.sex,
+    this.sexId,
     this.dateOfBirth,
     this.idNumber,
     this.idType,
     this.phoneNumber,
     this.mobileNumber,
     this.address,
-    this.maritalStatus,
+    this.maritalStatusId,
     this.ethnic,
-    this.religion,
+    this.religionId,
     this.occupation,
     this.pictureUrl,
     this.country,

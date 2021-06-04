@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'person.dart';
+
+import 'models.dart';
 
 part 'user.g.dart';
 
@@ -16,16 +17,16 @@ class User extends Person {
       firstName,
       lastName,
       salutation,
-      sex,
+      sexId,
       dateOfBirth,
       idNumber,
       idType,
       phoneNumber,
       mobileNumber,
       address,
-      maritalStatus,
+      maritalStatusId,
       ethnic,
-      religion,
+      religionId,
       occupation,
       pictureUrl,
       country,
@@ -39,16 +40,16 @@ class User extends Person {
             firstName: firstName,
             lastName: lastName,
             salutation: salutation,
-            sex: sex,
+            sexId: sexId,
             dateOfBirth: dateOfBirth,
             idNumber: idNumber,
             idType: idType,
             phoneNumber: phoneNumber,
             mobileNumber: mobileNumber,
             address: address,
-            maritalStatus: maritalStatus,
+            maritalStatusId: maritalStatusId,
             ethnic: ethnic,
-            religion: religion,
+            religionId: religionId,
             occupation: occupation,
             pictureUrl: pictureUrl,
             country: country,

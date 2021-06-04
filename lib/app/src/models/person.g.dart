@@ -11,16 +11,16 @@ Person _$PersonFromJson(Map<String, dynamic> json) {
     firstName: json['FirstName'] as String,
     lastName: json['LastName'] as String,
     salutation: json['Salutation'] as String,
-    sex: json['SexId'] as int,
+    sexId: json['SexId'] as int,
     dateOfBirth: json['DateOfBirth'] as String,
     idNumber: json['IdentificationNumber'] as String,
     idType: json['IdentificationTypeId'] as int,
     phoneNumber: json['PhoneNumber'] as String,
     mobileNumber: json['MobileNumber'] as String,
     address: json['Address'] as String,
-    maritalStatus: json['MaritalStatusId'] as int,
+    maritalStatusId: json['MaritalStatusId'] as int,
     ethnic: json['Ethnic'] as String,
-    religion: json['ReligionId'] as int,
+    religionId: json['ReligionId'] as int,
     occupation: json['OccupationId'] as int,
     pictureUrl: json['PictureUrl'] as String,
     country: json['Country'] as String,
@@ -45,7 +45,7 @@ Map<String, dynamic> _$PersonToJson(Person instance) {
   writeNotNull('FirstName', instance.firstName);
   writeNotNull('LastName', instance.lastName);
   writeNotNull('Salutation', instance.salutation);
-  writeNotNull('SexId', instance.sex);
+  writeNotNull('SexId', instance.sexId);
   writeNotNull('DateOfBirth', instance.dateOfBirth);
   writeNotNull('IdentificationNumber', instance.idNumber);
   writeNotNull('IdentificationTypeId', instance.idType);
@@ -58,9 +58,9 @@ Map<String, dynamic> _$PersonToJson(Person instance) {
   writeNotNull('Region3', instance.region3);
   writeNotNull('Region4', instance.region4);
   writeNotNull('ZipCode', instance.zipCode);
-  writeNotNull('MaritalStatusId', instance.maritalStatus);
+  writeNotNull('MaritalStatusId', instance.maritalStatusId);
   writeNotNull('Ethnic', instance.ethnic);
-  writeNotNull('ReligionId', instance.religion);
+  writeNotNull('ReligionId', instance.religionId);
   writeNotNull('OccupationId', instance.occupation);
   writeNotNull('PictureUrl', instance.pictureUrl);
   writeNotNull('EducationId', instance.lastEducation);

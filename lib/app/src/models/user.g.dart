@@ -13,16 +13,16 @@ User _$UserFromJson(Map<String, dynamic> json) {
     firstName: json['FirstName'],
     lastName: json['LastName'],
     salutation: json['Salutation'],
-    sex: json['SexId'],
+    sexId: json['SexId'],
     dateOfBirth: json['DateOfBirth'],
     idNumber: json['IdentificationNumber'],
     idType: json['IdentificationTypeId'],
     phoneNumber: json['PhoneNumber'],
     mobileNumber: json['MobileNumber'],
     address: json['Address'],
-    maritalStatus: json['MaritalStatusId'],
+    maritalStatusId: json['MaritalStatusId'],
     ethnic: json['Ethnic'],
-    religion: json['ReligionId'],
+    religionId: json['ReligionId'],
     occupation: json['OccupationId'],
     pictureUrl: json['PictureUrl'],
     country: json['Country'],
@@ -47,7 +47,7 @@ Map<String, dynamic> _$UserToJson(User instance) {
   writeNotNull('FirstName', instance.firstName);
   writeNotNull('LastName', instance.lastName);
   writeNotNull('Salutation', instance.salutation);
-  writeNotNull('SexId', instance.sex);
+  writeNotNull('SexId', instance.sexId);
   writeNotNull('DateOfBirth', instance.dateOfBirth);
   writeNotNull('IdentificationNumber', instance.idNumber);
   writeNotNull('IdentificationTypeId', instance.idType);
@@ -60,9 +60,9 @@ Map<String, dynamic> _$UserToJson(User instance) {
   writeNotNull('Region3', instance.region3);
   writeNotNull('Region4', instance.region4);
   writeNotNull('ZipCode', instance.zipCode);
-  writeNotNull('MaritalStatusId', instance.maritalStatus);
+  writeNotNull('MaritalStatusId', instance.maritalStatusId);
   writeNotNull('Ethnic', instance.ethnic);
-  writeNotNull('ReligionId', instance.religion);
+  writeNotNull('ReligionId', instance.religionId);
   writeNotNull('OccupationId', instance.occupation);
   writeNotNull('PictureUrl', instance.pictureUrl);
   writeNotNull('EducationId', instance.lastEducation);
