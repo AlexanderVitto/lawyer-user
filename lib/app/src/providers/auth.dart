@@ -422,30 +422,24 @@ class Auth with ChangeNotifier {
     await _connection.check();
 
     if (_connection.isConnected) {
-      try {
-        utils.ApiReturn<models.ResponseString> apiRequest =
-            await _userProfileAPI.checkMobileNumber(number, _token);
+      utils.ApiReturn<models.ResponseString> apiRequest =
+          await _userProfileAPI.checkMobileNumber(number, _token);
 
-        if (!apiRequest.status) {
-          // Problem with connection to API
+      if (!apiRequest.status) {
+        // Problem with connection to API
 
-          if (apiRequest.value.code == '401') {
-            // Force logout
+        if (apiRequest.value.code == '401') {
+          // Force logout
 
-          }
-
-          _authStatus = helpers.AuthResultStatus.apiConnectionError;
-        } else {
-          if (apiRequest.value.status) {
-            _authStatus = helpers.AuthResultStatus.mobileNumberAlreadyExists;
-          } else {
-            _authStatus = helpers.AuthResultStatus.mobileNumberNotRegistered;
-          }
         }
-      } catch (error) {
-        _log.error(method: method, message: error.toString());
 
-        _authStatus = helpers.AuthExceptionHandler.handleException(error);
+        _authStatus = helpers.AuthResultStatus.apiConnectionError;
+      } else {
+        if (apiRequest.value.status) {
+          _authStatus = helpers.AuthResultStatus.mobileNumberAlreadyExists;
+        } else {
+          _authStatus = helpers.AuthResultStatus.mobileNumberNotRegistered;
+        }
       }
 
       notifyListeners();

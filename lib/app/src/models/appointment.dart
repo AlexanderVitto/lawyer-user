@@ -212,6 +212,61 @@ class Appointment {
 }
 
 @JsonSerializable(explicitToJson: true)
+class AppointmentBody {
+  @JsonKey(name: 'userId', defaultValue: null, includeIfNull: false)
+  String userId;
+
+  @JsonKey(name: 'partnerId', defaultValue: null, includeIfNull: false)
+  String partnerId;
+
+  @JsonKey(name: 'serviceId', defaultValue: null, includeIfNull: false)
+  int serviceId;
+
+  @JsonKey(name: 'priceSchemaId', defaultValue: null, includeIfNull: false)
+  int priceSchemaId;
+
+  @JsonKey(name: 'partnerPriceId', defaultValue: null, includeIfNull: false)
+  int partnerPriceId;
+
+  @JsonKey(name: 'price', defaultValue: null, includeIfNull: false)
+  double price;
+
+  @JsonKey(name: 'startDate', defaultValue: null, includeIfNull: false)
+  String startDate;
+
+  @JsonKey(name: 'startTime', defaultValue: null, includeIfNull: false)
+  String startTime;
+
+  @JsonKey(
+      name: 'appointmentStatusId', defaultValue: null, includeIfNull: false)
+  int appointmentStatusId;
+
+  @JsonKey(name: 'recurrenceRule', defaultValue: null, includeIfNull: false)
+  String recurrenceStatus;
+
+  @JsonKey(name: 'appointmentNotes', defaultValue: null, includeIfNull: false)
+  String appointmentNotes;
+
+  AppointmentBody(
+      {this.userId,
+      this.partnerId,
+      this.serviceId,
+      this.priceSchemaId,
+      this.partnerPriceId,
+      this.price,
+      this.startDate,
+      this.startTime,
+      this.appointmentStatusId,
+      this.recurrenceStatus,
+      this.appointmentNotes});
+
+  factory AppointmentBody.fromJson(Map<String, dynamic> json) =>
+      _$AppointmentBodyFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AppointmentBodyToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
 class UpdateAppointmentStatus {
   @JsonKey(name: 'id', defaultValue: null, includeIfNull: false)
   int id;

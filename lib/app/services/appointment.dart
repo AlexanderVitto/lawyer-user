@@ -7,10 +7,10 @@ import '../utils/utils.dart' as utils;
 
 abstract class AppointmentAPI {
   Future<utils.ApiReturn<models.ResponseAppointment>> createAppointment(
-      models.Appointment body, String token);
+      models.AppointmentBody body, String token);
 
   Future<utils.ApiReturn<models.ResponseAppointment>> bookAppontment(
-      models.Appointment body, String token);
+      models.AppointmentBody body, String token);
 
   Future<utils.ApiReturn<models.ResponseAppointment>> updateAppointment(
       models.Appointment body, String token);
@@ -53,7 +53,7 @@ class Production implements AppointmentAPI {
 
   @override
   Future<utils.ApiReturn<models.ResponseAppointment>> bookAppontment(
-      models.Appointment body, String token) async {
+      models.AppointmentBody body, String token) async {
     final String method = 'bookAppontment';
     models.ResponseAppointment result;
 
@@ -127,7 +127,7 @@ class Production implements AppointmentAPI {
 
   @override
   Future<utils.ApiReturn<models.ResponseAppointment>> createAppointment(
-      models.Appointment body, String token) async {
+      models.AppointmentBody body, String token) async {
     final String method = 'createAppointment';
     models.ResponseAppointment result;
 

@@ -126,6 +126,45 @@ Map<String, dynamic> _$AppointmentToJson(Appointment instance) {
   return val;
 }
 
+AppointmentBody _$AppointmentBodyFromJson(Map<String, dynamic> json) {
+  return AppointmentBody(
+    userId: json['userId'] as String,
+    partnerId: json['partnerId'] as String,
+    serviceId: json['serviceId'] as int,
+    priceSchemaId: json['priceSchemaId'] as int,
+    partnerPriceId: json['partnerPriceId'] as int,
+    price: (json['price'] as num)?.toDouble(),
+    startDate: json['startDate'] as String,
+    startTime: json['startTime'] as String,
+    appointmentStatusId: json['appointmentStatusId'] as int,
+    recurrenceStatus: json['recurrenceRule'] as String,
+    appointmentNotes: json['appointmentNotes'] as String,
+  );
+}
+
+Map<String, dynamic> _$AppointmentBodyToJson(AppointmentBody instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('userId', instance.userId);
+  writeNotNull('partnerId', instance.partnerId);
+  writeNotNull('serviceId', instance.serviceId);
+  writeNotNull('priceSchemaId', instance.priceSchemaId);
+  writeNotNull('partnerPriceId', instance.partnerPriceId);
+  writeNotNull('price', instance.price);
+  writeNotNull('startDate', instance.startDate);
+  writeNotNull('startTime', instance.startTime);
+  writeNotNull('appointmentStatusId', instance.appointmentStatusId);
+  writeNotNull('recurrenceRule', instance.recurrenceStatus);
+  writeNotNull('appointmentNotes', instance.appointmentNotes);
+  return val;
+}
+
 UpdateAppointmentStatus _$UpdateAppointmentStatusFromJson(
     Map<String, dynamic> json) {
   return UpdateAppointmentStatus(
