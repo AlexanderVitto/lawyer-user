@@ -64,7 +64,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     super.initState();
 
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 2500),
+      duration: const Duration(milliseconds: 5000),
       vsync: this,
     )..forward();
     _animation = Tween<Offset>(
@@ -91,7 +91,9 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
         body: TabBarView(
           physics: NeverScrollableScrollPhysics(),
           children: [
-            HomeScreen(),
+            HomeScreen(
+              animation: _animation,
+            ),
             ScheduleScreen(),
             TransactionScreen(),
             ChatScreen(),

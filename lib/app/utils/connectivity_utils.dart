@@ -47,6 +47,13 @@ class Connection with ChangeNotifier {
   bool get isConnected => _isConnected;
 
   bool _isBusy = false;
+  bool _isInit = false;
+
+  setIsInit() {
+    _isInit = true;
+
+    notifyListeners();
+  }
 
   Future<bool> init() async {
     try {
@@ -67,8 +74,10 @@ class Connection with ChangeNotifier {
 
   Future check() async {
     if (!_isBusy) {
-      _isBusy = true;
-      notifyListeners();
+      if (!_isInit) {
+        _isBusy = true;
+        notifyListeners();
+      }
 
       try {
         final result = await InternetAddress.lookup('example.com');
@@ -81,6 +90,7 @@ class Connection with ChangeNotifier {
         _isConnected = false;
       }
 
+      _isInit = false;
       _isBusy = false;
       notifyListeners();
     }

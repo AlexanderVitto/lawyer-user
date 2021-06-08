@@ -136,7 +136,7 @@ class ResponseAllNotification {
   final String code;
 
   @JsonKey(name: 'Result', defaultValue: null, nullable: true)
-  final List<AllNotification> result;
+  final AllNotification result;
 
   ResponseAllNotification({this.status, this.message, this.code, this.result});
   factory ResponseAllNotification.fromJson(Map<String, dynamic> json) =>

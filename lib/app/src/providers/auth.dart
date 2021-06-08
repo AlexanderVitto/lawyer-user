@@ -42,6 +42,7 @@ class Auth with ChangeNotifier {
   User _firebaseUser;
 
   utils.Connection _connection;
+  utils.Connection get connection => _connection;
   utils.LogUtils _log;
 
   application.ApplicationAPI _applicationAPI;
@@ -58,6 +59,8 @@ class Auth with ChangeNotifier {
   bool get isAuth => _isAuth;
   bool _isRegister;
   bool get isRegister => _isRegister;
+  bool _isAuthorized = true;
+  bool get isAuthorized => _isAuthorized;
   String _deviceToken;
   String get deviceToken => _deviceToken;
   String _firstName;
@@ -115,6 +118,12 @@ class Auth with ChangeNotifier {
     notifyListeners();
   }
 
+  setIsAuthorized(bool data) {
+    this._isAuthorized = data;
+
+    notifyListeners();
+  }
+
   Auth(utils.Connection connection) {
     this._facebook = FacebookLogin();
     this._google = GoogleSignIn();
@@ -139,27 +148,25 @@ class Auth with ChangeNotifier {
 
     await _connection.check();
 
-    if (_connection.isConnected) {
-      try {
-        _firebaseUser = (await _firebaseAuth.signInWithEmailAndPassword(
-                email: email, password: password))
-            .user;
+    try {
+      _firebaseUser = (await _firebaseAuth.signInWithEmailAndPassword(
+              email: email, password: password))
+          .user;
 
-        _userId = _firebaseUser.uid;
+      _userId = _firebaseUser.uid;
 
-        if (_firebaseUser != null) {
-          await _authentication();
-        } else {
-          _authStatus = helpers.AuthResultStatus.firebaseUserNull;
-        }
-      } catch (error) {
-        _log.error(method: method, message: error.toString());
-
-        _authStatus = helpers.AuthExceptionHandler.handleException(error);
+      if (_firebaseUser != null) {
+        await _authentication();
+      } else {
+        _authStatus = helpers.AuthResultStatus.firebaseUserNull;
       }
+    } catch (error) {
+      _log.error(method: method, message: error.toString());
 
-      notifyListeners();
+      _authStatus = helpers.AuthExceptionHandler.handleException(error);
     }
+
+    notifyListeners();
   }
 
   Future emailSignup(String email, String name, password) async {
@@ -169,49 +176,47 @@ class Auth with ChangeNotifier {
 
     await _connection.check();
 
-    if (_connection.isConnected) {
-      utils.ApiReturn<models.ResponseString> apiRequest =
-          await _userProfileAPI.checkEmail(email, _token);
+    utils.ApiReturn<models.ResponseString> apiRequest =
+        await _userProfileAPI.checkEmail(email, _token);
 
-      if (!apiRequest.status) {
-        // Problem with connection to API
+    if (!apiRequest.status) {
+      // Problem with connection to API
 
-        if (apiRequest.value.code == '401') {
-          // Force logout
+      if (apiRequest.value.code == '401') {
+        // Force logout
 
-        }
+      }
 
-        _authStatus = helpers.AuthResultStatus.apiConnectionError;
+      _authStatus = helpers.AuthResultStatus.apiConnectionError;
+    } else {
+      if (apiRequest.value.status) {
+        _authStatus = helpers.AuthResultStatus.emailAlreadyExists;
       } else {
-        if (apiRequest.value.status) {
-          _authStatus = helpers.AuthResultStatus.emailAlreadyExists;
-        } else {
-          try {
-            _firebaseUser = (await _firebaseAuth.createUserWithEmailAndPassword(
-                    email: email, password: password))
-                .user;
+        try {
+          _firebaseUser = (await _firebaseAuth.createUserWithEmailAndPassword(
+                  email: email, password: password))
+              .user;
 
-            _userId = _firebaseUser.uid;
+          _userId = _firebaseUser.uid;
 
-            if (_firebaseUser != null) {
-              final futures = <Future>[
-                _firebaseUser.sendEmailVerification(),
-                _firebaseUser.getIdToken().then((token) => _token = token)
-              ];
+          if (_firebaseUser != null) {
+            final futures = <Future>[
+              _firebaseUser.sendEmailVerification(),
+              _firebaseUser.getIdToken().then((token) => _token = token)
+            ];
 
-              await Future.wait(futures);
+            await Future.wait(futures);
 
-              models.User userModel =
-                  models.User(id: userId, email: email, firstName: name);
-              await _createUserData(userModel);
-            } else {
-              _authStatus = helpers.AuthResultStatus.firebaseUserNull;
-            }
-          } catch (error) {
-            _log.error(method: method, message: error.toString());
-
-            _authStatus = helpers.AuthExceptionHandler.handleException(error);
+            models.User userModel =
+                models.User(id: userId, email: email, firstName: name);
+            await _createUserData(userModel);
+          } else {
+            _authStatus = helpers.AuthResultStatus.firebaseUserNull;
           }
+        } catch (error) {
+          _log.error(method: method, message: error.toString());
+
+          _authStatus = helpers.AuthExceptionHandler.handleException(error);
         }
       }
     }
@@ -229,28 +234,26 @@ class Auth with ChangeNotifier {
 
     await _connection.check();
 
-    if (_connection.isConnected) {
-      try {
-        final AuthCredential credential = PhoneAuthProvider.credential(
-            verificationId: _verificationId, smsCode: smsCode);
+    try {
+      final AuthCredential credential = PhoneAuthProvider.credential(
+          verificationId: _verificationId, smsCode: smsCode);
 
-        _firebaseUser =
-            (await _firebaseAuth.signInWithCredential(credential)).user;
+      _firebaseUser =
+          (await _firebaseAuth.signInWithCredential(credential)).user;
 
-        if (_firebaseUser != null) {
-          await _authentication();
-        } else {
-          _authStatus = helpers.AuthResultStatus.firebaseUserNull;
-        }
-      } catch (error) {
-        _log.error(method: method, message: error.toString());
-
-        _authStatus =
-            helpers.AuthExceptionHandler.generateExceptionMessage(error);
+      if (_firebaseUser != null) {
+        await _authentication();
+      } else {
+        _authStatus = helpers.AuthResultStatus.firebaseUserNull;
       }
+    } catch (error) {
+      _log.error(method: method, message: error.toString());
 
-      notifyListeners();
+      _authStatus =
+          helpers.AuthExceptionHandler.generateExceptionMessage(error);
     }
+
+    notifyListeners();
   }
 
   Future facebookSignIn() async {
@@ -260,83 +263,19 @@ class Auth with ChangeNotifier {
 
     await _connection.check();
 
-    if (_connection.isConnected) {
-      try {
-        _log.info(method: method, message: 'start');
+    try {
+      _log.info(method: method, message: 'start');
 
-        final facebookSignin = await _facebook.logIn(['email']);
+      final facebookSignin = await _facebook.logIn(['email']);
 
-        _log.debug(
-            method: method, message: 'result status ${facebookSignin.status}');
+      _log.debug(
+          method: method, message: 'result status ${facebookSignin.status}');
 
-        switch (facebookSignin.status) {
-          case FacebookLoginStatus.loggedIn:
-            final token = facebookSignin.accessToken.token;
-            AuthCredential authCredential =
-                FacebookAuthProvider.credential(token);
-            _firebaseUser =
-                (await _firebaseAuth.signInWithCredential(authCredential)).user;
-
-            _userId = _firebaseUser.uid;
-
-            if (_firebaseUser != null) {
-              await _authentication();
-            } else {
-              _authStatus = helpers.AuthResultStatus.firebaseUserNull;
-            }
-
-            break;
-          case FacebookLoginStatus.cancelledByUser:
-            await _facebook.logOut();
-            _authStatus = helpers.AuthResultStatus.cancelledByUser;
-            break;
-          case FacebookLoginStatus.error:
-            _authStatus = helpers.AuthResultStatus.facebookConnectionError;
-            await _facebook.logOut();
-            break;
-        }
-      } catch (error) {
-        _log.error(method: method, message: error.toString());
-
-        await _facebook.logOut();
-        _authStatus = helpers.AuthExceptionHandler.handleException(error);
-      }
-
-      _log.info(method: method, message: 'Login success');
-
-      notifyListeners();
-    }
-  }
-
-  Future googleSignin() async {
-    assert(_isRegister != null);
-    final String method = 'googleSignin';
-    _loginMethod = LoginMethod.GOOGLE;
-
-    await _connection.check();
-
-    if (_connection.isConnected) {
-      try {
-        _log.info(method: method, message: 'start');
-
-        final GoogleSignInAccount googleSignin = await _google.signIn();
-
-        if (googleSignin == null) {
-          _authStatus = helpers.AuthResultStatus.kSignInCanceledError;
-        } else {
-          final GoogleSignInAuthentication googleAuth =
-              await googleSignin.authentication;
-
-          _log.debug(
-              method: method,
-              message: 'googleAuth idToken  ${googleAuth.idToken}');
-          _log.debug(
-              method: method,
-              message: 'googleAuth accessToken ${googleAuth.accessToken}');
-
-          final AuthCredential authCredential = GoogleAuthProvider.credential(
-              idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
-
+      switch (facebookSignin.status) {
+        case FacebookLoginStatus.loggedIn:
+          final token = facebookSignin.accessToken.token;
+          AuthCredential authCredential =
+              FacebookAuthProvider.credential(token);
           _firebaseUser =
               (await _firebaseAuth.signInWithCredential(authCredential)).user;
 
@@ -347,18 +286,78 @@ class Auth with ChangeNotifier {
           } else {
             _authStatus = helpers.AuthResultStatus.firebaseUserNull;
           }
-        }
-      } catch (error) {
-        _log.error(method: method, message: error.toString());
 
-        await _google.signOut();
-        _authStatus = helpers.AuthExceptionHandler.googleException(error);
+          break;
+        case FacebookLoginStatus.cancelledByUser:
+          await _facebook.logOut();
+          _authStatus = helpers.AuthResultStatus.cancelledByUser;
+          break;
+        case FacebookLoginStatus.error:
+          _authStatus = helpers.AuthResultStatus.facebookConnectionError;
+          await _facebook.logOut();
+          break;
       }
+    } catch (error) {
+      _log.error(method: method, message: error.toString());
 
-      _log.info(method: method, message: 'Login success');
-
-      notifyListeners();
+      await _facebook.logOut();
+      _authStatus = helpers.AuthExceptionHandler.handleException(error);
     }
+
+    _log.info(method: method, message: 'Login success');
+
+    notifyListeners();
+  }
+
+  Future googleSignin() async {
+    assert(_isRegister != null);
+    final String method = 'googleSignin';
+    _loginMethod = LoginMethod.GOOGLE;
+
+    await _connection.check();
+
+    try {
+      _log.info(method: method, message: 'start');
+
+      final GoogleSignInAccount googleSignin = await _google.signIn();
+
+      if (googleSignin == null) {
+        _authStatus = helpers.AuthResultStatus.kSignInCanceledError;
+      } else {
+        final GoogleSignInAuthentication googleAuth =
+            await googleSignin.authentication;
+
+        _log.debug(
+            method: method,
+            message: 'googleAuth idToken  ${googleAuth.idToken}');
+        _log.debug(
+            method: method,
+            message: 'googleAuth accessToken ${googleAuth.accessToken}');
+
+        final AuthCredential authCredential = GoogleAuthProvider.credential(
+            idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
+
+        _firebaseUser =
+            (await _firebaseAuth.signInWithCredential(authCredential)).user;
+
+        _userId = _firebaseUser.uid;
+
+        if (_firebaseUser != null) {
+          await _authentication();
+        } else {
+          _authStatus = helpers.AuthResultStatus.firebaseUserNull;
+        }
+      }
+    } catch (error) {
+      _log.error(method: method, message: error.toString());
+
+      await _google.signOut();
+      _authStatus = helpers.AuthExceptionHandler.googleException(error);
+    }
+
+    _log.info(method: method, message: 'Login success');
+
+    notifyListeners();
   }
 
   Future mobilePhoneSignin(
@@ -372,29 +371,27 @@ class Auth with ChangeNotifier {
 
     await _connection.check();
 
-    if (_connection.isConnected) {
-      try {
-        final AuthCredential authCredential = PhoneAuthProvider.credential(
-            verificationId: verificationId, smsCode: smsCode);
+    try {
+      final AuthCredential authCredential = PhoneAuthProvider.credential(
+          verificationId: verificationId, smsCode: smsCode);
 
-        _firebaseUser =
-            (await _firebaseAuth.signInWithCredential(authCredential)).user;
+      _firebaseUser =
+          (await _firebaseAuth.signInWithCredential(authCredential)).user;
 
-        _userId = _firebaseUser.uid;
+      _userId = _firebaseUser.uid;
 
-        if (_firebaseUser != null) {
-          await _authentication();
-        } else {
-          _authStatus = helpers.AuthResultStatus.firebaseUserNull;
-        }
-      } catch (error) {
-        _log.error(method: method, message: error.toString());
-
-        _authStatus = helpers.AuthExceptionHandler.handleException(error);
+      if (_firebaseUser != null) {
+        await _authentication();
+      } else {
+        _authStatus = helpers.AuthResultStatus.firebaseUserNull;
       }
+    } catch (error) {
+      _log.error(method: method, message: error.toString());
 
-      notifyListeners();
+      _authStatus = helpers.AuthExceptionHandler.handleException(error);
     }
+
+    notifyListeners();
   }
 
   Future resetPassword(String email) async {
@@ -402,18 +399,16 @@ class Auth with ChangeNotifier {
 
     await _connection.check();
 
-    if (_connection.isConnected) {
-      try {
-        await _firebaseAuth.sendPasswordResetEmail(email: email);
-        _authStatus = helpers.AuthResultStatus.successful;
-      } catch (error) {
-        _log.error(method: method, message: error.toString());
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+      _authStatus = helpers.AuthResultStatus.successful;
+    } catch (error) {
+      _log.error(method: method, message: error.toString());
 
-        _authStatus = helpers.AuthExceptionHandler.handleException(error);
-      }
-
-      notifyListeners();
+      _authStatus = helpers.AuthExceptionHandler.handleException(error);
     }
+
+    notifyListeners();
   }
 
   Future checkMobileNumber(String number) async {
@@ -421,29 +416,27 @@ class Auth with ChangeNotifier {
 
     await _connection.check();
 
-    if (_connection.isConnected) {
-      utils.ApiReturn<models.ResponseString> apiRequest =
-          await _userProfileAPI.checkMobileNumber(number, _token);
+    utils.ApiReturn<models.ResponseString> apiRequest =
+        await _userProfileAPI.checkMobileNumber(number, _token);
 
-      if (!apiRequest.status) {
-        // Problem with connection to API
+    if (!apiRequest.status) {
+      // Problem with connection to API
 
-        if (apiRequest.value.code == '401') {
-          // Force logout
+      if (apiRequest.value.code == '401') {
+        // Force logout
 
-        }
-
-        _authStatus = helpers.AuthResultStatus.apiConnectionError;
-      } else {
-        if (apiRequest.value.status) {
-          _authStatus = helpers.AuthResultStatus.mobileNumberAlreadyExists;
-        } else {
-          _authStatus = helpers.AuthResultStatus.mobileNumberNotRegistered;
-        }
       }
 
-      notifyListeners();
+      _authStatus = helpers.AuthResultStatus.apiConnectionError;
+    } else {
+      if (apiRequest.value.status) {
+        _authStatus = helpers.AuthResultStatus.mobileNumberAlreadyExists;
+      } else {
+        _authStatus = helpers.AuthResultStatus.mobileNumberNotRegistered;
+      }
     }
+
+    notifyListeners();
   }
 
   Future sendOTP(bool resend) async {
@@ -532,10 +525,6 @@ class Auth with ChangeNotifier {
     final Map extractedUserSession =
         jsonDecode(_sharedPreferences.getString('userSession'));
 
-    _token = extractedUserSession['token'];
-    _userId = extractedUserSession['userId'];
-    _loginMethod = extractedUserSession['method'];
-
     if (_sharedPreferences.getString('userData') == null) {
       await logout();
       _isAuth = false;
@@ -551,11 +540,15 @@ class Auth with ChangeNotifier {
 
     final futures = <Future>[
       _firebaseAuth.currentUser.getIdToken().then((result) {
-        _token = token;
+        _token = result;
       })
     ];
 
     await Future.wait(futures);
+
+    // _token = extractedUserSession['token'];
+    _userId = extractedUserSession['userId'];
+    _loginMethod = extractedUserSession['method'];
 
     final userSession = jsonEncode({
       'token': _token,

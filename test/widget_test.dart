@@ -113,4 +113,110 @@ void main() {
 
     expect(_appointments.length, 2);
   });
+
+  test('Date filter', () {
+    List<Map<String, dynamic>> date = [
+      {
+        "UserFullName": "Alexander Jeanne",
+        "PartnerFullName": "Jeanne Natasya",
+        "StartSession": "04/06/2021 00.00.00 09:00:00",
+        "EndSession": "04/06/2021 00.00.00 09:30:00",
+        "AppointmentId": 156,
+        "BookingCode": "fRU3kUmh",
+        "UserId": "7LZzgg7ZstX3a9Yuq2ul7xsPRb83",
+        "UserFirstName": "Alexander",
+        "UserLastName": "Jeanne",
+        "PartnerId": "BwNpYywQKKRUggnYJlkl5x22enn1",
+        "PartnerFirstName": "Jeanne",
+        "PartnerLastName": "Natasya",
+        "Price": 200000.00,
+        "StartDate": "2021-06-04T00:00:00+07:00",
+        "StartTime": "09:00:00",
+        "EndDate": "2021-06-04T00:00:00+07:00",
+        "EndTime": "09:30:00",
+        "AppointmentStatusId": 1,
+        "AppointmentStatusDescription": "OPEN",
+        "ProductServiceId": 155,
+        "ProductServiceDescription": "Cognitive Disorders",
+        "PriceSchemaId": 2,
+        "PriceSchemaDescription": "SILVER VOICE",
+        "PartnerPriceId": 149,
+        "IsRescheduled": false,
+        "RescheduledConfirmed": false,
+        "RescheduledBookingCode": null,
+        "RescheduledByUser": false,
+        "ReschedulePreId": null,
+        "IsOnPayment": false,
+        "InvoiceNumber": null,
+        "PaymentMethodId": null,
+        "PaymentMethodDescription": null,
+        "PaymentId": null,
+        "OrderId": null,
+        "TransactionId": null,
+        "TransactionStatus": null,
+        "TransactionStatusDescription": null,
+        "PaymentType": null,
+        "ToBankCode": null,
+        "ToBankName": null,
+        "ToAccountName": null,
+        "ToAccountNumber": null,
+        "PaidAmount": null,
+        "ExpiredIn": "2021-06-08T15:00:00+07:00"
+      },
+      {
+        "UserFullName": "Alexander Jeanne",
+        "PartnerFullName": "Jeanne Natasya",
+        "StartSession": "04/06/2021 00.00.00 09:00:00",
+        "EndSession": "04/06/2021 00.00.00 09:30:00",
+        "AppointmentId": 156,
+        "BookingCode": "fRU3kUmh",
+        "UserId": "7LZzgg7ZstX3a9Yuq2ul7xsPRb83",
+        "UserFirstName": "Alexander",
+        "UserLastName": "Jeanne",
+        "PartnerId": "BwNpYywQKKRUggnYJlkl5x22enn1",
+        "PartnerFirstName": "Jeanne",
+        "PartnerLastName": "Natasya",
+        "Price": 200000.00,
+        "StartDate": "2021-06-04T00:00:00+07:00",
+        "StartTime": "09:00:00",
+        "EndDate": "2021-06-04T00:00:00+07:00",
+        "EndTime": "09:30:00",
+        "AppointmentStatusId": 1,
+        "AppointmentStatusDescription": "OPEN",
+        "ProductServiceId": 155,
+        "ProductServiceDescription": "Cognitive Disorders",
+        "PriceSchemaId": 2,
+        "PriceSchemaDescription": "SILVER VOICE",
+        "PartnerPriceId": 149,
+        "IsRescheduled": false,
+        "RescheduledConfirmed": false,
+        "RescheduledBookingCode": null,
+        "RescheduledByUser": false,
+        "ReschedulePreId": null,
+        "IsOnPayment": false,
+        "InvoiceNumber": null,
+        "PaymentMethodId": null,
+        "PaymentMethodDescription": null,
+        "PaymentId": null,
+        "OrderId": null,
+        "TransactionId": null,
+        "TransactionStatus": null,
+        "TransactionStatusDescription": null,
+        "PaymentType": null,
+        "ToBankCode": null,
+        "ToBankName": null,
+        "ToAccountName": null,
+        "ToAccountNumber": null,
+        "PaidAmount": null,
+        "ExpiredIn": "2021-06-07T15:00:00+07:00"
+      }
+    ];
+
+    List<Map<String, dynamic>> filtered = date
+        .where((value) =>
+            DateTime.now().isBefore(DateTime.tryParse(value['ExpiredIn'])))
+        .toList();
+
+    expect(filtered.length, 1);
+  });
 }

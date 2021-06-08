@@ -219,16 +219,16 @@ class ConfirmBankBody {
 @JsonSerializable(explicitToJson: true)
 class InitPaymentBody {
   @JsonKey(name: 'invoices', defaultValue: null)
-  final List<int> invoices;
+  List<int> invoices;
 
   @JsonKey(name: 'grossAmount', defaultValue: null)
-  final double grossAmount;
+  double grossAmount;
 
   @JsonKey(name: 'paymentMethod', defaultValue: null)
-  final int paymentMethod;
+  int paymentMethod;
 
   @JsonKey(name: 'userId', defaultValue: null)
-  final String userId;
+  String userId;
 
   InitPaymentBody(
       {this.invoices, this.grossAmount, this.paymentMethod, this.userId});

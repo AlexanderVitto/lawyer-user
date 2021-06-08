@@ -241,3 +241,12 @@ class ResponseCart {
       _$ResponseCartFromJson(json);
   Map<String, dynamic> toJson() => _$ResponseCartToJson(this);
 }
+
+class ItemFilter {
+  final int id;
+  final String name;
+  final bool ignore;
+  bool isFilterActive;
+
+  ItemFilter({this.id, this.name, this.ignore = false, this.isFilterActive});
+}

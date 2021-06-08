@@ -30,7 +30,7 @@ class Request {
       httpClient.badCertificateCallback =
           (X509Certificate cert, String host, int port) => true;
 
-      Uri uri = queryParameter == null
+      Uri uri = queryParameter != null
           ? Uri.parse(url).replace(queryParameters: queryParameter)
           : Uri.parse(url);
 

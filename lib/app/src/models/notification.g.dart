@@ -129,11 +129,9 @@ ResponseAllNotification _$ResponseAllNotificationFromJson(
     status: json['Status'] as bool,
     message: json['Messages'] as String,
     code: json['Code'] as String,
-    result: (json['Result'] as List)
-        ?.map((e) => e == null
-            ? null
-            : AllNotification.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+    result: json['Result'] == null
+        ? null
+        : AllNotification.fromJson(json['Result'] as Map<String, dynamic>),
   );
 }
 
@@ -143,5 +141,5 @@ Map<String, dynamic> _$ResponseAllNotificationToJson(
       'Status': instance.status,
       'Messages': instance.message,
       'Code': instance.code,
-      'Result': instance.result?.map((e) => e?.toJson())?.toList(),
+      'Result': instance.result?.toJson(),
     };

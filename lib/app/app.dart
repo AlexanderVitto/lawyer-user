@@ -59,7 +59,9 @@ class MyApp extends StatelessWidget {
         // home: SplashScreen(),
         home: Consumer<providers.Auth>(
             builder: (_, provider, __) => provider.isAuth
-                ? MainScreen(
+                ?
+                // SplashScreen()
+                MainScreen(
                     helpers.ScreenArguments(mainScreenTab: MainScreenTab.home))
                 : FutureBuilder(
                     future: provider.tryAutoLogin(),

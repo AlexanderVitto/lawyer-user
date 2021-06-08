@@ -32,6 +32,30 @@ List<SingleChildWidget> secondLinerProviders() {
         update: (_, connection, prevProvider) =>
             prevProvider..update(connection),
         lazy: false),
+    ChangeNotifierProxyProvider<Auth, Appointment>(
+        create: (ctx) => Appointment(),
+        update: (_, auth, prevProvider) => prevProvider..update(auth),
+        lazy: false),
+    ChangeNotifierProxyProvider<Auth, Cart>(
+        create: (ctx) => Cart(),
+        update: (_, auth, prevProvider) => prevProvider..update(auth),
+        lazy: false),
+    ChangeNotifierProxyProvider<Auth, Financial>(
+        create: (ctx) => Financial(),
+        update: (_, auth, prevProvider) => prevProvider..update(auth),
+        lazy: false),
+    ChangeNotifierProxyProvider<Auth, Notification>(
+        create: (ctx) => Notification(),
+        update: (_, auth, prevProvider) => prevProvider..update(auth),
+        lazy: false),
+    ChangeNotifierProxyProvider<Auth, Payment>(
+        create: (ctx) => Payment(),
+        update: (_, auth, prevProvider) => prevProvider..update(auth),
+        lazy: false),
+    ChangeNotifierProxyProvider<Auth, StaticData>(
+        create: (ctx) => StaticData(),
+        update: (_, auth, prevProvider) => prevProvider..update(auth),
+        lazy: false),
   ];
 
   return providers;

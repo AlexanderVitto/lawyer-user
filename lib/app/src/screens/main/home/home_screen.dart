@@ -6,7 +6,7 @@ import '../../../../../constraint.dart';
 import '../../../../utils/utils.dart' as utils;
 import '../../../../splash_animation.dart';
 
-import '../../../providers/providers.dart';
+import '../../../providers/providers.dart' as providers;
 
 import 'provider/home_provider.dart';
 import 'tablet/body.dart' as tablet;
@@ -16,13 +16,31 @@ import 'mini/body.dart' as mini;
 class HomeScreen extends StatelessWidget {
   static const routeName = '/home-screen';
 
+  final Animation<Offset> animation;
+
+  const HomeScreen({Key key, this.animation}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final padding = MediaQuery.of(context).padding;
-    return ChangeNotifierProxyProvider<Auth, HomeProvider>(
-      create: (ctx) => HomeProvider(ctx.read<Auth>(), padding.top),
-      update: (_, auth, prevProvider) => prevProvider..update(auth),
+    return ChangeNotifierProxyProvider4<
+        providers.Appointment,
+        providers.Financial,
+        providers.Notification,
+        providers.StaticData,
+        HomeProvider>(
+      create: (ctx) => HomeProvider(
+          ctx.read<providers.Appointment>(),
+          ctx.read<providers.Financial>(),
+          ctx.read<providers.Notification>(),
+          ctx.read<providers.StaticData>(),
+          padding.top),
+      update: (_, appointment, financial, notification, staticData,
+              prevProvider) =>
+          prevProvider
+            ..update(appointment, financial, notification, staticData),
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
             print('Width ${constraints.maxWidth}');
@@ -37,7 +55,9 @@ class HomeScreen extends StatelessWidget {
               return tablet.Body();
             } else if (constraints.maxWidth > PhoneThreshold &&
                 constraints.maxWidth <= TabletThreshold) {
-              return phone.Body();
+              return phone.Body(
+                animation: animation,
+              );
             } else {
               return mini.Body();
             }

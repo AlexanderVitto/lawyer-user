@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../helpers/helpers.dart' as helpers;
@@ -10,6 +11,7 @@ class CustomeElevatedButton extends StatelessWidget {
   final Color borderSideColor;
   final double fontSize;
   final FontWeight fontWeight;
+  final EdgeInsets padding;
 
   const CustomeElevatedButton(
       {Key key,
@@ -20,7 +22,8 @@ class CustomeElevatedButton extends StatelessWidget {
       this.backgroundColor,
       this.borderSideColor,
       this.fontSize = 18,
-      this.fontWeight = FontWeight.w800})
+      this.fontWeight = FontWeight.w800,
+      this.padding = const EdgeInsets.fromLTRB(16, 10, 16, 10)})
       : super(key: key);
 
   final helpers.AppLocalizations localization;
@@ -34,6 +37,8 @@ class CustomeElevatedButton extends StatelessWidget {
         style: TextStyle(fontSize: fontSize, fontWeight: fontWeight),
       ),
       style: ButtonStyle(
+          minimumSize: MaterialStateProperty.all<Size>(Size(0, 0)),
+          padding: MaterialStateProperty.all<EdgeInsets>(padding),
           foregroundColor: MaterialStateProperty.all<Color>(foregroundColor),
           backgroundColor: MaterialStateProperty.all<Color>(
               backgroundColor ?? Theme.of(context).buttonColor),
