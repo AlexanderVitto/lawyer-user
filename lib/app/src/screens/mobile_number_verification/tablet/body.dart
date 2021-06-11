@@ -89,7 +89,7 @@ class Body extends StatelessWidget {
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                child: CustomeElevatedButton(
+                child: CustomElevatedButton(
                   onPresses: () => Navigator.of(context).pop(),
                   localization: localization,
                   text: 'Back',

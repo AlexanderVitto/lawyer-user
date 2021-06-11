@@ -12,7 +12,7 @@ import '../../shared/shared.dart';
 import '../provider/otp_provider.dart';
 
 class Body extends StatelessWidget {
-  final ScreenSize screenSize = ScreenSize.phone;
+  final ScreenSize screenSize = ScreenSize.tablet;
 
   @override
   Widget build(BuildContext context) {
@@ -85,13 +85,13 @@ class Body extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      CustomeElevatedButton(
+                      CustomElevatedButton(
                         onPresses: () => provider.confirm(context, screenSize),
                         localization: localization,
                         text: 'Confirm',
                         fontSize: 18,
                       ),
-                      CustomeElevatedButton(
+                      CustomElevatedButton(
                         onPresses: () => provider.resend(context, screenSize),
                         localization: localization,
                         foregroundColor: PsykayGreenColor,

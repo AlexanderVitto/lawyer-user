@@ -3,14 +3,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../../../enum.dart';
-
 import '../../../../../config/config.dart' as config;
 import '../../../../../helpers/helpers.dart' as helpers;
 import '../../../../../utils/utils.dart' as utils;
 
 import '../../../../models/models.dart' as models;
 import '../../../../providers/providers.dart' as providers;
+
+import '../../../preference/preference_screen.dart';
 
 class HomeProvider with ChangeNotifier {
   static const fileName =
@@ -63,19 +63,11 @@ class HomeProvider with ChangeNotifier {
   int _pageLength;
   int get pageLength => _pageLength;
 
-  HomeProvider(
-      providers.Appointment appointment,
-      providers.Financial financial,
-      providers.Notification notification,
-      providers.StaticData staticData,
-      double appBarPosition) {
+  HomeProvider(providers.Appointment appointment, providers.Financial financial,
+      providers.Notification notification, providers.StaticData staticData) {
     this._log = config.locator<utils.LogUtils>(param1: fileName, param2: true);
 
-    this._appBarPosition = appBarPosition;
-
-    this._scrollController = ScrollController();
-    this._scrollController.addListener(_scrollListener);
-    this._pageController = PageController();
+    this._appBarPosition = 0.0;
 
     this._appointmentProvider = appointment;
     this._financialProvider = financial;
@@ -88,10 +80,6 @@ class HomeProvider with ChangeNotifier {
     this._isBusy = false;
     this._isFlexibled = true;
     this._pageLength = 0;
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      initialLoad();
-    });
   }
 
   update(providers.Appointment appointment, providers.Financial financial,
@@ -132,7 +120,7 @@ class HomeProvider with ChangeNotifier {
       _appointmentProvider.freeAppointments;
 
   String get userFullName =>
-      '${_appointmentProvider.auth.userData.firstName} ${_appointmentProvider.auth.userData.lastName}';
+      '${_appointmentProvider.auth.userData.firstName ?? ''} ${_appointmentProvider.auth.userData.lastName ?? ''}';
 
   String get balance => _financialProvider.balance;
 
@@ -185,7 +173,12 @@ class HomeProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> initialLoad() async {
+  navigateToPreference(BuildContext context, models.StaticData data) {
+    Navigator.of(context).pushNamed(PreferenceScreen.routeName,
+        arguments: helpers.ScreenArguments(staticData: data));
+  }
+
+  Future initialLoad() async {
     Map<String, dynamic> queryParamAppointment = {
       'userId': _appointmentProvider.auth.userId,
       'startDate': DateFormat('MM/dd/yyyy').format(DateTime.now()),
@@ -211,7 +204,6 @@ class HomeProvider with ChangeNotifier {
     _appointmentProvider.filterAppointment();
 
     setToIdle();
-    return true;
   }
 
   Future onStretch() async {
@@ -263,10 +255,16 @@ class HomeProvider with ChangeNotifier {
     }
   }
 
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    _pageController.dispose();
-    super.dispose();
+  initResource() {
+    this._scrollController = ScrollController();
+    this._scrollController.addListener(_scrollListener);
+    this._pageController = PageController();
+
+    this._isInit = true;
+  }
+
+  close() {
+    this._scrollController?.removeListener(_scrollListener);
+    this._pageController?.dispose();
   }
 }

@@ -85,7 +85,7 @@ class Body extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      CustomeElevatedButton(
+                      CustomElevatedButton(
                         onPresses: () => provider.confirm(context, screenSize),
                         localization: localization,
                         backgroundColor: provider.isCodeControllerEmpty
@@ -93,7 +93,7 @@ class Body extends StatelessWidget {
                             : PsykayGreenColor,
                         text: 'Confirm',
                       ),
-                      CustomeElevatedButton(
+                      CustomElevatedButton(
                         onPresses: () => provider.resend(context, screenSize),
                         localization: localization,
                         foregroundColor: PsykayGreenColor,

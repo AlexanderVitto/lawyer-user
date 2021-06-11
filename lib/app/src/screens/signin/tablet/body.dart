@@ -43,12 +43,12 @@ class Body extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 20),
                     child: signinProvider.isLogineWithEmail
-                        ? CustomeElevatedButton(
+                        ? CustomElevatedButton(
                             onPresses: () => signinProvider.loginWithEmail(
                                 context, screenSize),
                             localization: localization,
                             text: 'Login')
-                        : CustomeElevatedButton(
+                        : CustomElevatedButton(
                             onPresses: () => signinProvider.nextButton(context),
                             localization: localization,
                             text: 'Next'),

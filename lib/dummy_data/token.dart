@@ -1,0 +1,10 @@
+const userTokenTest = {
+  "Status": true,
+  "Messages": "",
+  "Code": "",
+  "Result": {
+    "Identity": "7LZzgg7ZstX3a9Yuq2ul7xsPRb83",
+    "Token":
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJpc3MiOiJTS2RkMThhYzk4NzI5NWRjNmQyNjA5M2U5MWZhZTkzMjdkIiwiZXhwIjoxNjIzMjEzNDQwLCJqdGkiOiJTS2RkMThhYzk4NzI5NWRjNmQyNjA5M2U5MWZhZTkzMjdkLTE2MjMyMDk4NDAiLCJzdWIiOiJBQ2VhZjQ5NTZjYmZmNTUxYjljMmM4NWU4OTBhN2RiNzY1IiwibmJmIjoxNjIzMjA5ODQwLCJncmFudHMiOnsiaWRlbnRpdHkiOiI3TFp6Z2c3WnN0WDNhOVl1cTJ1bDd4c1BSYjgzIiwiY2hhdCI6eyJzZXJ2aWNlX3NpZCI6IklTMTQwNGFhMTVmNGRiNDQ2OGIyZGVjYzExYzc4M2YwZmEiLCJwdXNoX2NyZWRlbnRpYWxfc2lkIjoiQ1I2NjVmNTM5ZDJiYWFjMTliYzc0MDZiNDc0NjA0YTRiMyJ9fX0.ep5OwK6A4xzPJ1gNsfStBFz2I-EOc3W6Hlz2IlX66R4"
+  }
+};

@@ -58,7 +58,7 @@ class Body extends StatelessWidget {
                 builder: (_, forgotPasswordProvider, __) => Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: CustomeElevatedButton(
+                  child: CustomElevatedButton(
                     onPresses: () => forgotPasswordProvider.resetPassword(
                         context, screenSize),
                     localization: localization,

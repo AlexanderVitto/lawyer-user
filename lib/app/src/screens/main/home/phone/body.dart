@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../../../../constraint.dart';
+import '../../../../../../enum.dart';
 
 import '../../../../../helpers/helpers.dart' as helpers;
 
@@ -14,6 +15,7 @@ import '../../../shared/shared.dart';
 import '../provider/home_provider.dart';
 
 class Body extends StatelessWidget {
+  final ScreenSize screenSize = ScreenSize.phone;
   final Animation<Offset> animation;
 
   const Body({Key key, this.animation}) : super(key: key);
@@ -61,33 +63,7 @@ class Body extends StatelessWidget {
                     ])),
                   ],
                 ),
-                if (provider.isBusy)
-                  Positioned(
-                      top: padding.top + 30,
-                      left: 0,
-                      right: 0,
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Container(
-                            padding: const EdgeInsets.all(3),
-                            height: 27,
-                            width: 27,
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.5),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(50)),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.3),
-                                  spreadRadius: 3,
-                                  blurRadius: 3,
-                                  offset: Offset(
-                                      0, 1), // changes position of shadow
-                                ),
-                              ],
-                            ),
-                            child: CircularProgressIndicator()),
-                      ))
+                if (provider.isBusy) CustomCircularLoading(padding: padding)
               ],
             ),
     );
@@ -134,6 +110,7 @@ class _ExpertiseContainer extends StatelessWidget {
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: provider.mapPageExpertise[index].length,
                 itemBuilder: (_, i) => _ItemContainer(
+                  provider: provider,
                   expertise: provider.mapPageExpertise[index][i],
                   size: size,
                 ),
@@ -424,7 +401,7 @@ class _RescheduleAppointmentContainer extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          CustomeElevatedButton(
+                          CustomElevatedButton(
                             onPresses: () => null,
                             localization: localization,
                             text: 'Accept',
@@ -436,7 +413,7 @@ class _RescheduleAppointmentContainer extends StatelessWidget {
                           const SizedBox(
                             width: 9,
                           ),
-                          CustomeElevatedButton(
+                          CustomElevatedButton(
                             onPresses: () => null,
                             localization: localization,
                             text: 'Reject',
@@ -448,7 +425,7 @@ class _RescheduleAppointmentContainer extends StatelessWidget {
                           const SizedBox(
                             width: 9,
                           ),
-                          CustomeElevatedButton(
+                          CustomElevatedButton(
                             onPresses: () => null,
                             localization: localization,
                             text: 'Reschedule',
@@ -523,7 +500,7 @@ class _TodayAppointmentContainer extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Container(
-                          height: 60,
+                          height: 70,
                           color: Colors.transparent,
                           child: Stack(
                             fit: StackFit.expand,
@@ -649,19 +626,22 @@ class _AppBar extends StatelessWidget {
                           top: 0,
                           right: 2,
                           child: Container(
-                            padding: const EdgeInsets.all(2.5),
+                            height: 15,
+                            width: 15,
                             decoration: BoxDecoration(
                                 color: PsykayOrangeColor,
-                                borderRadius: BorderRadius.circular(20)),
-                            child: Text(
-                              provider.unReadNotification.toString(),
-                              style: TextStyle(
-                                  fontSize: 9,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600),
+                                shape: BoxShape.circle),
+                            child: Center(
+                              child: Text(
+                                provider.unReadNotification.toString(),
+                                style: TextStyle(
+                                    fontSize: 9,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600),
+                              ),
                             ),
                           ),
-                        )
+                        ),
                     ],
                   ),
                 ),
@@ -762,13 +742,6 @@ class _AppBar extends StatelessWidget {
                     ),
                     const SizedBox(
                       height: 3,
-                    ),
-                    Text(
-                      localization.translate('How can we assist you today?'),
-                      style: TextStyle(
-                          fontSize: 9,
-                          color: Colors.black54,
-                          fontWeight: FontWeight.w400),
                     )
                   ],
                 ),
@@ -814,16 +787,19 @@ class _AppBar extends StatelessWidget {
                           top: 0,
                           right: 2,
                           child: Container(
-                            padding: const EdgeInsets.all(2.5),
+                            height: 15,
+                            width: 15,
                             decoration: BoxDecoration(
                                 color: PsykayOrangeColor,
-                                borderRadius: BorderRadius.circular(20)),
-                            child: Text(
-                              provider.unReadNotification.toString(),
-                              style: TextStyle(
-                                  fontSize: 9,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600),
+                                shape: BoxShape.circle),
+                            child: Center(
+                              child: Text(
+                                provider.unReadNotification.toString(),
+                                style: TextStyle(
+                                    fontSize: 9,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600),
+                              ),
                             ),
                           ),
                         )
@@ -838,52 +814,57 @@ class _AppBar extends StatelessWidget {
 }
 
 class _ItemContainer extends StatelessWidget {
-  const _ItemContainer({Key key, this.expertise, this.size}) : super(key: key);
+  const _ItemContainer({Key key, this.provider, this.expertise, this.size})
+      : super(key: key);
 
+  final HomeProvider provider;
   final models.StaticData expertise;
   final Size size;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 17),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
-            spreadRadius: 3,
-            blurRadius: 3,
-            offset: Offset(0, 1), // changes position of shadow
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            height: size.height * 0.06,
-            width: size.width * 0.1,
-            constraints: BoxConstraints(minHeight: 80, minWidth: 120),
-            child: Image(
-              image: NetworkImage(expertise.icon),
+    return InkWell(
+      onTap: () => provider.navigateToPreference(context, expertise),
+      child: Container(
+        // margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 17),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              spreadRadius: 3,
+              blurRadius: 3,
+              offset: Offset(0, 1), // changes position of shadow
             ),
-          ),
-          const SizedBox(
-            height: 3,
-          ),
-          Center(
-            child: Text(
-              expertise.name,
-              style: TextStyle(
-                  fontSize: 11,
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w600),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              height: size.height * 0.06,
+              width: size.width * 0.1,
+              constraints: BoxConstraints(minHeight: 80, minWidth: 120),
+              child: Image(
+                image: NetworkImage(expertise.icon),
+              ),
             ),
-          )
-        ],
+            const SizedBox(
+              height: 3,
+            ),
+            Center(
+              child: Text(
+                expertise.name,
+                style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w600),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

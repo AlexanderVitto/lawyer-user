@@ -17,7 +17,7 @@ Future<void> main() async {
           googleApiUrl:
               'https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyAvz02RmKRJUPDVidwhT9iPQh2COFOg99I',
           enableBearerToken: true,
-          timeout: 15));
+          timeout: 30));
 
   await Firebase.initializeApp();
 

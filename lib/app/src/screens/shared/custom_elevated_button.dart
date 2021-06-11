@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../helpers/helpers.dart' as helpers;
 
-class CustomeElevatedButton extends StatelessWidget {
+class CustomElevatedButton extends StatelessWidget {
   final Function onPresses;
   final String text;
   final Color foregroundColor;
@@ -13,7 +13,7 @@ class CustomeElevatedButton extends StatelessWidget {
   final FontWeight fontWeight;
   final EdgeInsets padding;
 
-  const CustomeElevatedButton(
+  const CustomElevatedButton(
       {Key key,
       @required this.onPresses,
       @required this.localization,

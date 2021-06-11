@@ -28,6 +28,12 @@ void main() {
   //   expect(find.text('1'), findsOneWidget);
   // });
 
+  test('Boolean', () {
+    var value = 1 / 100;
+
+    expect(value, 0);
+  });
+
   test('Fetching Appointment', () {
     var data = [
       {

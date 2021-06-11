@@ -9,3 +9,5 @@ enum TransactionScreenTab {
   appointmentReschedule,
   appointmentCancel
 }
+
+enum Preference { sex, englishSpeaking, age, noPreferences }

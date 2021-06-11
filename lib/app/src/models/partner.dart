@@ -156,13 +156,13 @@ class PartnerExpertise {
   final String partnerId;
 
   @JsonKey(name: 'MasterExpertiseId', defaultValue: null, includeIfNull: false)
-  final String masterExpertiseId;
+  final int masterExpertiseId;
 
   @JsonKey(name: 'ServiceEligible', defaultValue: null, includeIfNull: false)
-  final String serviceEligible;
+  final bool serviceEligible;
 
   @JsonKey(name: 'ServiceEnable', defaultValue: null, includeIfNull: false)
-  final String serviceEnable;
+  final bool serviceEnable;
 
   PartnerExpertise(
       {this.id,

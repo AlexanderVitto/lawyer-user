@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../constraint.dart';
 
 import '../../../helpers/helpers.dart' as helpers;
+
+import 'home/provider/home_provider.dart';
 
 import 'chat/chat_screen.dart';
 import 'home/home_screen.dart';
@@ -74,6 +77,10 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
       parent: _animationController,
       curve: Curves.easeInCubic,
     ));
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      initialize();
+    });
   }
 
   @override
@@ -106,5 +113,15 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
         ),
       ),
     );
+  }
+
+  // Functions
+
+  Future initialize() async {
+    final homeProvider = Provider.of<HomeProvider>(context, listen: false);
+
+    final futures = <Future>[homeProvider.initialLoad()];
+
+    await Future.wait(futures);
   }
 }

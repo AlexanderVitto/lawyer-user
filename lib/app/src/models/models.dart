@@ -11,6 +11,7 @@ export 'notification.dart';
 export 'partner.dart';
 export 'payment.dart';
 export 'person.dart';
+export 'preference.dart';
 export 'price_schema.dart';
 export 'questionnaire.dart';
 export 'static_data.dart';

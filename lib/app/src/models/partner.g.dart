@@ -138,9 +138,9 @@ PartnerExpertise _$PartnerExpertiseFromJson(Map<String, dynamic> json) {
   return PartnerExpertise(
     id: json['Id'] as int,
     partnerId: json['PartnerId'] as String,
-    masterExpertiseId: json['MasterExpertiseId'] as String,
-    serviceEligible: json['ServiceEligible'] as String,
-    serviceEnable: json['ServiceEnable'] as String,
+    masterExpertiseId: json['MasterExpertiseId'] as int,
+    serviceEligible: json['ServiceEligible'] as bool,
+    serviceEnable: json['ServiceEnable'] as bool,
   );
 }
 

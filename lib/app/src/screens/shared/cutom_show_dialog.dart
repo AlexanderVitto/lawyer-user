@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../helpers/helpers.dart' as helpers;
-import 'custome_elevated_button.dart';
+import 'custom_elevated_button.dart';
 
 Future<T> successDialog<T>(
     {@required BuildContext context,
@@ -61,7 +61,7 @@ Future<T> successDialog<T>(
                   SizedBox(
                     height: sizedBox3,
                   ),
-                  CustomeElevatedButton(
+                  CustomElevatedButton(
                     text: buttonText,
                     localization: localization,
                     fontSize: buttonFontSize,
@@ -131,7 +131,7 @@ Future<T> errorDialog<T>(
                   SizedBox(
                     height: sizedBox3,
                   ),
-                  CustomeElevatedButton(
+                  CustomElevatedButton(
                     text: buttonText,
                     localization: localization,
                     fontSize: buttonFontSize,
