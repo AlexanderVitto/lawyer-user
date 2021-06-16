@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import '../config/config.dart' as config;
@@ -13,6 +14,9 @@ abstract class PartnerAPI {
       Map<String, dynamic> queryParameter, String token);
 
   Future<utils.ApiReturn<models.ResponsePartner>> detailByExpertise(
+      Map<String, dynamic> queryParameter, String token);
+
+  Future<utils.ApiReturn<models.ResponseScheduleResource>> scheduleResource(
       Map<String, dynamic> queryParameter, String token);
 }
 
@@ -133,6 +137,44 @@ class Production implements PartnerAPI {
     _log.info(method: method, message: 'result status: ${result.status}');
 
     return utils.ApiReturn<models.ResponseListPartner>(
+        status: true, value: result);
+  }
+
+  @override
+  Future<utils.ApiReturn<models.ResponseScheduleResource>> scheduleResource(
+      Map<String, dynamic> queryParameter, String token) async {
+    final String method = 'scheduleResource';
+    models.ResponseScheduleResource result;
+
+    final url =
+        '${config.FlavorConfig.instance.values.host}/api/Partner/scheduleresources';
+    _log.info(
+        method: method, message: 'url $url ${jsonEncode(queryParameter)}');
+
+    utils.ApiReturn<HttpClientResponse> response =
+        await _request.getRequest(url, token, queryParameter: queryParameter);
+
+    if (!response.status) {
+      _log.error(method: method, message: 'response ${response.status}');
+
+      if (response.value != null) {
+        return utils.ApiReturn<models.ResponseScheduleResource>(
+            status: false,
+            value: models.ResponseScheduleResource(
+                code: response.value.statusCode.toString()));
+      } else {
+        return utils.ApiReturn<models.ResponseScheduleResource>(
+            status: false,
+            value: models.ResponseScheduleResource(message: response.message));
+      }
+    }
+
+    Map responseMap = await utils.ResponseParser().from(response, _log, method);
+    result = models.ResponseScheduleResource.fromJson(responseMap);
+
+    _log.info(method: method, message: 'result status: ${result.status}');
+
+    return utils.ApiReturn<models.ResponseScheduleResource>(
         status: true, value: result);
   }
 }

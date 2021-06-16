@@ -10,13 +10,19 @@ class FlavorValues {
   final String googleApiUrl;
   final int timeout;
   final bool enableBearerToken;
+  final int bookingTimeThreshold;
+  final List<int> operationTimeStart;
+  final List<int> operationalTimeOff;
 
   FlavorValues(
       {this.host,
       this.chatHost,
       this.googleApiUrl,
       this.timeout = 15,
-      this.enableBearerToken = false});
+      this.enableBearerToken = false,
+      this.bookingTimeThreshold,
+      this.operationTimeStart,
+      this.operationalTimeOff});
 }
 
 class FlavorConfig {

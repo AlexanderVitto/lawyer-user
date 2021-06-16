@@ -16,7 +16,10 @@ Future<void> main() async {
           chatHost: 'https://twillio-dev.psykay.co.id',
           googleApiUrl:
               'https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyAvz02RmKRJUPDVidwhT9iPQh2COFOg99I',
-          enableBearerToken: true));
+          enableBearerToken: true,
+          bookingTimeThreshold: 6,
+          operationTimeStart: [8, 0],
+          operationalTimeOff: [21, 0]));
 
   await Firebase.initializeApp();
 

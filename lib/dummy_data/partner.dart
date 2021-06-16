@@ -817,70 +817,99 @@ const schedule = {
   ]
 };
 
-const rescheduleResource = {
+const scheduleResource = {
+  "Result": {
+    "ScheduleRules": [
+      {
+        "Id": 143,
+        "StartTime": "08:00:00",
+        "StartTimezone": null,
+        "EndTime": "20:00:00",
+        "EndTimezone": null,
+        "EventTypeId": null,
+        "RecurrenceRule": "FREQ=WEEKLY;INTERVAL=1;BYDAY=FR;WKST=MO;"
+      },
+      {
+        "Id": 180,
+        "StartTime": "11:00:00",
+        "StartTimezone": null,
+        "EndTime": "17:00:00",
+        "EndTimezone": null,
+        "EventTypeId": null,
+        "RecurrenceRule": "FREQ=WEEKLY;INTERVAL=1;BYDAY=SA;WKST=MO;"
+      },
+      {
+        "Id": 221,
+        "StartTime": "08:00:00",
+        "StartTimezone": null,
+        "EndTime": "19:30:00",
+        "EndTimezone": null,
+        "EventTypeId": null,
+        "RecurrenceRule": "FREQ=WEEKLY;INTERVAL=1;BYDAY=WE;WKST=MO;"
+      },
+      {
+        "Id": 222,
+        "StartTime": "08:00:00",
+        "StartTimezone": null,
+        "EndTime": "19:30:00",
+        "EndTimezone": null,
+        "EventTypeId": null,
+        "RecurrenceRule": "FREQ=WEEKLY;INTERVAL=1;BYDAY=TH;WKST=MO;"
+      }
+    ],
+    "AppointmentResources": [
+      {
+        "Id": 65,
+        "StartDate": "2021-07-09T00:00:00+07:00",
+        "StartTime": "14:30:00",
+        "EndDate": "2021-07-09T00:00:00+07:00",
+        "EndTime": "15:00:00"
+      },
+      {
+        "Id": 54,
+        "StartDate": "2021-06-26T00:00:00+07:00",
+        "StartTime": "16:30:00",
+        "EndDate": "2021-06-26T00:00:00+07:00",
+        "EndTime": "17:00:00"
+      },
+      {
+        "Id": 62,
+        "StartDate": "2021-06-25T00:00:00+07:00",
+        "StartTime": "12:30:00",
+        "EndDate": "2021-06-25T00:00:00+07:00",
+        "EndTime": "13:00:00"
+      },
+      {
+        "Id": 136,
+        "StartDate": "2021-06-25T00:00:00+07:00",
+        "StartTime": "13:00:00",
+        "EndDate": "2021-06-25T00:00:00+07:00",
+        "EndTime": "13:30:00"
+      },
+      {
+        "Id": 166,
+        "StartDate": "2021-06-16T00:00:00+07:00",
+        "StartTime": "08:30:00",
+        "EndDate": "2021-06-16T00:00:00+07:00",
+        "EndTime": "09:00:00"
+      },
+      {
+        "Id": 160,
+        "StartDate": "2021-06-23T00:00:00+07:00",
+        "StartTime": "09:00:00",
+        "EndDate": "2021-06-23T00:00:00+07:00",
+        "EndTime": "09:30:00"
+      },
+      {
+        "Id": 161,
+        "StartDate": "2021-06-25T00:00:00+07:00",
+        "StartTime": "09:30:00",
+        "EndDate": "2021-06-25T00:00:00+07:00",
+        "EndTime": "10:00:00"
+      }
+    ]
+  },
   "Status": true,
   "Messages": "",
-  "Code": "",
-  "Result": [
-    {
-      "Id": 143,
-      "PartnerId": "BwNpYywQKKRUggnYJlkl5x22enn1",
-      "StartDate": null,
-      "StartTime": "08:00:00",
-      "StartTimezone": null,
-      "EndDate": null,
-      "EndTime": "20:00:00",
-      "EndTimezone": null,
-      "EventTypeId": 1,
-      "RecurrenceRule": "FREQ=WEEKLY;INTERVAL=1;BYDAY=FR;WKST=MO;",
-      "Location": null,
-      "IsBlock": false,
-      "IsAllDay": false
-    },
-    {
-      "Id": 180,
-      "PartnerId": "BwNpYywQKKRUggnYJlkl5x22enn1",
-      "StartDate": null,
-      "StartTime": "11:00:00",
-      "StartTimezone": null,
-      "EndDate": null,
-      "EndTime": "17:00:00",
-      "EndTimezone": null,
-      "EventTypeId": 1,
-      "RecurrenceRule": "FREQ=WEEKLY;INTERVAL=1;BYDAY=SA;WKST=MO;",
-      "Location": null,
-      "IsBlock": false,
-      "IsAllDay": false
-    },
-    {
-      "Id": 205,
-      "PartnerId": "BwNpYywQKKRUggnYJlkl5x22enn1",
-      "StartDate": null,
-      "StartTime": "08:00:00",
-      "StartTimezone": null,
-      "EndDate": null,
-      "EndTime": "14:30:00",
-      "EndTimezone": null,
-      "EventTypeId": 1,
-      "RecurrenceRule": "FREQ=WEEKLY;INTERVAL=1;BYDAY=MO;WKST=MO;",
-      "Location": null,
-      "IsBlock": false,
-      "IsAllDay": false
-    },
-    {
-      "Id": 206,
-      "PartnerId": "BwNpYywQKKRUggnYJlkl5x22enn1",
-      "StartDate": null,
-      "StartTime": "16:30:00",
-      "StartTimezone": null,
-      "EndDate": null,
-      "EndTime": "18:00:00",
-      "EndTimezone": null,
-      "EventTypeId": 1,
-      "RecurrenceRule": "FREQ=WEEKLY;INTERVAL=1;BYDAY=MO;WKST=MO;",
-      "Location": null,
-      "IsBlock": false,
-      "IsAllDay": false
-    }
-  ]
+  "Code": null
 };

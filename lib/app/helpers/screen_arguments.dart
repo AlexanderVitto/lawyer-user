@@ -9,10 +9,12 @@ class ScreenArguments {
   final MainScreenTab mainScreenTab;
   final TransactionScreenTab transactionScreenTab;
   final StaticData staticData;
+  final Partner partnerData;
 
   ScreenArguments(
       {this.key,
       this.mainScreenTab = MainScreenTab.home,
       this.transactionScreenTab = TransactionScreenTab.paymentStatus,
-      this.staticData});
+      this.staticData,
+      this.partnerData});
 }

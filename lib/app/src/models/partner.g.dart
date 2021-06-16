@@ -278,6 +278,29 @@ Map<String, dynamic> _$PartnerScheduleToJson(PartnerSchedule instance) {
   return val;
 }
 
+ScheduleResource _$ScheduleResourceFromJson(Map<String, dynamic> json) {
+  return ScheduleResource(
+    scheduleRules: (json['ScheduleRules'] as List)
+        ?.map((e) => e == null
+            ? null
+            : PartnerSchedule.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+    appointmentResources: (json['AppointmentResources'] as List)
+        ?.map((e) => e == null
+            ? null
+            : PartnerSchedule.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+  );
+}
+
+Map<String, dynamic> _$ScheduleResourceToJson(ScheduleResource instance) =>
+    <String, dynamic>{
+      'ScheduleRules':
+          instance.scheduleRules?.map((e) => e?.toJson())?.toList(),
+      'AppointmentResources':
+          instance.appointmentResources?.map((e) => e?.toJson())?.toList(),
+    };
+
 ResponseListPartner _$ResponseListPartnerFromJson(Map<String, dynamic> json) {
   return ResponseListPartner(
     status: json['Status'] as bool,
@@ -333,3 +356,95 @@ Map<String, dynamic> _$ResponsePartnerToJson(ResponsePartner instance) =>
       'code': instance.code,
       'Result': instance.result?.toJson(),
     };
+
+ResponseScheduleResource _$ResponseScheduleResourceFromJson(
+    Map<String, dynamic> json) {
+  return ResponseScheduleResource(
+    status: json['Status'] as bool,
+    message: json['Messages'] as String,
+    code: json['code'] as String,
+    result: json['Result'] == null
+        ? null
+        : ScheduleResource.fromJson(json['Result'] as Map<String, dynamic>),
+  );
+}
+
+Map<String, dynamic> _$ResponseScheduleResourceToJson(
+        ResponseScheduleResource instance) =>
+    <String, dynamic>{
+      'Status': instance.status,
+      'Messages': instance.message,
+      'code': instance.code,
+      'Result': instance.result?.toJson(),
+    };
+
+Availability _$AvailabilityFromJson(Map<String, dynamic> json) {
+  return Availability(
+    id: (json['id'] as List)?.map((e) => e as int)?.toList(),
+    day: _$enumDecodeNullable(_$DaysOfWeekEnumMap, json['day']),
+    startTime: json['startTime'] == null
+        ? null
+        : DateTime.parse(json['startTime'] as String),
+    endTime: json['endTime'] == null
+        ? null
+        : DateTime.parse(json['endTime'] as String),
+  );
+}
+
+Map<String, dynamic> _$AvailabilityToJson(Availability instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  writeNotNull('day', _$DaysOfWeekEnumMap[instance.day]);
+  writeNotNull('startTime', instance.startTime?.toIso8601String());
+  writeNotNull('endTime', instance.endTime?.toIso8601String());
+  return val;
+}
+
+T _$enumDecode<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
+  if (source == null) {
+    throw ArgumentError('A value must be provided. Supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+
+  final value = enumValues.entries
+      .singleWhere((e) => e.value == source, orElse: () => null)
+      ?.key;
+
+  if (value == null && unknownValue == null) {
+    throw ArgumentError('`$source` is not one of the supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+  return value ?? unknownValue;
+}
+
+T _$enumDecodeNullable<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
+}
+
+const _$DaysOfWeekEnumMap = {
+  DaysOfWeek.mon: 'mon',
+  DaysOfWeek.tus: 'tus',
+  DaysOfWeek.wed: 'wed',
+  DaysOfWeek.thur: 'thur',
+  DaysOfWeek.fri: 'fri',
+  DaysOfWeek.sat: 'sat',
+  DaysOfWeek.sun: 'sun',
+};

@@ -11,3 +11,14 @@ enum TransactionScreenTab {
 }
 
 enum Preference { sex, englishSpeaking, age, noPreferences }
+
+enum SortBy {
+  priceHiLo,
+  priceLoHi,
+  highRating,
+  experiencexHiLo,
+  experienceLoHi,
+  age
+}
+
+enum DaysOfWeek { mon, tus, wed, thur, fri, sat, sun }

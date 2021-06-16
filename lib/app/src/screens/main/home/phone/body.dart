@@ -306,7 +306,7 @@ class _RescheduleAppointmentContainer extends StatelessWidget {
                         color: Colors.grey.withOpacity(0.3),
                         spreadRadius: 3,
                         blurRadius: 3,
-                        offset: Offset(0, 1), // changes position of shadow
+                        offset: Offset(0, 0), // changes position of shadow
                       ),
                     ],
                   ),
@@ -332,32 +332,34 @@ class _RescheduleAppointmentContainer extends StatelessWidget {
                           const SizedBox(
                             width: 10,
                           ),
-                          Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(
-                                height: 7,
-                              ),
-                              Text(
-                                '${value.partnerFirstName} ${value.partnerLastName}',
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                              const SizedBox(
-                                height: 3,
-                              ),
-                              Text(
-                                "${localization.translate('Case')}: ${value.productServiceDescription}",
-                                style: TextStyle(
-                                    fontSize: 11,
-                                    color: Colors.black54,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ],
+                          Expanded(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(
+                                  height: 7,
+                                ),
+                                Text(
+                                  '${value.partnerFirstName} ${value.partnerLastName}',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                const SizedBox(
+                                  height: 3,
+                                ),
+                                Text(
+                                  "${localization.translate('Case')}: ${value.productServiceDescription}",
+                                  style: TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.black54,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),

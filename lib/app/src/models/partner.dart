@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../../enum.dart';
 import 'models.dart';
 
 part 'partner.g.dart';
@@ -328,6 +330,23 @@ class PartnerSchedule {
 }
 
 @JsonSerializable(explicitToJson: true)
+class ScheduleResource {
+  @JsonKey(name: 'ScheduleRules', defaultValue: null, nullable: true)
+  final List<PartnerSchedule> scheduleRules;
+
+  @JsonKey(name: 'AppointmentResources', defaultValue: null, nullable: true)
+  final List<PartnerSchedule> appointmentResources;
+
+  ScheduleResource({
+    this.scheduleRules,
+    this.appointmentResources,
+  });
+  factory ScheduleResource.fromJson(Map<String, dynamic> json) =>
+      _$ScheduleResourceFromJson(json);
+  Map<String, dynamic> toJson() => _$ScheduleResourceToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
 class ResponseListPartner {
   @JsonKey(name: 'Status', defaultValue: null, nullable: true)
   final bool status;
@@ -407,4 +426,73 @@ class ResponsePartner {
   factory ResponsePartner.fromJson(Map<String, dynamic> json) =>
       _$ResponsePartnerFromJson(json);
   Map<String, dynamic> toJson() => _$ResponsePartnerToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ResponseScheduleResource {
+  @JsonKey(name: 'Status', defaultValue: null, nullable: true)
+  final bool status;
+
+  @JsonKey(name: 'Messages', defaultValue: null, nullable: true)
+  final String message;
+
+  @JsonKey(name: 'code', defaultValue: null, nullable: true)
+  final String code;
+
+  @JsonKey(name: 'Result', defaultValue: null, nullable: true)
+  final ScheduleResource result;
+
+  ResponseScheduleResource({
+    this.status,
+    this.message,
+    this.code,
+    this.result,
+  });
+  factory ResponseScheduleResource.fromJson(Map<String, dynamic> json) =>
+      _$ResponseScheduleResourceFromJson(json);
+  Map<String, dynamic> toJson() => _$ResponseScheduleResourceToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class Availability {
+  @JsonKey(name: 'id', defaultValue: null, includeIfNull: false)
+  List<int> id;
+
+  @JsonKey(name: 'day', defaultValue: null, includeIfNull: false)
+  DaysOfWeek day;
+
+  @JsonKey(name: 'startTime', defaultValue: null, includeIfNull: false)
+  DateTime startTime;
+
+  @JsonKey(name: 'endTime', defaultValue: null, includeIfNull: false)
+  DateTime endTime;
+
+  Availability({this.id, this.day, this.startTime, this.endTime});
+
+  factory Availability.fromJson(Map<String, dynamic> json) =>
+      _$AvailabilityFromJson(json);
+  Map<String, dynamic> toJson() => _$AvailabilityToJson(this);
+}
+
+class WorkingHour with ChangeNotifier {
+  final String partnerId;
+  final DateTime dateTime;
+  final String startTime;
+  final String endTime;
+  bool isBooked;
+  bool isSelected;
+
+  WorkingHour(
+      {this.partnerId,
+      this.dateTime,
+      this.startTime,
+      this.endTime,
+      this.isBooked = false,
+      this.isSelected = false});
+
+  toggleSelectTime() {
+    isSelected = !isSelected;
+
+    notifyListeners();
+  }
 }

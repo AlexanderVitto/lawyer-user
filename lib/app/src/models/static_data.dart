@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../../enum.dart';
+
 part 'static_data.g.dart';
 
 @JsonSerializable(explicitToJson: true)
@@ -46,4 +48,12 @@ class ResponseListStaticData {
   factory ResponseListStaticData.fromJson(Map<String, dynamic> json) =>
       _$ResponseListStaticDataFromJson(json);
   Map<String, dynamic> toJson() => _$ResponseListStaticDataToJson(this);
+}
+
+class Sort {
+  int id;
+  final String name;
+  final SortBy sortValue;
+
+  Sort({this.id, this.name, this.sortValue});
 }

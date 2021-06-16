@@ -9,6 +9,9 @@ import '../src/screens/otp/otp_screen.dart';
 import '../src/screens/main/main_screen.dart';
 import '../src/screens/preference/preference_screen.dart';
 import '../src/screens/psychologist/psychologist_screen.dart';
+import '../src/screens/psychologist/sorting/sorting_screen.dart';
+import '../src/screens/psychologist_profile/psychologist_profile_screen.dart';
+import '../src/screens/book_appointment/book_appointment.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   // Here we'll handle all the routing
@@ -21,7 +24,12 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     OTPScreen.routeName: (_) => OTPScreen(),
     MainScreen.routeName: (_) => MainScreen(settings.arguments),
     PreferenceScreen.routeName: (_) => PreferenceScreen(settings.arguments),
-    PsychologistScreen.routeName: (_) => PsychologistScreen(settings.arguments)
+    PsychologistScreen.routeName: (_) => PsychologistScreen(settings.arguments),
+    SortingScreen.routeName: (_) => SortingScreen(),
+    PsychologistProfileScreen.routeName: (_) =>
+        PsychologistProfileScreen(settings.arguments),
+    BookAppointmentScreen.routeName: (_) =>
+        BookAppointmentScreen(settings.arguments)
   };
 
   WidgetBuilder builder = routes[settings.name];

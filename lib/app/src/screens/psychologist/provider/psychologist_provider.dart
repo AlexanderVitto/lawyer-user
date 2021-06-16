@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+
+import '../../../../../enum.dart';
 
 import '../../../../config/config.dart' as config;
 import '../../../../helpers/helpers.dart' as helpers;
@@ -7,12 +11,50 @@ import '../../../../utils/utils.dart' as utils;
 import '../../../models/models.dart' as models;
 import '../../../providers/providers.dart' as providers;
 
+import '../../book_appointment/book_appointment.dart';
+import '../../psychologist_profile/psychologist_profile_screen.dart';
+
+import '../sorting/sorting_screen.dart';
+
 class PsychologistProvider with ChangeNotifier {
   static const fileName =
       'lib/app/src/screens/psychologist/provider/psychologist_provider.dart';
 
+  final List<models.Sort> sortingData = [
+    models.Sort(
+      id: 1,
+      name: 'Price low to high',
+      sortValue: SortBy.priceLoHi,
+    ),
+    models.Sort(
+      id: 2,
+      name: 'Price high to low',
+      sortValue: SortBy.priceHiLo,
+    ),
+    models.Sort(
+      id: 3,
+      name: 'Working experiences low to high',
+      sortValue: SortBy.experienceLoHi,
+    ),
+    models.Sort(
+      id: 4,
+      name: 'Working experiences high to low',
+      sortValue: SortBy.experiencexHiLo,
+    ),
+    models.Sort(
+      id: 5,
+      name: 'Younger',
+      sortValue: SortBy.age,
+    ),
+  ];
+
   ScrollController _scrollController;
   ScrollController get scrollController => _scrollController;
+  TextEditingController _searchController;
+  TextEditingController get searchController => _searchController;
+
+  SortBy _sortBy;
+  SortBy get sortBy => _sortBy;
 
   utils.LogUtils _log;
 
@@ -22,7 +64,7 @@ class PsychologistProvider with ChangeNotifier {
   models.Partner get partnerDetail => _partnerDetail;
 
   List<models.Partner> _listPartner;
-  List<models.Partner> get listPartner => _partnerProvider.listPartner;
+  List<models.Partner> get listPartner => _listPartner;
 
   bool _isInit;
   bool get isInit => _isInit;
@@ -32,6 +74,11 @@ class PsychologistProvider with ChangeNotifier {
   bool get isTop => _isTop;
   bool _isEnd;
   bool get isEnd => _isEnd;
+  bool _isLoadMore;
+  bool get isLoadMore => _isLoadMore;
+
+  int _page;
+  int get page => _page;
 
   double _pixelValue;
   double get pixelValue => _pixelValue;
@@ -42,10 +89,6 @@ class PsychologistProvider with ChangeNotifier {
     this._log = config.locator<utils.LogUtils>(param1: fileName, param2: true);
 
     this._partnerProvider = partner;
-
-    this._listPartner = [];
-    this._isInit = true;
-    this._isBusy = false;
   }
 
   update(providers.Partner partner) {
@@ -55,11 +98,18 @@ class PsychologistProvider with ChangeNotifier {
   }
 
   void _scrollListener() {
-    print(_scrollController.position.extentAfter);
     if (_scrollController.position.extentAfter == 0) {
       // load more
-      print('test');
+
     }
+  }
+
+  setSortBy(SortBy data) {
+    _sortBy = data;
+
+    _sortData(data);
+
+    notifyListeners();
   }
 
   setToBusy() {
@@ -74,13 +124,141 @@ class PsychologistProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  onNotification(ScrollNotification scrollNotification) {
+    if (scrollNotification is ScrollStartNotification) {
+      if (scrollNotification.metrics.pixels < 250) {
+        _isTop = true;
+      } else {
+        _isTop = false;
+      }
+    } else if (scrollNotification is ScrollUpdateNotification) {
+      if (scrollNotification.scrollDelta > 0 && _pixelValue > 0 && !_isEnd) {
+        _pixelValue -= scrollNotification.scrollDelta;
+      }
+    } else if (scrollNotification is ScrollEndNotification) {
+      if (_pixelValue > (_heightLoading * 2 / 3)) {
+        _isEnd = true;
+      } else {
+        _isEnd = false;
+        _pixelValue = 0;
+      }
+    } else if (scrollNotification is OverscrollNotification) {
+      if (scrollNotification.overscroll < 0 &&
+          _pixelValue <= _heightLoading &&
+          _isTop) {
+        _pixelValue -= scrollNotification.overscroll;
+      } else {
+        if (!_isLoadMore) loadMore();
+      }
+    }
+
+    notifyListeners();
+
+    return false;
+  }
+
+  onSearch(String data) {
+    _listPartner = _partnerProvider.listPartner
+        .where((element) =>
+            element.firstName.toLowerCase().contains(data.toLowerCase()) ||
+            element.lastName.toLowerCase().contains(data.toLowerCase()))
+        .toList();
+
+    _sortData(_sortBy);
+
+    notifyListeners();
+  }
+
+  initResource() {
+    this._scrollController = ScrollController()..addListener(_scrollListener);
+    this._searchController = TextEditingController();
+
+    this._sortBy = SortBy.priceLoHi;
+    this._isInit = true;
+    this._isBusy = false;
+    this._isTop = true;
+    this._isEnd = false;
+    this._isLoadMore = false;
+
+    this._page = 1;
+    this._pixelValue = 0;
+
+    this._listPartner = [];
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      initialLoad();
+    });
+  }
+
+  close() {
+    this._scrollController?.removeListener(_scrollListener);
+    this._searchController.dispose();
+  }
+
+  navigateToSort(BuildContext context) {
+    Navigator.of(context).pushNamed(SortingScreen.routeName);
+  }
+
+  navigateToBookAppointment(BuildContext context, models.Partner partner) {
+    Navigator.of(context).pushNamed(BookAppointmentScreen.routeName,
+        arguments: helpers.ScreenArguments(partnerData: partner));
+  }
+
+  navigateToProfile(BuildContext context, models.Partner partner) {
+    Navigator.of(context).pushNamed(PsychologistProfileScreen.routeName,
+        arguments: helpers.ScreenArguments(partnerData: partner));
+  }
+
   Future initialLoad() async {
+    _log.info(method: 'initialLoad', message: 'Masuk');
     Map<String, dynamic> queryParameter =
         _partnerProvider.currentQueryParamListPartner;
 
     await _partnerProvider.fetchListPartner(queryParameter);
+    _listPartner = _partnerProvider.listPartner
+        .where((element) =>
+            element.firstName
+                .toLowerCase()
+                .contains(_searchController.text.toLowerCase()) ||
+            element.lastName
+                .toLowerCase()
+                .contains(_searchController.text.toLowerCase()))
+        .toList();
 
+    _sortData(_sortBy);
     setToIdle();
+  }
+
+  Future loadMore() async {
+    _page++;
+
+    _isLoadMore = true;
+
+    notifyListeners();
+    Map<String, dynamic> queryParameter =
+        _partnerProvider.currentQueryParamListPartner;
+
+    queryParameter['currentPage'] = _page.toString();
+
+    await _partnerProvider.fetchMoreListPartner(queryParameter);
+
+    print(jsonEncode(queryParameter));
+
+    _listPartner = _partnerProvider.listPartner
+        .where((element) =>
+            element.firstName
+                .toLowerCase()
+                .contains(_searchController.text.toLowerCase()) ||
+            element.lastName
+                .toLowerCase()
+                .contains(_searchController.text.toLowerCase()))
+        .toList();
+
+    _sortData(_sortBy);
+
+    _isLoadMore = false;
+
+    notifyListeners();
   }
 
   Future onRefresh() async {
@@ -91,22 +269,39 @@ class PsychologistProvider with ChangeNotifier {
 
     await _partnerProvider.fetchListPartner(queryParameter);
 
+    _sortData(_sortBy);
     setToIdle();
   }
 
-  initResource() {
-    this._scrollController = ScrollController()..addListener(_scrollListener);
-    this._isInit = true;
-    this._isTop = true;
-    this._isEnd = false;
-    this._pixelValue = 0;
+  _sortData(SortBy data) {
+    switch (data) {
+      case SortBy.priceHiLo:
+        _listPartner.sort((a, b) => a.partnerPrices[0].priceSchema.basePrice
+            .compareTo(b.partnerPrices[0].priceSchema.basePrice));
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      initialLoad();
-    });
-  }
+        _listPartner = _listPartner.reversed.toList();
+        break;
+      case SortBy.priceLoHi:
+        _listPartner.sort((a, b) => a.partnerPrices[0].priceSchema.basePrice
+            .compareTo(b.partnerPrices[0].priceSchema.basePrice));
 
-  close() {
-    this._scrollController?.removeListener(_scrollListener);
+        break;
+      case SortBy.highRating:
+        break;
+      case SortBy.experienceLoHi:
+        _listPartner.sort((a, b) => a.experiences.compareTo(b.experiences));
+
+        _listPartner = _listPartner.reversed.toList();
+        break;
+      case SortBy.experiencexHiLo:
+        _listPartner.sort((a, b) => a.experiences.compareTo(b.experiences));
+        break;
+
+      case SortBy.age:
+        _listPartner.sort((a, b) => a.dateOfBirth.compareTo(b.dateOfBirth));
+
+        _listPartner = _listPartner.reversed.toList();
+        break;
+    }
   }
 }

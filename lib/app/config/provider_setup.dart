@@ -5,6 +5,8 @@ import '../src/screens/otp/provider/otp_provider.dart';
 import '../src/screens/main/home/provider/home_provider.dart';
 import '../src/screens/preference/provider/preference_provider.dart';
 import '../src/screens/psychologist/provider/psychologist_provider.dart';
+import '../src/screens/psychologist_profile/provider/psychologist_profile_provider.dart';
+import '../src/screens/book_appointment/provider/book_appointment_provider.dart';
 
 import '../utils/utils.dart' as utils;
 
@@ -96,6 +98,17 @@ List<SingleChildWidget> stateProviders() {
     ),
     ChangeNotifierProxyProvider<Partner, PsychologistProvider>(
       create: (ctx) => PsychologistProvider(ctx.read<Partner>()),
+      update: (_, partner, prevProvider) => prevProvider..update(partner),
+    ),
+    ChangeNotifierProxyProvider2<Partner, StaticData,
+        PsychologistProfileProvider>(
+      create: (ctx) => PsychologistProfileProvider(
+          ctx.read<Partner>(), ctx.read<StaticData>()),
+      update: (_, partner, staticData, prevProvider) =>
+          prevProvider..update(partner, staticData),
+    ),
+    ChangeNotifierProxyProvider<Partner, BookAppointmentProvider>(
+      create: (ctx) => BookAppointmentProvider(ctx.read<Partner>()),
       update: (_, partner, prevProvider) => prevProvider..update(partner),
     ),
   ];
