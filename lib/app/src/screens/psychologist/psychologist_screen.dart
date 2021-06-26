@@ -29,7 +29,7 @@ class _PsychologistScreenState extends State<PsychologistScreen> {
     super.initState();
 
     _provider = Provider.of<PsychologistProvider>(context, listen: false);
-    _provider.initResource();
+    _provider.initResource(widget.arguments.staticData);
   }
 
   @override

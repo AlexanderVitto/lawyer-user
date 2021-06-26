@@ -32,20 +32,18 @@ class SignInProvider with ChangeNotifier {
 
   bool _isBusy = false;
   bool get isBusy => _isBusy;
-  bool _isLoginWithEmail = false;
+  bool _isLoginWithEmail;
   bool get isLogineWithEmail => _isLoginWithEmail;
-  bool _isPasswordControllerEmpty = false;
+  bool _isPasswordControllerEmpty;
   bool get isPasswordControllerEmpty => _isPasswordControllerEmpty;
-  bool _isUserControllerEmpty = false;
+  bool _isUserControllerEmpty;
   bool get isUserControllerEmpty => _isUserControllerEmpty;
-  bool _passwordIsObsecure = true;
+  bool _passwordIsObsecure;
   bool get passwordIsObsecure => _passwordIsObsecure;
 
   SignInProvider(providers.Auth auth) {
     this._log = config.locator<utils.LogUtils>(param1: fileName, param2: true);
-    this._regex = RegExp(_pattern);
-    this._userController = TextEditingController();
-    this._passwordController = TextEditingController();
+
     this._authProvider = auth;
   }
 
@@ -53,6 +51,21 @@ class SignInProvider with ChangeNotifier {
     this._authProvider = auth;
 
     notifyListeners();
+  }
+
+  initResource() {
+    this._regex = RegExp(_pattern);
+    this._userController = TextEditingController();
+    this._passwordController = TextEditingController();
+    this._isLoginWithEmail = false;
+    this._isPasswordControllerEmpty = false;
+    this._isUserControllerEmpty = false;
+    this._passwordIsObsecure = true;
+  }
+
+  close() {
+    _userController.dispose();
+    _passwordController.dispose();
   }
 
   toggleObsecurePassword() {
@@ -489,12 +502,5 @@ class SignInProvider with ChangeNotifier {
     }
 
     setToIdle();
-  }
-
-  @override
-  void dispose() {
-    _userController.dispose();
-    _passwordController.dispose();
-    super.dispose();
   }
 }

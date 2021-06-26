@@ -16,6 +16,9 @@ abstract class PartnerAPI {
   Future<utils.ApiReturn<models.ResponsePartner>> detailByExpertise(
       Map<String, dynamic> queryParameter, String token);
 
+  Future<utils.ApiReturn<models.ResponsePartnerPrice>> price(
+      Map<String, dynamic> queryParameter, String token);
+
   Future<utils.ApiReturn<models.ResponseScheduleResource>> scheduleResource(
       Map<String, dynamic> queryParameter, String token);
 }
@@ -137,6 +140,42 @@ class Production implements PartnerAPI {
     _log.info(method: method, message: 'result status: ${result.status}');
 
     return utils.ApiReturn<models.ResponseListPartner>(
+        status: true, value: result);
+  }
+
+  @override
+  Future<utils.ApiReturn<models.ResponsePartnerPrice>> price(
+      Map<String, dynamic> queryParameter, String token) async {
+    final String method = 'price';
+    models.ResponsePartnerPrice result;
+
+    final url = '${config.FlavorConfig.instance.values.host}/api/Partner/price';
+    _log.info(method: method, message: 'url $url');
+
+    utils.ApiReturn<HttpClientResponse> response =
+        await _request.getRequest(url, token, queryParameter: queryParameter);
+
+    if (!response.status) {
+      _log.error(method: method, message: 'response ${response.status}');
+
+      if (response.value != null) {
+        return utils.ApiReturn<models.ResponsePartnerPrice>(
+            status: false,
+            value: models.ResponsePartnerPrice(
+                code: response.value.statusCode.toString()));
+      } else {
+        return utils.ApiReturn<models.ResponsePartnerPrice>(
+            status: false,
+            value: models.ResponsePartnerPrice(message: response.message));
+      }
+    }
+
+    Map responseMap = await utils.ResponseParser().from(response, _log, method);
+    result = models.ResponsePartnerPrice.fromJson(responseMap);
+
+    _log.info(method: method, message: 'result status: ${result.status}');
+
+    return utils.ApiReturn<models.ResponsePartnerPrice>(
         status: true, value: result);
   }
 

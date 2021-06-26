@@ -136,6 +136,8 @@ AppointmentBody _$AppointmentBodyFromJson(Map<String, dynamic> json) {
     price: (json['price'] as num)?.toDouble(),
     startDate: json['startDate'] as String,
     startTime: json['startTime'] as String,
+    endDate: json['endDate'] as String,
+    endTime: json['endTime'] as String,
     appointmentStatusId: json['appointmentStatusId'] as int,
     recurrenceStatus: json['recurrenceRule'] as String,
     appointmentNotes: json['appointmentNotes'] as String,
@@ -159,6 +161,8 @@ Map<String, dynamic> _$AppointmentBodyToJson(AppointmentBody instance) {
   writeNotNull('price', instance.price);
   writeNotNull('startDate', instance.startDate);
   writeNotNull('startTime', instance.startTime);
+  writeNotNull('endDate', instance.endDate);
+  writeNotNull('endTime', instance.endTime);
   writeNotNull('appointmentStatusId', instance.appointmentStatusId);
   writeNotNull('recurrenceRule', instance.recurrenceStatus);
   writeNotNull('appointmentNotes', instance.appointmentNotes);

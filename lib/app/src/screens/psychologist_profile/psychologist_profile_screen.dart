@@ -28,7 +28,8 @@ class _PsychologistProfileScreenState extends State<PsychologistProfileScreen> {
     super.initState();
 
     Provider.of<PsychologistProfileProvider>(context, listen: false)
-        .initResource(widget.arguments.partnerData.id);
+        .initResource(
+            widget.arguments.partnerData.id, widget.arguments.staticData);
   }
 
   @override

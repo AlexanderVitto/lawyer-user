@@ -1,5 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../../../../constraint.dart';
 import '../../../../../enum.dart';
@@ -19,57 +22,96 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+
   @override
   Widget build(BuildContext context) {
     final localization = helpers.AppLocalizations.of(context);
 
     return Consumer<PsychologistProvider>(
-      builder: (_, provider, __) => Stack(
-        fit: StackFit.expand,
-        children: [
-          NotificationListener<ScrollNotification>(
-            onNotification: (scrollNotification) =>
-                provider.onNotification(scrollNotification),
-            child: Column(
+        builder: (_, provider, __) => Column(
               children: [
                 _SearchBar(provider: provider, localization: localization),
-                ExpandedSection(
-                  child: Container(
-                    height: provider.heightLoading,
-                    color: Colors.transparent,
+                SmartRefresher(
+                  enablePullDown: true,
+                  enablePullUp: true,
+                  controller: _refreshController,
+                  footer: CustomFooter(
+                    builder: (BuildContext context, LoadStatus mode) {
+                      Widget body;
+                      if (mode == LoadStatus.idle) {
+                        body = Text("pull up load");
+                      } else if (mode == LoadStatus.loading) {
+                        body = CupertinoActivityIndicator();
+                      } else if (mode == LoadStatus.failed) {
+                        body = Text("Load Failed!Click retry!");
+                      } else if (mode == LoadStatus.canLoading) {
+                        body = Text("release to load more");
+                      } else {
+                        body = Text("No more Data");
+                      }
+                      return Container(
+                        height: 55.0,
+                        child: Center(child: body),
+                      );
+                    },
                   ),
-                  value: provider.pixelValue / provider.heightLoading,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                if (provider.listPartner.isNotEmpty)
-                  Expanded(
-                    child: ListView.builder(
-                      addAutomaticKeepAlives: true,
-                      controller: provider.scrollController,
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      itemBuilder: (_, index) => _PsychologistContainer(
-                          provider: provider,
-                          data: provider.listPartner[index],
-                          localization: localization),
-                      itemCount: provider.listPartner.length,
-                    ),
-                  ),
-                if (provider.isLoadMore)
-                  ExpandedSection(
-                    child: Container(
-                      height: 60,
-                      color: Colors.transparent,
-                    ),
-                    value: 1,
-                  ),
+                  onRefresh: () => provider.initialLoad(_refreshController),
+                  onLoading: () => provider.loadMore(_refreshController),
+                )
               ],
-            ),
-          )
-        ],
-      ),
-    );
+            )
+        // Stack(
+        //   fit: StackFit.expand,
+        //   children: [
+        //     NotificationListener<ScrollNotification>(
+        //       onNotification: (scrollNotification) =>
+        //           provider.onNotification(scrollNotification),
+        //       child: Column(
+        //         children: [
+        //           _SearchBar(provider: provider, localization: localization),
+        //           ExpandedSection(
+        //             child: Container(
+        //               height: provider.heightLoading,
+        //               color: Colors.transparent,
+        //             ),
+        //             value: provider.pixelValue / provider.heightLoading,
+        //           ),
+        //           const SizedBox(
+        //             height: 10,
+        //           ),
+        //           if (provider.listPartner.isNotEmpty)
+        //             Expanded(
+        //               child: ListView.builder(
+        //                 addAutomaticKeepAlives: true,
+        //                 controller: provider.scrollController,
+        //                 physics: const AlwaysScrollableScrollPhysics(),
+        //                 itemBuilder: (_, index) => InkWell(
+        //                   onTap: () => provider.navigateToProfile(
+        //                       context, provider.listPartner[index]),
+        //                   child: _PsychologistContainer(
+        //                       provider: provider,
+        //                       data: provider.listPartner[index],
+        //                       localization: localization),
+        //                 ),
+        //                 itemCount: provider.listPartner.length,
+        //               ),
+        //             ),
+        //           if (provider.isLoadMore)
+        //             ExpandedSection(
+        //               child: Container(
+        //                 height: 60,
+        //                 color: Colors.transparent,
+        //               ),
+        //               value: 1,
+        //             ),
+        //         ],
+        //       ),
+        //     )
+        //   ],
+        // ),
+        );
   }
 }
 
@@ -134,25 +176,28 @@ class _SearchBar extends StatelessWidget {
           const SizedBox(
             width: 9,
           ),
-          Container(
-            height: 40,
-            width: 40,
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: PsykayGreenColor,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
-                  spreadRadius: 2,
-                  blurRadius: 1,
-                  offset: Offset(0, 0), // changes position of shadow
-                ),
-              ],
-            ),
-            child: ImageIcon(
-              AssetImage('assets/icons/icon-sort.png'),
-              color: Colors.white,
+          InkWell(
+            onTap: () => provider.navigateToSort(context),
+            child: Container(
+              height: 40,
+              width: 40,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: PsykayGreenColor,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    spreadRadius: 2,
+                    blurRadius: 1,
+                    offset: Offset(0, 0), // changes position of shadow
+                  ),
+                ],
+              ),
+              child: ImageIcon(
+                AssetImage('assets/icons/icon-sort.png'),
+                color: Colors.white,
+              ),
             ),
           )
         ],
@@ -182,6 +227,8 @@ class __PsychologistContainerState extends State<_PsychologistContainer>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
+    final currencyFormatter = NumberFormat('#,##0.00', 'ID');
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
@@ -250,7 +297,7 @@ class __PsychologistContainerState extends State<_PsychologistContainer>
                           fontWeight: FontWeight.w400),
                     ),
                     Text(
-                      "${widget.localization.translate('Start from')}  ${widget.localization.translate('Rp')} ${widget.data.level} / ${widget.localization.translate('Session')}",
+                      "${widget.localization.translate('Start from')}  ${widget.localization.translate('Rp')} ${currencyFormatter.format(widget.data.partnerPrices[0].priceSchema.basePrice)} / ${widget.localization.translate('Session')}",
                       style: TextStyle(
                           fontSize: 12,
                           color: Colors.black54,
@@ -271,7 +318,8 @@ class __PsychologistContainerState extends State<_PsychologistContainer>
               SizedBox(
                 height: 23,
                 child: CustomElevatedButton(
-                  onPresses: () => null,
+                  onPresses: () => widget.provider
+                      .navigateToBookAppointment(context, widget.data),
                   localization: widget.localization,
                   text: 'Appointments',
                   fontSize: 10,

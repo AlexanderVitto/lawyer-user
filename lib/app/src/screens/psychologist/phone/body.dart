@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../../../../constraint.dart';
 import '../../../../../enum.dart';
@@ -20,32 +22,39 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+
   @override
   Widget build(BuildContext context) {
     final localization = helpers.AppLocalizations.of(context);
 
     return Consumer<PsychologistProvider>(
-      builder: (_, provider, __) => Stack(
-        fit: StackFit.expand,
-        children: [
-          NotificationListener<ScrollNotification>(
-            onNotification: (scrollNotification) =>
-                provider.onNotification(scrollNotification),
-            child: Column(
+        builder: (_, provider, __) => Column(
               children: [
                 _SearchBar(provider: provider, localization: localization),
-                ExpandedSection(
-                  child: Container(
-                    height: provider.heightLoading,
-                    color: Colors.transparent,
-                  ),
-                  value: provider.pixelValue / provider.heightLoading,
-                ),
                 const SizedBox(
                   height: 10,
                 ),
-                if (provider.listPartner.isNotEmpty)
-                  Expanded(
+                Expanded(
+                  child: SmartRefresher(
+                    enablePullDown: true,
+                    enablePullUp: true,
+                    controller: _refreshController,
+                    footer: CustomFooter(
+                      builder: (BuildContext context, LoadStatus mode) {
+                        if (mode == LoadStatus.loading) {
+                          return Container(
+                            height: 55.0,
+                            child: Center(child: CupertinoActivityIndicator()),
+                          );
+                        }
+
+                        return Container();
+                      },
+                    ),
+                    onRefresh: () => provider.initialLoad(_refreshController),
+                    onLoading: () => provider.loadMore(_refreshController),
                     child: ListView.builder(
                       addAutomaticKeepAlives: true,
                       controller: provider.scrollController,
@@ -61,20 +70,9 @@ class _BodyState extends State<Body> {
                       itemCount: provider.listPartner.length,
                     ),
                   ),
-                if (provider.isLoadMore)
-                  ExpandedSection(
-                    child: Container(
-                      height: 60,
-                      color: Colors.transparent,
-                    ),
-                    value: 1,
-                  ),
+                )
               ],
-            ),
-          )
-        ],
-      ),
-    );
+            ));
   }
 }
 
@@ -281,7 +279,8 @@ class __PsychologistContainerState extends State<_PsychologistContainer>
               SizedBox(
                 height: 23,
                 child: CustomElevatedButton(
-                  onPresses: () => null,
+                  onPresses: () => widget.provider
+                      .navigateToBookAppointment(context, widget.data),
                   localization: widget.localization,
                   text: 'Appointments',
                   fontSize: 10,

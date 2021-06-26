@@ -11,7 +11,11 @@ import '../src/screens/preference/preference_screen.dart';
 import '../src/screens/psychologist/psychologist_screen.dart';
 import '../src/screens/psychologist/sorting/sorting_screen.dart';
 import '../src/screens/psychologist_profile/psychologist_profile_screen.dart';
-import '../src/screens/book_appointment/book_appointment.dart';
+import '../src/screens/book_appointment/book_appointment_screen.dart';
+import '../src/screens/cart/cart_screen.dart';
+import '../src/screens/checkout/checkout_screen.dart';
+import '../src/screens/manual_payment/manual_payment_screen.dart';
+import '../src/screens/main/transaction/transaction_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   // Here we'll handle all the routing
@@ -29,7 +33,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     PsychologistProfileScreen.routeName: (_) =>
         PsychologistProfileScreen(settings.arguments),
     BookAppointmentScreen.routeName: (_) =>
-        BookAppointmentScreen(settings.arguments)
+        BookAppointmentScreen(settings.arguments),
+    CartScreen.routeName: (_) => CartScreen(settings.arguments),
+    CheckoutScreen.routeName: (_) => CheckoutScreen(),
+    ManualPaymentScreen.routeName: (_) => ManualPaymentScreen(),
   };
 
   WidgetBuilder builder = routes[settings.name];

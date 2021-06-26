@@ -18,14 +18,14 @@ class ForgotPasswordProvider with ChangeNotifier {
 
   providers.Auth _authProvider;
 
-  bool _isBusy = false;
+  bool _isBusy;
   bool get isBusy => _isBusy;
-  bool _isEmailControllerEmpty = false;
+  bool _isEmailControllerEmpty;
   bool get isEmailControllerEmpty => _isEmailControllerEmpty;
 
   ForgotPasswordProvider(providers.Auth auth) {
     this._log = config.locator<utils.LogUtils>(param1: fileName, param2: true);
-    this._emailController = TextEditingController();
+
     this._authProvider = auth;
   }
 
@@ -55,6 +55,17 @@ class ForgotPasswordProvider with ChangeNotifier {
     _isBusy = false;
 
     notifyListeners();
+  }
+
+  initResource() {
+    this._emailController = TextEditingController();
+    this._isEmailControllerEmpty = false;
+    this._isBusy = false;
+  }
+
+  close() {
+    _log.debug(method: 'Dispose', message: 'Done');
+    _emailController.dispose();
   }
 
   Future resetPassword(BuildContext context, ScreenSize screenSize) async {
@@ -158,12 +169,5 @@ class ForgotPasswordProvider with ChangeNotifier {
     }
 
     setToIdle();
-  }
-
-  @override
-  void dispose() {
-    _log.debug(method: 'Dispose', message: 'Done');
-    _emailController.dispose();
-    super.dispose();
   }
 }

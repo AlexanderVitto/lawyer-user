@@ -47,13 +47,10 @@ class MainActivity : FlutterActivity(), TransactionFinishedCallback, EventChanne
     private fun midtrans(call: MethodCall, result: MethodChannel.Result) {
         val dict = call.arguments as HashMap<String, Any>
 
-        val total = dict.get("total") as Double
-        val orderId = dict.get("orderId") as String
-        val items = dict.get("items") as ArrayList<HashMap<String, Any>>
 
         initMidtransSdk()
 
-        MidtransSDK.getInstance().transactionRequest = DataCustomer.transactionRequest(total, orderId, items)
+        MidtransSDK.getInstance().transactionRequest = DataCustomer.transactionRequest(dict)
 
         MidtransSDK.getInstance().startPaymentUiFlow(this)
 
@@ -79,7 +76,7 @@ class MainActivity : FlutterActivity(), TransactionFinishedCallback, EventChanne
 
     @SuppressLint("ShowToast")
     override fun onTransactionFinished(result: TransactionResult) {
-        when {
+         when {
             result.response != null -> {
 
                 when (result.status) {
@@ -92,14 +89,16 @@ class MainActivity : FlutterActivity(), TransactionFinishedCallback, EventChanne
 
                 }
                 result.response.validationMessages
-                statusChannel?.success(hashMapOf("transaction_id" to result.response.transactionId,
-                        "status" to result.status))
+                statusChannel?.success(hashMapOf("transaction_id" to result.response.transactionId, "order_id" to result.response.orderId,
+                        "status" to result.status,"payment_type" to result.response.paymentType, "permata_va_number" to result.response.permataVANumber, "bca_va_number" to result.response.bcaVaNumber,"bni_va_number" to result.response.bniVaNumber,
+                        "bri_va_number" to result.response.briVaNumber, "payment_code" to result.response.paymentCode, "bank" to result.response.bank,
+                        "bill_key" to result.response.paymentCode, "biller_code" to result.response.companyCode))
 
             }
             result.isTransactionCanceled -> {
                 Toast.makeText(this, "Transaction Canceled", Toast.LENGTH_SHORT).show()
                 statusChannel?.success(hashMapOf("transaction_id" to "",
-                        "status" to "Canceled"))
+                        "status" to "canceled"))
 
             }
             else -> {

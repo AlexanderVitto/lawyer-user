@@ -125,6 +125,9 @@ class AuthExceptionHandler {
       case 'sign_in_failed':
         status = AuthResultStatus.kSignInFailedError;
         break;
+      case 'email_already_axists':
+        status = AuthResultStatus.emailAlreadyExists;
+        break;
     }
 
     return status;

@@ -165,6 +165,10 @@ PartnerPrice _$PartnerPriceFromJson(Map<String, dynamic> json) {
   return PartnerPrice(
     id: json['Id'] as int,
     partnerId: json['PartnerId'] as String,
+    masterPriceId: json['MasterPriceId'] as int,
+    priceCategoryId: json['PriceCategoryId'] as int,
+    priceName: json['PriceName'] as String,
+    price: (json['Price'] as num)?.toDouble(),
     priceSchemaId: json['PriceSchemaId'] as int,
     priceLevelId: json['PriceLevelId'] as int,
     serviceCategoryId: json['ServiceCategoryId'] as int,
@@ -186,6 +190,10 @@ Map<String, dynamic> _$PartnerPriceToJson(PartnerPrice instance) {
   }
 
   writeNotNull('PartnerId', instance.partnerId);
+  writeNotNull('MasterPriceId', instance.masterPriceId);
+  writeNotNull('PriceCategoryId', instance.priceCategoryId);
+  writeNotNull('PriceName', instance.priceName);
+  writeNotNull('Price', instance.price);
   writeNotNull('PriceSchemaId', instance.priceSchemaId);
   writeNotNull('PriceLevelId', instance.priceLevelId);
   writeNotNull('ServiceCategoryId', instance.serviceCategoryId);
@@ -202,8 +210,8 @@ MasterPrice _$MasterPriceFromJson(Map<String, dynamic> json) {
     description: json['Description'] as String,
     basePrice: (json['BasePrice'] as num)?.toDouble(),
     serviceCount: json['ServiceCount'] as int,
-    isEnabled: json['isEnabled'] as bool,
-    isDeleted: json['isDeleted'] as bool,
+    isEnabled: json['IsEnabled'] as bool,
+    isDeleted: json['IsDeleted'] as bool,
   );
 }
 
@@ -224,8 +232,8 @@ Map<String, dynamic> _$MasterPriceToJson(MasterPrice instance) {
   writeNotNull('Description', instance.description);
   writeNotNull('BasePrice', instance.basePrice);
   writeNotNull('ServiceCount', instance.serviceCount);
-  writeNotNull('isEnabled', instance.isEnabled);
-  writeNotNull('isDeleted', instance.isDeleted);
+  writeNotNull('IsEnabled', instance.isEnabled);
+  writeNotNull('IsDeleted', instance.isDeleted);
   return val;
 }
 
@@ -376,6 +384,27 @@ Map<String, dynamic> _$ResponseScheduleResourceToJson(
       'Messages': instance.message,
       'code': instance.code,
       'Result': instance.result?.toJson(),
+    };
+
+ResponsePartnerPrice _$ResponsePartnerPriceFromJson(Map<String, dynamic> json) {
+  return ResponsePartnerPrice(
+    status: json['Status'] as bool,
+    message: json['Messages'] as String,
+    code: json['code'] as String,
+    result: (json['Result'] as List)
+        ?.map((e) =>
+            e == null ? null : PartnerPrice.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+  );
+}
+
+Map<String, dynamic> _$ResponsePartnerPriceToJson(
+        ResponsePartnerPrice instance) =>
+    <String, dynamic>{
+      'Status': instance.status,
+      'Messages': instance.message,
+      'code': instance.code,
+      'Result': instance.result?.map((e) => e?.toJson())?.toList(),
     };
 
 Availability _$AvailabilityFromJson(Map<String, dynamic> json) {

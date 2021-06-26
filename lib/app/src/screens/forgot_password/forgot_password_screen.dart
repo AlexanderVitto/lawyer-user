@@ -12,40 +12,50 @@ import 'tablet/body.dart' as tablet;
 import 'phone/body.dart' as phone;
 import 'mini/body.dart' as mini;
 
-class ForgotPasswordScreen extends StatelessWidget {
+class ForgotPasswordScreen extends StatefulWidget {
   static const routeName = '/forgot-password-screen';
 
   @override
+  _ForgotPasswordScreenState createState() => _ForgotPasswordScreenState();
+}
+
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+  ForgotPasswordProvider provider;
+
+  @override
+  void initState() {
+    super.initState();
+    provider = Provider.of<ForgotPasswordProvider>(context, listen: false);
+
+    provider.initResource();
+  }
+
+  @override
+  void dispose() {
+    provider.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final connection = Provider.of<utils.Connection>(context, listen: false);
+    provider = Provider.of<ForgotPasswordProvider>(context, listen: false);
 
-    return ChangeNotifierProxyProvider<Auth, ForgotPasswordProvider>(
-      create: (ctx) => ForgotPasswordProvider(ctx.read<Auth>()),
-      update: (_, auth, prevProvider) => prevProvider..update(auth),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: FutureBuilder<bool>(
-          future: connection.init(),
-          builder: (_, AsyncSnapshot<bool> snapshot) =>
-              snapshot.connectionState == ConnectionState.waiting
-                  ? helpers.LoadingPouringHourGlass()
-                  : LayoutBuilder(
-                      builder:
-                          (BuildContext context, BoxConstraints constraints) {
-                        print('Width ${constraints.maxWidth}');
-                        print('Height ${constraints.maxHeight}');
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          print('Width ${constraints.maxWidth}');
+          print('Height ${constraints.maxHeight}');
 
-                        if (constraints.maxWidth > TabletThreshold) {
-                          return tablet.Body();
-                        } else if (constraints.maxWidth > PhoneThreshold &&
-                            constraints.maxWidth <= TabletThreshold) {
-                          return phone.Body();
-                        } else {
-                          return mini.Body();
-                        }
-                      },
-                    ),
-        ),
+          if (constraints.maxWidth > TabletThreshold) {
+            return tablet.Body();
+          } else if (constraints.maxWidth > PhoneThreshold &&
+              constraints.maxWidth <= TabletThreshold) {
+            return phone.Body();
+          } else {
+            return mini.Body();
+          }
+        },
       ),
     );
   }

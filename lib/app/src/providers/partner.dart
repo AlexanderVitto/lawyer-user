@@ -31,6 +31,8 @@ class Partner with ChangeNotifier {
 
   List<models.Partner> _listPartner;
   List<models.Partner> get listPartner => _listPartner;
+  List<models.PartnerPrice> _partnerPrice;
+  List<models.PartnerPrice> get partnerPrice => _partnerPrice;
 
   List<models.Availability> _listAvailability;
   List<models.Availability> get listAvailability => _listAvailability;
@@ -48,6 +50,7 @@ class Partner with ChangeNotifier {
     this._partnerAPI = config.locator<partner.PartnerAPI>();
 
     this._listPartner = [];
+    this._partnerPrice = [];
     this._listAvailability = [];
     this._listAvailabilityFull = [];
     this._listWorkingHour = [];
@@ -77,8 +80,8 @@ class Partner with ChangeNotifier {
       // Problem with connection to API
 
       if (apiRequest.value.code == '401') {
-        // Force logout
-
+        // Refresh token
+        _auth.setToken();
       }
 
       _listPartner = [];
@@ -105,8 +108,8 @@ class Partner with ChangeNotifier {
       // Problem with connection to API
 
       if (apiRequest.value.code == '401') {
-        // Force logout
-
+        // Refresh token
+        _auth.setToken();
       }
 
       _scheduleResource = null;
@@ -134,28 +137,36 @@ class Partner with ChangeNotifier {
     notifyListeners();
   }
 
-  Future fetchMoreListPartner(Map<String, dynamic> queryParameter) async {
+  Future<bool> fetchMoreListPartner(Map<String, dynamic> queryParameter) async {
     final String method = 'fetchMoreListPartner';
+    bool result = false;
 
     await _connection.check();
 
-    utils.ApiReturn<models.ResponseListPartner> apiRequest = await _partnerAPI
-        .listPartnerByPreference3(_currentQueryParamLisPartner, _auth.token);
+    utils.ApiReturn<models.ResponseListPartner> apiRequest =
+        await _partnerAPI.listPartnerByPreference3(queryParameter, _auth.token);
 
     if (!apiRequest.status) {
       // Problem with connection to API
 
       if (apiRequest.value.code == '401') {
-        // Force logout
-
+        // Refresh token
+        _auth.setToken();
       }
+
+      result = true;
     } else {
       if (apiRequest.value.status) {
         _listPartner.addAll(apiRequest.value.result);
-      } else {}
+        result = false;
+      } else {
+        result = true;
+      }
     }
 
     notifyListeners();
+
+    return result;
   }
 
   Future fetchPartnerDetail(Map<String, dynamic> queryParameter) async {
@@ -170,8 +181,8 @@ class Partner with ChangeNotifier {
       // Problem with connection to API
 
       if (apiRequest.value.code == '401') {
-        // Force logout
-
+        // Refresh token
+        _auth.setToken();
       }
 
       _partnerData = null;
@@ -199,8 +210,8 @@ class Partner with ChangeNotifier {
       // Problem with connection to API
 
       if (apiRequest.value.code == '401') {
-        // Force logout
-
+        // Refresh token
+        _auth.setToken();
       }
 
       _partnerData = null;
@@ -209,6 +220,34 @@ class Partner with ChangeNotifier {
         _partnerData = apiRequest.value.result;
       } else {
         _partnerData = null;
+      }
+    }
+
+    notifyListeners();
+  }
+
+  Future fetchPartnerPrice(Map<String, dynamic> queryParameter) async {
+    final String method = 'fetchPartnerPrice';
+
+    await _connection.check();
+
+    utils.ApiReturn<models.ResponsePartnerPrice> apiRequest =
+        await _partnerAPI.price(queryParameter, _auth.token);
+
+    if (!apiRequest.status) {
+      // Problem with connection to API
+
+      if (apiRequest.value.code == '401') {
+        // Refresh token
+        _auth.setToken();
+      }
+
+      _partnerPrice = [];
+    } else {
+      if (apiRequest.value.status) {
+        _partnerPrice = apiRequest.value.result;
+      } else {
+        _partnerPrice = [];
       }
     }
 

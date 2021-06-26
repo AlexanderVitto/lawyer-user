@@ -29,7 +29,8 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
     super.initState();
 
     provider = Provider.of<BookAppointmentProvider>(context, listen: false);
-    provider.initResource(widget.arguments.partnerData.id);
+    provider.initResource(
+        widget.arguments.partnerData.id, widget.arguments.staticData);
   }
 
   @override
@@ -47,7 +48,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
       onWillPop: provider.onWillPop,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(localization.translate('Booke Appointment')),
+          title: Text(localization.translate('Book Appointment')),
         ),
         backgroundColor: Colors.white,
         body: LayoutBuilder(

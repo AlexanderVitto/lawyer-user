@@ -70,10 +70,10 @@ class Body extends StatelessWidget {
               ? helpers.LoadingPouringHourGlass()
               : Container(),
         ),
-        utils.ConnectionInfo(
-          iconSize: 18,
-          fontSize: 14,
-        )
+        // utils.ConnectionInfo(
+        //   iconSize: 18,
+        //   fontSize: 14,
+        // )
       ],
     );
   }

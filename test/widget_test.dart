@@ -5,9 +5,13 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/intl.dart';
 
+import '../lib/app/helpers/extension_helper.dart';
 import '../lib/app/src/models/models.dart' as models;
 
 void main() {
@@ -224,5 +228,18 @@ void main() {
         .toList();
 
     expect(filtered.length, 1);
+  });
+
+  test('Format', () {
+    // DateTime.parse("2021-05-07T14:59:17+07:00");
+    DateTime date = DateTime.parse("2021-06-25");
+    DateTime today =
+        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+
+    expect(date.isAtSameMomentAs(today), true);
+  });
+
+  test('Pascal case', () {
+    expect('test saja'.capitalize(), 'Test saja');
   });
 }

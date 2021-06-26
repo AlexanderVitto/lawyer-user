@@ -186,6 +186,18 @@ class PartnerPrice {
   @JsonKey(name: 'PartnerId', defaultValue: null, includeIfNull: false)
   final String partnerId;
 
+  @JsonKey(name: 'MasterPriceId', defaultValue: null, includeIfNull: false)
+  final int masterPriceId;
+
+  @JsonKey(name: 'PriceCategoryId', defaultValue: null, includeIfNull: false)
+  final int priceCategoryId;
+
+  @JsonKey(name: 'PriceName', defaultValue: null, includeIfNull: false)
+  final String priceName;
+
+  @JsonKey(name: 'Price', defaultValue: null, includeIfNull: false)
+  final double price;
+
   @JsonKey(name: 'PriceSchemaId', defaultValue: null, includeIfNull: false)
   final int priceSchemaId;
 
@@ -201,6 +213,10 @@ class PartnerPrice {
   PartnerPrice(
       {this.id,
       this.partnerId,
+      this.masterPriceId,
+      this.priceCategoryId,
+      this.priceName,
+      this.price,
       this.priceSchemaId,
       this.priceLevelId,
       this.serviceCategoryId,
@@ -234,10 +250,10 @@ class MasterPrice {
   @JsonKey(name: 'ServiceCount', defaultValue: null, includeIfNull: false)
   final int serviceCount;
 
-  @JsonKey(name: 'isEnabled', defaultValue: null, includeIfNull: false)
+  @JsonKey(name: 'IsEnabled', defaultValue: null, includeIfNull: false)
   bool isEnabled;
 
-  @JsonKey(name: 'isDeleted', defaultValue: null, includeIfNull: false)
+  @JsonKey(name: 'IsDeleted', defaultValue: null, includeIfNull: false)
   bool isDeleted;
 
   MasterPrice(
@@ -451,6 +467,31 @@ class ResponseScheduleResource {
   factory ResponseScheduleResource.fromJson(Map<String, dynamic> json) =>
       _$ResponseScheduleResourceFromJson(json);
   Map<String, dynamic> toJson() => _$ResponseScheduleResourceToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ResponsePartnerPrice {
+  @JsonKey(name: 'Status', defaultValue: null, nullable: true)
+  final bool status;
+
+  @JsonKey(name: 'Messages', defaultValue: null, nullable: true)
+  final String message;
+
+  @JsonKey(name: 'code', defaultValue: null, nullable: true)
+  final String code;
+
+  @JsonKey(name: 'Result', defaultValue: null, nullable: true)
+  final List<PartnerPrice> result;
+
+  ResponsePartnerPrice({
+    this.status,
+    this.message,
+    this.code,
+    this.result,
+  });
+  factory ResponsePartnerPrice.fromJson(Map<String, dynamic> json) =>
+      _$ResponsePartnerPriceFromJson(json);
+  Map<String, dynamic> toJson() => _$ResponsePartnerPriceToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)

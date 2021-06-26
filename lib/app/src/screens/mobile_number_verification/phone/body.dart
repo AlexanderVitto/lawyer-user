@@ -103,10 +103,10 @@ class Body extends StatelessWidget {
           builder: (_, provider, __) =>
               provider.isBusy ? helpers.LoadingPouringHourGlass() : Container(),
         ),
-        utils.ConnectionInfo(
-          iconSize: 18,
-          fontSize: 14,
-        )
+        // utils.ConnectionInfo(
+        //   iconSize: 18,
+        //   fontSize: 14,
+        // )
       ],
     );
   }

@@ -78,7 +78,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
       curve: Curves.easeInCubic,
     ));
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       initialize();
     });
   }
@@ -102,7 +102,9 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
               animation: _animation,
             ),
             ScheduleScreen(),
-            TransactionScreen(),
+            TransactionScreen(
+              tab: widget.arguments.transactionScreenTab,
+            ),
             ChatScreen(),
             ProfileScreen()
           ],

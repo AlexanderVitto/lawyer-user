@@ -10,7 +10,7 @@ import '../../../../utils/utils.dart' as utils;
 import '../../../models/models.dart' as models;
 import '../../../providers/providers.dart' as providers;
 
-import '../../book_appointment/book_appointment.dart';
+import '../../book_appointment/book_appointment_screen.dart';
 
 class PsychologistProfileProvider with ChangeNotifier {
   static const fileName =
@@ -24,6 +24,8 @@ class PsychologistProfileProvider with ChangeNotifier {
 
   models.Partner _partnerDetail;
   models.Partner get partnerDetail => _partnerDetail;
+  models.StaticData _expertise;
+  models.StaticData get expertise => _expertise;
 
   Map<DaysOfWeek, List<models.Availability>> get mapAvailability {
     Map<DaysOfWeek, List<models.Availability>> result = {};
@@ -105,17 +107,19 @@ class PsychologistProfileProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  initResource(String id) {
+  initResource(String id, models.StaticData expertise) {
     this._isInit = true;
+    this._expertise = expertise;
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       initialLoad(id);
     });
   }
 
   navigateToBookAppointment(BuildContext context) {
     Navigator.of(context).pushNamed(BookAppointmentScreen.routeName,
-        arguments: helpers.ScreenArguments(partnerData: _partnerDetail));
+        arguments: helpers.ScreenArguments(
+            partnerData: _partnerDetail, staticData: _expertise));
   }
 
   Future initialLoad(String id) async {

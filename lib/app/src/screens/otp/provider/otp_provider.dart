@@ -25,23 +25,34 @@ class OTPProvider with ChangeNotifier {
 
   bool _isBusy = false;
   bool get isBusy => _isBusy;
-  bool _isCodeControllerEmpty = false;
+  bool _isCodeControllerEmpty;
   bool get isCodeControllerEmpty => _isCodeControllerEmpty;
-  int _timeout = 60;
+  int _timeout;
   int get timeout => _timeout;
 
   OTPProvider(providers.Auth auth) {
     this._log = config.locator<utils.LogUtils>(param1: fileName, param2: true);
-    this._codeController = TextEditingController();
-    this._authProvider = auth;
 
-    _startTimer();
+    this._authProvider = auth;
   }
 
   update(providers.Auth auth) {
     this._authProvider = auth;
 
     notifyListeners();
+  }
+
+  initResource() {
+    this._codeController = TextEditingController();
+    this._isCodeControllerEmpty = false;
+    this._timeout = 60;
+
+    _startTimer();
+  }
+
+  close() {
+    _timer.cancel();
+    _codeController.dispose();
   }
 
   codeTextOnChange(String text) {
@@ -239,12 +250,5 @@ class OTPProvider with ChangeNotifier {
         }
       }
     }
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    _codeController.dispose();
-    super.dispose();
   }
 }

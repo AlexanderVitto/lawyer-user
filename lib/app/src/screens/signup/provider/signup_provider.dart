@@ -37,32 +37,27 @@ class SignUpProvider with ChangeNotifier {
 
   bool _isBusy = false;
   bool get isBusy => _isBusy;
-  bool _isLoginWithEmail = false;
+  bool _isLoginWithEmail;
   bool get isLogineWithEmail => _isLoginWithEmail;
-  bool _isPasswordControllerEmpty = false;
+  bool _isPasswordControllerEmpty;
   bool get isPasswordControllerEmpty => _isPasswordControllerEmpty;
-  bool _isPasswordConfirmationControllerEmpty = false;
+  bool _isPasswordConfirmationControllerEmpty;
   bool get isPasswordConfirmationControllerEmpty =>
       _isPasswordConfirmationControllerEmpty;
-  bool _isUserControllerEmpty = false;
+  bool _isUserControllerEmpty;
   bool get isUserControllerEmpty => _isUserControllerEmpty;
-  bool _isPasswordMatch = true;
+  bool _isPasswordMatch;
   bool get isPasswordMatch => _isPasswordMatch;
-  bool _isNameControllerEmpty = false;
+  bool _isNameControllerEmpty;
   bool get isNameControllerEmpty => _isNameControllerEmpty;
 
-  bool _passwordIsObsecure = true;
+  bool _passwordIsObsecure;
   bool get passwordIsObsecure => _passwordIsObsecure;
-  bool _passwordConfirmationIsObsecure = true;
+  bool _passwordConfirmationIsObsecure;
   bool get passwordConfirmationIsObsecure => _passwordConfirmationIsObsecure;
 
   SignUpProvider(providers.Auth auth) {
     this._log = config.locator<utils.LogUtils>(param1: fileName, param2: true);
-    this._regex = RegExp(_pattern);
-    this._nameController = TextEditingController();
-    this._userController = TextEditingController();
-    this._passwordController = TextEditingController();
-    this._passwordConfirmationController = TextEditingController();
     this._authProvider = auth;
   }
 
@@ -70,6 +65,29 @@ class SignUpProvider with ChangeNotifier {
     this._authProvider = auth;
 
     notifyListeners();
+  }
+
+  initResource() {
+    this._regex = RegExp(_pattern);
+    this._nameController = TextEditingController();
+    this._userController = TextEditingController();
+    this._passwordController = TextEditingController();
+    this._passwordConfirmationController = TextEditingController();
+    this._isLoginWithEmail = false;
+    this._isPasswordControllerEmpty = false;
+    this._isPasswordConfirmationControllerEmpty = false;
+    this._isUserControllerEmpty = false;
+    this._isPasswordMatch = true;
+    this._isNameControllerEmpty = false;
+    this._passwordIsObsecure = true;
+    this._passwordConfirmationIsObsecure = true;
+  }
+
+  close() {
+    _nameController.dispose();
+    _userController.dispose();
+    _passwordController.dispose();
+    _passwordConfirmationController.dispose();
   }
 
   toggleObsecurePassword() {
@@ -560,14 +578,5 @@ class SignUpProvider with ChangeNotifier {
     }
 
     setToIdle();
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _userController.dispose();
-    _passwordController.dispose();
-    _passwordConfirmationController.dispose();
-    super.dispose();
   }
 }

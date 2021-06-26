@@ -237,6 +237,12 @@ class AppointmentBody {
   @JsonKey(name: 'startTime', defaultValue: null, includeIfNull: false)
   String startTime;
 
+  @JsonKey(name: 'endDate', defaultValue: null, includeIfNull: false)
+  String endDate;
+
+  @JsonKey(name: 'endTime', defaultValue: null, includeIfNull: false)
+  String endTime;
+
   @JsonKey(
       name: 'appointmentStatusId', defaultValue: null, includeIfNull: false)
   int appointmentStatusId;
@@ -256,6 +262,8 @@ class AppointmentBody {
       this.price,
       this.startDate,
       this.startTime,
+      this.endDate,
+      this.endTime,
       this.appointmentStatusId,
       this.recurrenceStatus,
       this.appointmentNotes});

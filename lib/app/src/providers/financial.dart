@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:psykay_userapp_v2/app/services/appointment.dart';
 
 import '../../config/config.dart' as config;
 import '../../helpers/helpers.dart' as helpers;
@@ -49,8 +48,8 @@ class Financial with ChangeNotifier {
       // Problem with connection to API
 
       if (apiRequest.value.code == '401') {
-        // Force logout
-
+        // Refresh token
+        _auth.setToken();
       }
 
       _balance = 0;

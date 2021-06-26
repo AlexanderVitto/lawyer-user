@@ -114,10 +114,10 @@ class Body extends StatelessWidget {
                 )
               : Container(),
         ),
-        utils.ConnectionInfo(
-          iconSize: 20,
-          fontSize: 14,
-        )
+        // utils.ConnectionInfo(
+        //   iconSize: 20,
+        //   fontSize: 14,
+        // )
       ],
     );
   }

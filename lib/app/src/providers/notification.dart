@@ -66,8 +66,8 @@ class Notification with ChangeNotifier {
       // Problem with connection to API
 
       if (apiRequest.value.code == '401') {
-        // Force logout
-
+        // Refresh token
+        _auth.setToken();
       }
 
       _notificationInfos = [];

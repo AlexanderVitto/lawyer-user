@@ -89,6 +89,8 @@ class Appointment with ChangeNotifier {
 
     await _connection.check();
 
+    body.userId = _auth.userId;
+
     utils.ApiReturn<models.ResponseAppointment> apiRequest =
         await _appointmentAPI.bookAppontment(body, _auth.token);
 
@@ -96,8 +98,8 @@ class Appointment with ChangeNotifier {
       // Problem with connection to API
 
       if (apiRequest.value.code == '401') {
-        // Force logout
-
+        // Refresh token
+        _auth.setToken();
       }
 
       _appointmentStatus = helpers.AuthResultStatus.apiConnectionError;
@@ -126,8 +128,8 @@ class Appointment with ChangeNotifier {
       // Problem with connection to API
 
       if (apiRequest.value.code == '401') {
-        // Force logout
-
+        // Refresh token
+        _auth.setToken();
       }
 
       _appointmentStatus = helpers.AuthResultStatus.apiConnectionError;
@@ -156,8 +158,8 @@ class Appointment with ChangeNotifier {
       // Problem with connection to API
 
       if (apiRequest.value.code == '401') {
-        // Force logout
-
+        // Refresh token
+        _auth.setToken();
       }
 
       _appointmentStatus = helpers.AuthResultStatus.apiConnectionError;
@@ -188,8 +190,8 @@ class Appointment with ChangeNotifier {
       // Problem with connection to API
 
       if (apiRequest.value.code == '401') {
-        // Force logout
-
+        // Refresh token
+        _auth.setToken();
       }
 
       _appointmentStatus = helpers.AuthResultStatus.apiConnectionError;
@@ -219,8 +221,8 @@ class Appointment with ChangeNotifier {
       // Problem with connection to API
 
       if (apiRequest.value.code == '401') {
-        // Force logout
-
+        // Refresh token
+        _auth.setToken();
       }
 
       _appointmentStatus = helpers.AuthResultStatus.apiConnectionError;
@@ -265,8 +267,8 @@ class Appointment with ChangeNotifier {
       // Problem with connection to API
 
       if (apiRequest.value.code == '401') {
-        // Force logout
-
+        // Refresh token
+        _auth.setToken();
       }
 
       _appointments = [];
@@ -311,8 +313,8 @@ class Appointment with ChangeNotifier {
       // Problem with connection to API
 
       if (apiRequest.value.code == '401') {
-        // Force logout
-
+        // Refresh token
+        _auth.setToken();
       }
 
       _freeAppointments = [];

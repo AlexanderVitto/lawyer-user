@@ -10,6 +10,7 @@ import '../../../../../utils/utils.dart' as utils;
 import '../../../../models/models.dart' as models;
 import '../../../../providers/providers.dart' as providers;
 
+import '../../../cart/cart_screen.dart';
 import '../../../preference/preference_screen.dart';
 
 class HomeProvider with ChangeNotifier {
@@ -24,9 +25,11 @@ class HomeProvider with ChangeNotifier {
   utils.LogUtils _log;
 
   providers.Appointment _appointmentProvider;
+  providers.Appointment get appointmentProvider => _appointmentProvider;
   providers.Financial _financialProvider;
   providers.Notification _notificationProvider;
   providers.StaticData _staticDataProvider;
+  providers.Cart _cartProvider;
 
   List<models.Article> _articles = [
     models.Article(
@@ -63,35 +66,6 @@ class HomeProvider with ChangeNotifier {
   int _pageLength;
   int get pageLength => _pageLength;
 
-  HomeProvider(providers.Appointment appointment, providers.Financial financial,
-      providers.Notification notification, providers.StaticData staticData) {
-    this._log = config.locator<utils.LogUtils>(param1: fileName, param2: true);
-
-    this._appBarPosition = 0.0;
-
-    this._appointmentProvider = appointment;
-    this._financialProvider = financial;
-    this._notificationProvider = notification;
-    this._staticDataProvider = staticData;
-
-    this._todayAppointment = [];
-
-    this._isInit = true;
-    this._isBusy = false;
-    this._isFlexibled = true;
-    this._pageLength = 0;
-  }
-
-  update(providers.Appointment appointment, providers.Financial financial,
-      providers.Notification notification, providers.StaticData staticData) {
-    this._appointmentProvider = appointment;
-    this._financialProvider = financial;
-    this._notificationProvider = notification;
-    this._staticDataProvider = staticData;
-
-    notifyListeners();
-  }
-
   List<models.Appointment> get todayAppointment {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -119,6 +93,12 @@ class HomeProvider with ChangeNotifier {
   List<models.Appointment> get freeAppointment =>
       _appointmentProvider.freeAppointments;
 
+  List<models.Cart> get carts {
+    _log.info(method: 'carts', message: _cartProvider.carts.length.toString());
+
+    return _cartProvider.carts;
+  }
+
   String get userFullName =>
       '${_appointmentProvider.auth.userData.firstName ?? ''} ${_appointmentProvider.auth.userData.lastName ?? ''}';
 
@@ -136,6 +116,65 @@ class HomeProvider with ChangeNotifier {
         ?.length;
 
     return infoLength + promoLength + transactionLength;
+  }
+
+  HomeProvider(
+      providers.Appointment appointment,
+      providers.Financial financial,
+      providers.Notification notification,
+      providers.StaticData staticData,
+      providers.Cart cart) {
+    this._log = config.locator<utils.LogUtils>(param1: fileName, param2: true);
+
+    this._appointmentProvider = appointment;
+    this._financialProvider = financial;
+    this._notificationProvider = notification;
+    this._staticDataProvider = staticData;
+    this._cartProvider = cart;
+  }
+
+  update(
+      providers.Appointment appointment,
+      providers.Financial financial,
+      providers.Notification notification,
+      providers.StaticData staticData,
+      providers.Cart cart) {
+    this._appointmentProvider = appointment;
+    this._financialProvider = financial;
+    this._notificationProvider = notification;
+    this._staticDataProvider = staticData;
+    this._cartProvider = cart;
+
+    notifyListeners();
+  }
+
+  initResource() {
+    this._scrollController = ScrollController();
+    this._scrollController.addListener(_scrollListener);
+
+    this._todayAppointment = [];
+
+    this._isInit = true;
+    this._isBusy = false;
+    this._isFlexibled = true;
+    this._appBarPosition = 0.0;
+    this._pageLength = 0;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      initialLoad();
+    });
+  }
+
+  initSubTree() {
+    this._pageController = PageController();
+  }
+
+  close() {
+    this._scrollController?.removeListener(_scrollListener);
+  }
+
+  closeSubTree() {
+    this._pageController?.dispose();
   }
 
   setAppBarPosition(double data) {
@@ -178,6 +217,11 @@ class HomeProvider with ChangeNotifier {
         arguments: helpers.ScreenArguments(staticData: data));
   }
 
+  navigateToCart(BuildContext context, String currentRoute) {
+    Navigator.of(context).pushNamed(CartScreen.routeName,
+        arguments: helpers.ScreenArguments(prevRoute: currentRoute));
+  }
+
   Future initialLoad() async {
     Map<String, dynamic> queryParamAppointment = {
       'userId': _appointmentProvider.auth.userId,
@@ -192,10 +236,12 @@ class HomeProvider with ChangeNotifier {
 
     var futures = <Future>[
       _staticDataProvider.fetchExpertise(),
+      _staticDataProvider.fetchBank(),
       _appointmentProvider.fetchAppointment(queryParamAppointment),
       _appointmentProvider.fetchFreeAppointment(),
       _financialProvider.fetchBalance(queryParamFinancial),
-      _notificationProvider.fetchNotification()
+      _notificationProvider.fetchNotification(),
+      _cartProvider.fetchCart(),
     ];
 
     await Future.wait(futures);
@@ -209,7 +255,7 @@ class HomeProvider with ChangeNotifier {
   Future onStretch() async {
     print('onStretch');
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       setToBusy();
       initialLoad();
     });
@@ -253,18 +299,5 @@ class HomeProvider with ChangeNotifier {
         }
       }
     }
-  }
-
-  initResource() {
-    this._scrollController = ScrollController();
-    this._scrollController.addListener(_scrollListener);
-    this._pageController = PageController();
-
-    this._isInit = true;
-  }
-
-  close() {
-    this._scrollController?.removeListener(_scrollListener);
-    this._pageController?.dispose();
   }
 }

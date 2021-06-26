@@ -9,6 +9,8 @@ class FlavorValues {
   final String chatHost;
   final String googleApiUrl;
   final int timeout;
+  final int consultationTime;
+  final int paymentExpiredTime;
   final bool enableBearerToken;
   final int bookingTimeThreshold;
   final List<int> operationTimeStart;
@@ -19,6 +21,8 @@ class FlavorValues {
       this.chatHost,
       this.googleApiUrl,
       this.timeout = 15,
+      this.paymentExpiredTime = 120,
+      this.consultationTime = 30,
       this.enableBearerToken = false,
       this.bookingTimeThreshold,
       this.operationTimeStart,

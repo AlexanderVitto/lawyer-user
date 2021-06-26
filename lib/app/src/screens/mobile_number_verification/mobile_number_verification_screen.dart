@@ -21,35 +21,22 @@ class MobileNumberVerificationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final connection = Provider.of<utils.Connection>(context, listen: false);
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          print('Width ${constraints.maxWidth}');
+          print('Height ${constraints.maxHeight}');
 
-    return ChangeNotifierProxyProvider<Auth, MobileNumberVerificationProvider>(
-      create: (ctx) => MobileNumberVerificationProvider(ctx.read<Auth>()),
-      update: (_, auth, prevProvider) => prevProvider..update(auth),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: FutureBuilder<bool>(
-          future: connection.init(),
-          builder: (_, AsyncSnapshot<bool> snapshot) =>
-              snapshot.connectionState == ConnectionState.waiting
-                  ? SplashAnimation()
-                  : LayoutBuilder(
-                      builder:
-                          (BuildContext context, BoxConstraints constraints) {
-                        print('Width ${constraints.maxWidth}');
-                        print('Height ${constraints.maxHeight}');
-
-                        if (constraints.maxWidth > TabletThreshold) {
-                          return tablet.Body();
-                        } else if (constraints.maxWidth > PhoneThreshold &&
-                            constraints.maxWidth <= TabletThreshold) {
-                          return phone.Body();
-                        } else {
-                          return mini.Body();
-                        }
-                      },
-                    ),
-        ),
+          if (constraints.maxWidth > TabletThreshold) {
+            return tablet.Body();
+          } else if (constraints.maxWidth > PhoneThreshold &&
+              constraints.maxWidth <= TabletThreshold) {
+            return phone.Body();
+          } else {
+            return mini.Body();
+          }
+        },
       ),
     );
   }

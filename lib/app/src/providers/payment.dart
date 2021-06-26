@@ -68,8 +68,8 @@ class Payment with ChangeNotifier {
       // Problem with connection to API
 
       if (apiRequest.value.code == '401') {
-        // Force logout
-
+        // Refresh token
+        _auth.setToken();
       }
 
       _paymentStatus = helpers.AuthResultStatus.apiConnectionError;
@@ -79,7 +79,7 @@ class Payment with ChangeNotifier {
         _paymentStatus = helpers.AuthResultStatus.initPaymentSuccess;
         _initPaymentResult = apiRequest.value.result;
 
-        await tryFetch();
+        // await tryFetch();
       } else {
         _paymentStatus = helpers.AuthResultStatus.initPaymentFailed;
         _initPaymentResult = null;
@@ -101,8 +101,8 @@ class Payment with ChangeNotifier {
       // Problem with connection to API
 
       if (apiRequest.value.code == '401') {
-        // Force logout
-
+        // Refresh token
+        _auth.setToken();
       }
 
       _paymentStatus = helpers.AuthResultStatus.apiConnectionError;
@@ -112,7 +112,7 @@ class Payment with ChangeNotifier {
         _paymentStatus = helpers.AuthResultStatus.initPaymentSuccess;
         _initPaymentResult = apiRequest.value.result;
 
-        await tryFetch();
+        // await tryFetch();
       } else {
         _paymentStatus = helpers.AuthResultStatus.initPaymentFailed;
         _initPaymentResult = null;
@@ -148,8 +148,8 @@ class Payment with ChangeNotifier {
       // Problem with connection to API
 
       if (apiRequest.value.code == '401') {
-        // Force logout
-
+        // Refresh token
+        _auth.setToken();
       }
 
       _open = [];
@@ -179,8 +179,8 @@ class Payment with ChangeNotifier {
       // Problem with connection to API
 
       if (apiRequest.value.code == '401') {
-        // Force logout
-
+        // Refresh token
+        _auth.setToken();
       }
 
       _pending = [];
@@ -210,8 +210,8 @@ class Payment with ChangeNotifier {
       // Problem with connection to API
 
       if (apiRequest.value.code == '401') {
-        // Force logout
-
+        // Refresh token
+        _auth.setToken();
       }
 
       _settled = [];
@@ -241,8 +241,8 @@ class Payment with ChangeNotifier {
       // Problem with connection to API
 
       if (apiRequest.value.code == '401') {
-        // Force logout
-
+        // Refresh token
+        _auth.setToken();
       }
 
       _canceled = [];
@@ -272,8 +272,8 @@ class Payment with ChangeNotifier {
       // Problem with connection to API
 
       if (apiRequest.value.code == '401') {
-        // Force logout
-
+        // Refresh token
+        _auth.setToken();
       }
 
       _expired = [];

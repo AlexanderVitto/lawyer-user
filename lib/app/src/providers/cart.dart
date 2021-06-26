@@ -52,17 +52,18 @@ class Cart with ChangeNotifier {
       // Problem with connection to API
 
       if (apiRequest.value.code == '401') {
-        // Force logout
-
+        // Refresh token
+        _auth.setToken();
       }
 
       _carts = [];
     } else {
       if (apiRequest.value.status) {
-        _carts = apiRequest.value.result
-            .where((value) =>
-                DateTime.now().isBefore(DateTime.tryParse(value.expiredIn)))
-            .toList();
+        _carts = apiRequest.value.result;
+        // _carts = apiRequest.value.result
+        //     .where((value) =>
+        //         DateTime.now().isBefore(DateTime.tryParse(value.expiredIn)))
+        //     .toList();
 
         _carts.sort((a, b) => a.appointmentId.compareTo(b.appointmentId));
       } else {

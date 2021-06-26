@@ -2,13 +2,7 @@ enum ScreenSize { tablet, phone, mini }
 
 enum MainScreenTab { home, appointment, transaction, chat, profile }
 
-enum TransactionScreenTab {
-  paymentStatus,
-  appointmentStatus,
-  appointmentAccepted,
-  appointmentReschedule,
-  appointmentCancel
-}
+enum TransactionScreenTab { onGoing, history }
 
 enum Preference { sex, englishSpeaking, age, noPreferences }
 
@@ -22,3 +16,5 @@ enum SortBy {
 }
 
 enum DaysOfWeek { mon, tus, wed, thur, fri, sat, sun }
+
+enum PaymentMethod { automatic, manual }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../../../../enum.dart';
 
@@ -11,7 +12,7 @@ import '../../../../utils/utils.dart' as utils;
 import '../../../models/models.dart' as models;
 import '../../../providers/providers.dart' as providers;
 
-import '../../book_appointment/book_appointment.dart';
+import '../../book_appointment/book_appointment_screen.dart';
 import '../../psychologist_profile/psychologist_profile_screen.dart';
 
 import '../sorting/sorting_screen.dart';
@@ -62,6 +63,8 @@ class PsychologistProvider with ChangeNotifier {
 
   models.Partner _partnerDetail;
   models.Partner get partnerDetail => _partnerDetail;
+  models.StaticData _expertise;
+  models.StaticData get expertise => _expertise;
 
   List<models.Partner> _listPartner;
   List<models.Partner> get listPartner => _listPartner;
@@ -76,6 +79,7 @@ class PsychologistProvider with ChangeNotifier {
   bool get isEnd => _isEnd;
   bool _isLoadMore;
   bool get isLoadMore => _isLoadMore;
+  bool _isLastIndex;
 
   int _page;
   int get page => _page;
@@ -124,38 +128,38 @@ class PsychologistProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  onNotification(ScrollNotification scrollNotification) {
-    if (scrollNotification is ScrollStartNotification) {
-      if (scrollNotification.metrics.pixels < 250) {
-        _isTop = true;
-      } else {
-        _isTop = false;
-      }
-    } else if (scrollNotification is ScrollUpdateNotification) {
-      if (scrollNotification.scrollDelta > 0 && _pixelValue > 0 && !_isEnd) {
-        _pixelValue -= scrollNotification.scrollDelta;
-      }
-    } else if (scrollNotification is ScrollEndNotification) {
-      if (_pixelValue > (_heightLoading * 2 / 3)) {
-        _isEnd = true;
-      } else {
-        _isEnd = false;
-        _pixelValue = 0;
-      }
-    } else if (scrollNotification is OverscrollNotification) {
-      if (scrollNotification.overscroll < 0 &&
-          _pixelValue <= _heightLoading &&
-          _isTop) {
-        _pixelValue -= scrollNotification.overscroll;
-      } else {
-        if (!_isLoadMore) loadMore();
-      }
-    }
+  // onNotification(ScrollNotification scrollNotification) {
+  //   if (scrollNotification is ScrollStartNotification) {
+  //     if (scrollNotification.metrics.pixels < 250) {
+  //       _isTop = true;
+  //     } else {
+  //       _isTop = false;
+  //     }
+  //   } else if (scrollNotification is ScrollUpdateNotification) {
+  //     if (scrollNotification.scrollDelta > 0 && _pixelValue > 0 && !_isEnd) {
+  //       _pixelValue -= scrollNotification.scrollDelta;
+  //     }
+  //   } else if (scrollNotification is ScrollEndNotification) {
+  //     if (_pixelValue > (_heightLoading * 2 / 3)) {
+  //       _isEnd = true;
+  //     } else {
+  //       _isEnd = false;
+  //       _pixelValue = 0;
+  //     }
+  //   } else if (scrollNotification is OverscrollNotification) {
+  //     if (scrollNotification.overscroll < 0 &&
+  //         _pixelValue <= _heightLoading &&
+  //         _isTop) {
+  //       _pixelValue -= scrollNotification.overscroll;
+  //     } else {
+  //       if (!_isLoadMore) loadMore();
+  //     }
+  //   }
 
-    notifyListeners();
+  //   notifyListeners();
 
-    return false;
-  }
+  //   return false;
+  // }
 
   onSearch(String data) {
     _listPartner = _partnerProvider.listPartner
@@ -169,10 +173,11 @@ class PsychologistProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  initResource() {
+  initResource(models.StaticData expertise) {
     this._scrollController = ScrollController()..addListener(_scrollListener);
     this._searchController = TextEditingController();
 
+    this._expertise = expertise;
     this._sortBy = SortBy.priceLoHi;
     this._isInit = true;
     this._isBusy = false;
@@ -182,10 +187,11 @@ class PsychologistProvider with ChangeNotifier {
 
     this._page = 1;
     this._pixelValue = 0;
+    this._isLastIndex = false;
 
     this._listPartner = [];
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       initialLoad();
     });
   }
@@ -201,15 +207,17 @@ class PsychologistProvider with ChangeNotifier {
 
   navigateToBookAppointment(BuildContext context, models.Partner partner) {
     Navigator.of(context).pushNamed(BookAppointmentScreen.routeName,
-        arguments: helpers.ScreenArguments(partnerData: partner));
+        arguments: helpers.ScreenArguments(
+            partnerData: partner, staticData: _expertise));
   }
 
   navigateToProfile(BuildContext context, models.Partner partner) {
     Navigator.of(context).pushNamed(PsychologistProfileScreen.routeName,
-        arguments: helpers.ScreenArguments(partnerData: partner));
+        arguments: helpers.ScreenArguments(
+            partnerData: partner, staticData: _expertise));
   }
 
-  Future initialLoad() async {
+  Future initialLoad([RefreshController controller]) async {
     _log.info(method: 'initialLoad', message: 'Masuk');
     Map<String, dynamic> queryParameter =
         _partnerProvider.currentQueryParamListPartner;
@@ -226,39 +234,42 @@ class PsychologistProvider with ChangeNotifier {
         .toList();
 
     _sortData(_sortBy);
+
+    if (controller != null) controller.refreshCompleted();
     setToIdle();
   }
 
-  Future loadMore() async {
-    _page++;
+  Future loadMore(RefreshController controller) async {
+    if (!_isLastIndex) {
+      _page++;
 
-    _isLoadMore = true;
+      setToBusy();
 
-    notifyListeners();
-    Map<String, dynamic> queryParameter =
-        _partnerProvider.currentQueryParamListPartner;
+      Map<String, dynamic> queryParameter = {
+        'serviceId': _partnerProvider.currentQueryParamListPartner['serviceId'],
+        'currentPage': _page.toString(),
+        'pageSize': _partnerProvider.currentQueryParamListPartner['pageSize']
+      };
 
-    queryParameter['currentPage'] = _page.toString();
+      _isLastIndex =
+          await _partnerProvider.fetchMoreListPartner(queryParameter);
 
-    await _partnerProvider.fetchMoreListPartner(queryParameter);
+      _listPartner = _partnerProvider.listPartner
+          .where((element) =>
+              element.firstName
+                  .toLowerCase()
+                  .contains(_searchController.text.toLowerCase()) ||
+              element.lastName
+                  .toLowerCase()
+                  .contains(_searchController.text.toLowerCase()))
+          .toList();
 
-    print(jsonEncode(queryParameter));
+      _sortData(_sortBy);
 
-    _listPartner = _partnerProvider.listPartner
-        .where((element) =>
-            element.firstName
-                .toLowerCase()
-                .contains(_searchController.text.toLowerCase()) ||
-            element.lastName
-                .toLowerCase()
-                .contains(_searchController.text.toLowerCase()))
-        .toList();
+      controller.loadComplete();
 
-    _sortData(_sortBy);
-
-    _isLoadMore = false;
-
-    notifyListeners();
+      setToIdle();
+    }
   }
 
   Future onRefresh() async {

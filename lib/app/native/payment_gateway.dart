@@ -1,6 +1,12 @@
 import 'package:flutter/services.dart';
 
 class PaymentGateway {
+  static const String STATUS_SUCCESS = "success";
+  static const String STATUS_PENDING = "pending";
+  static const String STATUS_INVALID = "invalid";
+  static const String STATUS_FAILED = "failed";
+  static const String STATUS_CANCELED = "canceled";
+
   static const MethodChannel _channel =
       const MethodChannel('com.example.local_psykay.payment_gateway');
 
@@ -26,5 +32,9 @@ class PaymentGateway {
     }
 
     return _paymentStatus;
+  }
+
+  static resetStatus() {
+    _paymentStatus = null;
   }
 }

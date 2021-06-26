@@ -61,6 +61,8 @@ class Auth with ChangeNotifier {
   bool get isRegister => _isRegister;
   bool _isAuthorized = true;
   bool get isAuthorized => _isAuthorized;
+  String _language;
+  String get language => _language;
   String _deviceToken;
   String get deviceToken => _deviceToken;
   String _firstName;
@@ -133,6 +135,7 @@ class Auth with ChangeNotifier {
     this._userProfileAPI = config.locator<userProfile.UserProfileAPI>();
 
     this._connection = connection;
+    this._language = 'en';
   }
 
   update(utils.Connection connection) {
@@ -183,8 +186,8 @@ class Auth with ChangeNotifier {
       // Problem with connection to API
 
       if (apiRequest.value.code == '401') {
-        // Force logout
-
+        // Refresh token
+        setToken();
       }
 
       _authStatus = helpers.AuthResultStatus.apiConnectionError;
@@ -324,6 +327,15 @@ class Auth with ChangeNotifier {
       if (googleSignin == null) {
         _authStatus = helpers.AuthResultStatus.kSignInCanceledError;
       } else {
+        if (_isRegister) {
+          utils.ApiReturn<models.ResponseString> apiRequest =
+              await _userProfileAPI.checkEmail(googleSignin.email, _token);
+
+          if (apiRequest.value.status) {
+            throw 'email_already_axists';
+          }
+        }
+
         final GoogleSignInAuthentication googleAuth =
             await googleSignin.authentication;
 
@@ -423,8 +435,8 @@ class Auth with ChangeNotifier {
       // Problem with connection to API
 
       if (apiRequest.value.code == '401') {
-        // Force logout
-
+        // Refresh token
+        setToken();
       }
 
       _authStatus = helpers.AuthResultStatus.apiConnectionError;
@@ -515,6 +527,9 @@ class Auth with ChangeNotifier {
     if (_sharedPreferences == null)
       _sharedPreferences = await SharedPreferences.getInstance();
 
+    if (_sharedPreferences.containsKey('language'))
+      _language = _sharedPreferences.getString('language');
+
     if (!_sharedPreferences.containsKey('userSession') ||
         !_sharedPreferences.containsKey('userData')) {
       _isAuth = false;
@@ -567,6 +582,20 @@ class Auth with ChangeNotifier {
 
     notifyListeners();
     return true;
+  }
+
+  Future setToken() async {
+    _token = await _firebaseAuth.currentUser.getIdToken();
+
+    final userSession = jsonEncode({
+      'token': _token,
+      'userId': _userId,
+      'method': _loginMethod,
+    });
+
+    _sharedPreferences.setString('userSession', userSession);
+
+    notifyListeners();
   }
 
   Future logout() async {
@@ -689,8 +718,8 @@ class Auth with ChangeNotifier {
       // Problem with connection to API
 
       if (apiRequest.value.code == '401') {
-        // Force logout
-
+        // Refresh token
+        setToken();
       }
 
       _authStatus = helpers.AuthResultStatus.apiConnectionError;
@@ -731,8 +760,8 @@ class Auth with ChangeNotifier {
         // Problem with connection to API
 
         if (apiRequest.value.code == '401') {
-          // Force logout
-
+          // Refresh token
+          setToken();
         }
 
         _authStatus = helpers.AuthResultStatus.apiConnectionError;
@@ -775,8 +804,8 @@ class Auth with ChangeNotifier {
       // Problem with connection to API
 
       if (apiRequest.value.code == '401') {
-        // Force logout
-
+        // Refresh token
+        setToken();
       }
 
       _authStatus = helpers.AuthResultStatus.apiConnectionError;

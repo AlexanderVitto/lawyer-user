@@ -159,7 +159,7 @@ class Body extends StatelessWidget {
                 SizedBox(
                   width: 150,
                   child: Text(
-                    '${DateFormat('EEEE').format(value[i].startTime)}',
+                    '${DateFormat('EEEE', provider.staticDataProvider.auth.language).format(value[i].startTime)}',
                     style: TextStyle(
                         fontSize: 12,
                         color: Colors.black45,
@@ -171,7 +171,7 @@ class Body extends StatelessWidget {
                 ),
                 Expanded(
                   child: Text(
-                    '${DateFormat('HH:mm').format(value[i].startTime)} - ${DateFormat('HH:mm').format(value[i].endTime)}',
+                    '${DateFormat('HH:mm', provider.staticDataProvider.auth.language).format(value[i].startTime)} - ${DateFormat('HH:mm', provider.staticDataProvider.auth.language).format(value[i].endTime)}',
                     style: TextStyle(
                         fontSize: 12,
                         color: Colors.black45,
@@ -195,7 +195,7 @@ class Body extends StatelessWidget {
                 ),
                 Expanded(
                   child: Text(
-                    '${DateFormat('HH:mm').format(value[i].startTime)} - ${DateFormat('HH:mm').format(value[i].endTime)}',
+                    '${DateFormat('HH:mm', provider.staticDataProvider.auth.language).format(value[i].startTime)} - ${DateFormat('HH:mm', provider.staticDataProvider.auth.language).format(value[i].endTime)}',
                     style: TextStyle(
                         fontSize: 12,
                         color: Colors.black45,
@@ -271,7 +271,7 @@ class _TopProfile extends StatelessWidget {
                       fontWeight: FontWeight.w400),
                 ),
                 Text(
-                  "${DateFormat.yMMMd().format(DateTime.parse(provider.partnerDetail.dateOfBirth))}",
+                  "${DateFormat.yMMMd(provider.staticDataProvider.auth.language).format(DateTime.parse(provider.partnerDetail.dateOfBirth))}",
                   style: TextStyle(
                       fontSize: 14,
                       color: Colors.black54,

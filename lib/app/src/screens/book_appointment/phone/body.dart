@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:timeline_tile/timeline_tile.dart';
@@ -42,7 +43,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final localization = helpers.AppLocalizations.of(context);
-
+    final currencyFormatter = NumberFormat('#,##0.00', 'ID');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -58,42 +59,285 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
               _TimeTabView(
                   tabController: _tabController, localization: localization),
               _DetailTabView(
-                  tabController: _tabController, localization: localization),
+                tabController: _tabController,
+                localization: localization,
+                currencyFormatter: currencyFormatter,
+              ),
               _SubmitTabView(
-                  tabController: _tabController, localization: localization),
+                tabController: _tabController,
+                localization: localization,
+                currencyFormatter: currencyFormatter,
+              ),
             ],
           ),
         )
       ],
     );
   }
-
-  // Function
-
 }
 
 class _SubmitTabView extends StatelessWidget {
   const _SubmitTabView({
     Key key,
-    @required TabController tabController,
-    this.provider,
+    @required this.tabController,
+    this.currencyFormatter,
     @required this.localization,
-  })  : _tabController = tabController,
-        super(key: key);
+  }) : super(key: key);
 
-  final TabController _tabController;
-
-  final BookAppointmentProvider provider;
+  final TabController tabController;
+  final NumberFormat currencyFormatter;
   final helpers.AppLocalizations localization;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: CustomElevatedButton(
-        onPresses: () => provider.onNext(_tabController, 0),
-        localization: localization,
-        text: 'Test 3',
-      ),
+    final size = MediaQuery.of(context).size;
+    return Consumer<BookAppointmentProvider>(
+      builder: (_, provider, __) => provider.isInit
+          ? helpers.LoadingPouringHourGlass()
+          : ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            localization.translate('Psychologist'),
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.black45,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          const SizedBox(
+                            height: 3,
+                          ),
+                          Text(
+                            '${provider.partnerDetail.firstName} ${provider.partnerDetail.lastName}',
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(
+                      Icons.person_outline,
+                      color: Colors.black45,
+                      size: 30,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    )
+                  ],
+                ),
+                const Divider(
+                  height: 25,
+                  color: Colors.black45,
+                  indent: 10,
+                  endIndent: 10,
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      localization.translate('Expertise'),
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.black45,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    const SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      '${provider.expertise.name}',
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  ],
+                ),
+                const Divider(
+                  height: 25,
+                  color: Colors.black45,
+                  indent: 10,
+                  endIndent: 10,
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      localization.translate('Package'),
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.black45,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    const SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      '${provider.partnerPrice.priceName}',
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  ],
+                ),
+                const Divider(
+                  height: 25,
+                  color: Colors.black45,
+                  indent: 10,
+                  endIndent: 10,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            localization.translate('Date'),
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.black45,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          const SizedBox(
+                            height: 3,
+                          ),
+                          Text(
+                            '${DateFormat.yMMMEd(provider.partnerProvider.auth.language).format(provider.selectedWorkingHour.dateTime)}',
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(
+                      Icons.date_range_outlined,
+                      color: Colors.black45,
+                      size: 30,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    )
+                  ],
+                ),
+                const Divider(
+                  height: 25,
+                  color: Colors.black45,
+                  indent: 10,
+                  endIndent: 10,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            localization.translate('Time'),
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.black45,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          const SizedBox(
+                            height: 3,
+                          ),
+                          Text(
+                            '${provider.selectedWorkingHour.startTime} - ${provider.selectedWorkingHour.endTime}',
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(
+                      Icons.alarm,
+                      color: Colors.black45,
+                      size: 30,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: Colors.white,
+                    border: Border.all(color: PsykayGreenColor),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${localization.translate('Rp')} ${currencyFormatter.format(provider.partnerPrice.priceSchema.basePrice)}',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: PsykayGreenColor,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              '${localization.translate('For consultation')}',
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: PsykayOrangeColor,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Icon(
+                        Icons.credit_card,
+                        color: PsykayGreenColor,
+                        size: 30,
+                      )
+                    ],
+                  ),
+                ),
+                Container(
+                  height: size.height * 0.19,
+                  constraints: BoxConstraints(minHeight: 70),
+                ),
+                CustomElevatedButton(
+                  onPresses: () => provider.onSubmit(context),
+                  localization: localization,
+                  fontSize: 14,
+                  text: 'Proceed to payment',
+                )
+              ],
+            ),
     );
   }
 }
@@ -101,24 +345,206 @@ class _SubmitTabView extends StatelessWidget {
 class _DetailTabView extends StatelessWidget {
   const _DetailTabView({
     Key key,
-    @required TabController tabController,
+    this.currencyFormatter,
+    @required this.tabController,
+    @required this.localization,
+  }) : super(key: key);
+
+  final TabController tabController;
+  final NumberFormat currencyFormatter;
+  final helpers.AppLocalizations localization;
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<BookAppointmentProvider>(
+        builder: (_, provider, __) => provider.isInit
+            ? helpers.LoadingPouringHourGlass()
+            : Column(
+                children: [
+                  _TopDetail(provider: provider, localization: localization),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  const Divider(
+                    height: 20,
+                    thickness: 1,
+                    indent: 10,
+                    endIndent: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: Center(
+                      child: Text(
+                        localization.translate('Select Your Package'),
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: PsykayGreenColor,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ),
+                  const Divider(
+                    height: 20,
+                    thickness: 1,
+                    indent: 10,
+                    endIndent: 10,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: provider.listPartnerPrice.length,
+                      itemBuilder: (_, index) => InkWell(
+                        onTap: () =>
+                            provider.onSubmitPackage(index, tabController, 2),
+                        child: Container(
+                          margin: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: Colors.white,
+                              border: Border.all(color: PsykayGreenColor),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: PsykayGreenColor.withOpacity(0.3),
+                                  spreadRadius: 2,
+                                  blurRadius: 1,
+                                  offset: Offset(
+                                      0, 0), // changes position of shadow
+                                )
+                              ]),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      localization.translate(provider
+                                          .listPartnerPrice[index]
+                                          .priceSchema
+                                          .name),
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: PsykayGreenColor,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      '${localization.translate('Rp')} ${currencyFormatter.format(provider.listPartnerPrice[index].priceSchema.basePrice)}',
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: PsykayOrangeColor,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                color: PsykayGreenColor,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ));
+  }
+}
+
+class _TopDetail extends StatelessWidget {
+  const _TopDetail({
+    Key key,
     this.provider,
     @required this.localization,
-  })  : _tabController = tabController,
-        super(key: key);
-
-  final TabController _tabController;
+  }) : super(key: key);
 
   final BookAppointmentProvider provider;
   final helpers.AppLocalizations localization;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: CustomElevatedButton(
-        onPresses: () => provider.onNext(_tabController, 2),
-        localization: localization,
-        text: 'Test 2',
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+              height: 90,
+              width: 90,
+              decoration: BoxDecoration(
+                  color: PsykayGreyLightColor,
+                  image: provider.partnerDetail.pictureUrl == null
+                      ? null
+                      : DecorationImage(
+                          image:
+                              NetworkImage(provider.partnerDetail.pictureUrl),
+                          fit: BoxFit.cover),
+                  borderRadius: BorderRadius.circular(10)),
+              child: provider.partnerDetail.pictureUrl != null
+                  ? null
+                  : Icon(
+                      Icons.person,
+                      size: 90,
+                      color: Colors.grey,
+                    )),
+          const SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${provider.partnerDetail.firstName} ${provider.partnerDetail.lastName}',
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(
+                  height: 9,
+                ),
+                Text(
+                  '${localization.translate('Expertise')}: ${provider.expertise.name}',
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.black45,
+                      fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(
+                  height: 3,
+                ),
+                Text(
+                  '${localization.translate('Counseling date')}: ${DateFormat.yMMMd(provider.partnerProvider.auth.language).format(provider.selectedWorkingHour.dateTime)}',
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.black45,
+                      fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(
+                  height: 3,
+                ),
+                Text(
+                  '${localization.translate('Counseling time')}: ${provider.selectedWorkingHour.startTime}',
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.black45,
+                      fontWeight: FontWeight.w600),
+                ),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
@@ -406,148 +832,136 @@ class _ProgressIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          height: 70,
-          child: TimelineTile(
-            axis: TimelineAxis.horizontal,
-            alignment: TimelineAlign.manual,
-            isFirst: true,
-            lineXY: 0.5,
-            endChild: Container(
-              width: size.width * 0.2,
-              constraints: const BoxConstraints(
-                minWidth: 100,
-              ),
-              color: Colors.transparent,
-              child: Center(
-                child: Text(
-                  localization.translate('Time'),
-                  style: provider.currentPageIndex == 0
-                      ? TextStyle(
-                          fontSize: 16,
-                          color: PsykayGreyColor,
-                          fontWeight: FontWeight.w600)
-                      : TextStyle(
-                          fontSize: 14,
-                          color: PsykayGreyColor.withOpacity(0.5),
-                          fontWeight: FontWeight.w600),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            height: 70,
+            child: TimelineTile(
+              axis: TimelineAxis.horizontal,
+              alignment: TimelineAlign.manual,
+              isFirst: true,
+              lineXY: 0.4,
+              endChild: Container(
+                width: size.width * 0.2,
+                constraints: const BoxConstraints(
+                  minWidth: 100,
+                ),
+                color: Colors.transparent,
+                child: Center(
+                  child: Text(
+                    localization.translate('Time'),
+                    style: TextStyle(
+                        fontSize: 14,
+                        color: provider.text1Color,
+                        fontWeight: FontWeight.w600),
+                  ),
                 ),
               ),
-            ),
-            startChild: Container(
-              width: size.width * 0.2,
-              constraints: const BoxConstraints(
-                minWidth: 100,
+              startChild: Container(
+                width: size.width * 0.2,
+                constraints: const BoxConstraints(
+                  minWidth: 100,
+                ),
+                color: Colors.transparent,
               ),
-              color: Colors.transparent,
-            ),
-            afterLineStyle: LineStyle(
-              color: provider.progressLine1Color,
-              thickness: 6,
-            ),
-            indicatorStyle: IndicatorStyle(
-              height: 20,
-              color: provider.indicator1Color,
+              afterLineStyle: LineStyle(
+                color: provider.progressLine1Color,
+                thickness: 6,
+              ),
+              indicatorStyle: IndicatorStyle(
+                height: 20,
+                color: provider.indicator1Color,
+              ),
             ),
           ),
-        ),
-        Container(
-          height: 70,
-          child: TimelineTile(
-            axis: TimelineAxis.horizontal,
-            alignment: TimelineAlign.manual,
-            lineXY: 0.5,
-            endChild: Container(
-              width: size.width * 0.2,
-              constraints: const BoxConstraints(
-                minWidth: 100,
-              ),
-              color: Colors.transparent,
-              child: Center(
-                child: Text(
-                  localization.translate('Details'),
-                  style: provider.currentPageIndex == 1
-                      ? TextStyle(
-                          fontSize: 16,
-                          color: PsykayGreyColor,
-                          fontWeight: FontWeight.w600)
-                      : TextStyle(
-                          fontSize: 14,
-                          color: PsykayGreyColor.withOpacity(0.5),
-                          fontWeight: FontWeight.w600),
+          Container(
+            height: 70,
+            child: TimelineTile(
+              axis: TimelineAxis.horizontal,
+              alignment: TimelineAlign.manual,
+              lineXY: 0.4,
+              endChild: Container(
+                width: size.width * 0.2,
+                constraints: const BoxConstraints(
+                  minWidth: 100,
+                ),
+                color: Colors.transparent,
+                child: Center(
+                  child: Text(
+                    localization.translate('Details'),
+                    style: TextStyle(
+                        fontSize: 14,
+                        color: provider.text2Color,
+                        fontWeight: FontWeight.w600),
+                  ),
                 ),
               ),
-            ),
-            startChild: Container(
-              width: size.width * 0.2,
-              constraints: const BoxConstraints(
-                minWidth: 100,
+              startChild: Container(
+                width: size.width * 0.2,
+                constraints: const BoxConstraints(
+                  minWidth: 100,
+                ),
+                color: Colors.transparent,
               ),
-              color: Colors.transparent,
-            ),
-            beforeLineStyle: LineStyle(
-              color: provider.progressLine1Color,
-              thickness: 6,
-            ),
-            afterLineStyle: LineStyle(
-              color: provider.progressLine2Color,
-              thickness: 6,
-            ),
-            indicatorStyle: IndicatorStyle(
-              height: 20,
-              color: provider.indicator2Color,
+              beforeLineStyle: LineStyle(
+                color: provider.progressLine1Color,
+                thickness: 6,
+              ),
+              afterLineStyle: LineStyle(
+                color: provider.progressLine2Color,
+                thickness: 6,
+              ),
+              indicatorStyle: IndicatorStyle(
+                height: 20,
+                color: provider.indicator2Color,
+              ),
             ),
           ),
-        ),
-        Container(
-          height: 70,
-          child: TimelineTile(
-            axis: TimelineAxis.horizontal,
-            alignment: TimelineAlign.manual,
-            isLast: true,
-            lineXY: 0.5,
-            endChild: Container(
-              width: size.width * 0.2,
-              constraints: const BoxConstraints(
-                minWidth: 100,
-              ),
-              color: Colors.transparent,
-              child: Center(
-                child: Text(
-                  localization.translate('Submit'),
-                  style: provider.currentPageIndex == 2
-                      ? TextStyle(
-                          fontSize: 16,
-                          color: PsykayGreyColor,
-                          fontWeight: FontWeight.w600)
-                      : TextStyle(
-                          fontSize: 14,
-                          color: PsykayGreyColor.withOpacity(0.5),
-                          fontWeight: FontWeight.w600),
+          Container(
+            height: 70,
+            child: TimelineTile(
+              axis: TimelineAxis.horizontal,
+              alignment: TimelineAlign.manual,
+              isLast: true,
+              lineXY: 0.4,
+              endChild: Container(
+                width: size.width * 0.2,
+                constraints: const BoxConstraints(
+                  minWidth: 100,
+                ),
+                color: Colors.transparent,
+                child: Center(
+                  child: Text(
+                    localization.translate('Submit'),
+                    style: TextStyle(
+                        fontSize: 14,
+                        color: provider.text3Color,
+                        fontWeight: FontWeight.w600),
+                  ),
                 ),
               ),
-            ),
-            startChild: Container(
-              width: size.width * 0.2,
-              constraints: const BoxConstraints(
-                minWidth: 100,
+              startChild: Container(
+                width: size.width * 0.2,
+                constraints: const BoxConstraints(
+                  minWidth: 100,
+                ),
+                color: Colors.transparent,
               ),
-              color: Colors.transparent,
-            ),
-            beforeLineStyle: LineStyle(
-              color: provider.progressLine2Color,
-              thickness: 6,
-            ),
-            indicatorStyle: IndicatorStyle(
-              height: 20,
-              color: provider.indicator3Color,
+              beforeLineStyle: LineStyle(
+                color: provider.progressLine2Color,
+                thickness: 6,
+              ),
+              indicatorStyle: IndicatorStyle(
+                height: 20,
+                color: provider.indicator3Color,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

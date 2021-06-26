@@ -70,7 +70,7 @@ class Body extends StatelessWidget {
   }
 }
 
-class _ExpertiseContainer extends StatelessWidget {
+class _ExpertiseContainer extends StatefulWidget {
   const _ExpertiseContainer(
       {Key key, this.provider, this.localization, this.size})
       : super(key: key);
@@ -78,6 +78,23 @@ class _ExpertiseContainer extends StatelessWidget {
   final HomeProvider provider;
   final helpers.AppLocalizations localization;
   final Size size;
+
+  @override
+  __ExpertiseContainerState createState() => __ExpertiseContainerState();
+}
+
+class __ExpertiseContainerState extends State<_ExpertiseContainer> {
+  @override
+  void initState() {
+    super.initState();
+    widget.provider.initSubTree();
+  }
+
+  @override
+  void dispose() {
+    widget.provider.closeSubTree();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +108,7 @@ class _ExpertiseContainer extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
             color: PsykayGreenColor.withOpacity(0.8),
             child: Text(
-              localization.translate('Expertise'),
+              widget.localization.translate('Expertise'),
               style: TextStyle(
                   fontSize: 14,
                   color: Colors.white,
@@ -99,20 +116,20 @@ class _ExpertiseContainer extends StatelessWidget {
             ),
           ),
           Container(
-            height: size.height * 0.5,
-            width: size.width,
+            height: widget.size.height * 0.5,
+            width: widget.size.width,
             constraints: BoxConstraints(minHeight: 430),
             child: PageView.builder(
-              controller: provider.pageController,
-              itemCount: provider.pageLength,
+              controller: widget.provider.pageController,
+              itemCount: widget.provider.pageLength,
               itemBuilder: (_, index) => GridView.builder(
                 padding: const EdgeInsets.fromLTRB(10, 15, 10, 0),
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: provider.mapPageExpertise[index].length,
+                itemCount: widget.provider.mapPageExpertise[index].length,
                 itemBuilder: (_, i) => _ItemContainer(
-                  provider: provider,
-                  expertise: provider.mapPageExpertise[index][i],
-                  size: size,
+                  provider: widget.provider,
+                  expertise: widget.provider.mapPageExpertise[index][i],
+                  size: widget.size,
                 ),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
@@ -128,8 +145,8 @@ class _ExpertiseContainer extends StatelessWidget {
           ),
           Center(
             child: SmoothPageIndicator(
-              controller: provider.pageController,
-              count: provider.pageLength,
+              controller: widget.provider.pageController,
+              count: widget.provider.pageLength,
               effect: ScrollingDotsEffect(
                   strokeWidth: 0.5,
                   activeDotScale: 1.2,
@@ -206,7 +223,8 @@ class _TodayArticleContainer extends StatelessWidget {
                         height: size.height * 0.05,
                         constraints: BoxConstraints(minWidth: 200),
                         child: Text(
-                          intl.DateFormat.yMMMEd()
+                          intl.DateFormat.yMMMEd(
+                                  provider.appointmentProvider.auth.language)
                               .format(provider.articles[index].dateTime),
                           style: TextStyle(
                               fontSize: 11,
@@ -372,7 +390,7 @@ class _RescheduleAppointmentContainer extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "${intl.DateFormat.yMMMEd().format(startTime)} ${localization.translate('At')} ${intl.DateFormat('HH:mm').format(startTime)}",
+                              "${intl.DateFormat.yMMMEd(provider.appointmentProvider.auth.language).format(startTime)} ${localization.translate('At')} ${intl.DateFormat('HH:mm', provider.appointmentProvider.auth.language).format(startTime)}",
                               style: TextStyle(
                                   fontSize: 11,
                                   color: Colors.black54,
@@ -563,14 +581,16 @@ class _TodayAppointmentContainer extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                intl.DateFormat.yMMMEd().format(startTime),
+                                intl.DateFormat.yMMMEd(provider
+                                        .appointmentProvider.auth.language)
+                                    .format(startTime),
                                 style: TextStyle(
                                     fontSize: 11,
                                     color: Colors.black54,
                                     fontWeight: FontWeight.w600),
                               ),
                               Text(
-                                "${localization.translate('Start at')} ${intl.DateFormat('HH:mm').format(startTime)}",
+                                "${localization.translate('Start at')} ${intl.DateFormat('HH:mm', provider.appointmentProvider.auth.language).format(startTime)}",
                                 style: TextStyle(
                                     fontSize: 11,
                                     color: Colors.black54,
@@ -710,19 +730,20 @@ class _AppBar extends StatelessWidget {
                             ],
                           ),
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 5),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: PsykayGreenColor,
-                          ),
-                          child: Text(
-                            "${provider.freeAppointment.length ?? 0} ${localization.translate('Kredit')}",
-                            style: TextStyle(
-                                fontSize: 8, fontWeight: FontWeight.w600),
-                          ),
-                        )
+                        if (provider.freeAppointment.isNotEmpty)
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: PsykayGreenColor,
+                            ),
+                            child: Text(
+                              "${provider.freeAppointment.length ?? 0} ${localization.translate('Kredit')}",
+                              style: TextStyle(
+                                  fontSize: 8, fontWeight: FontWeight.w600),
+                            ),
+                          )
                       ],
                     ),
                     const SizedBox(
