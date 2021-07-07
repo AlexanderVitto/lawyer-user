@@ -10,7 +10,7 @@ import 'tablet/body.dart' as tablet;
 import 'phone/body.dart' as phone;
 import 'mini/body.dart' as mini;
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   static const routeName = '/home-screen';
 
   final Animation<Offset> animation;
@@ -18,31 +18,11 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({Key key, this.animation}) : super(key: key);
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  HomeProvider provider;
-  @override
-  void initState() {
-    super.initState();
-
-    provider = Provider.of<HomeProvider>(context, listen: false);
-    provider.initResource();
-  }
-
-  @override
-  void dispose() {
-    provider.close();
-
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final localization = helpers.AppLocalizations.of(context);
     final padding = MediaQuery.of(context).padding;
-    provider = Provider.of<HomeProvider>(context, listen: false);
+    final provider = Provider.of<HomeProvider>(context, listen: false);
+    provider.setAppBarPosition(padding.top);
     return Scaffold(
       backgroundColor: Colors.white,
       body: LayoutBuilder(
@@ -50,29 +30,24 @@ class _HomeScreenState extends State<HomeScreen> {
           print('Width ${constraints.maxWidth}');
           print('Height ${constraints.maxHeight}');
 
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            Provider.of<HomeProvider>(context, listen: false)
-                .setAppBarPosition(padding.top);
-          });
-
           if (constraints.maxWidth > TabletThreshold) {
             return tablet.Body(
-              animation: widget.animation,
+              animation: animation,
             );
           } else if (constraints.maxWidth > PhoneThreshold &&
               constraints.maxWidth <= TabletThreshold) {
             return phone.Body(
-              animation: widget.animation,
+              animation: animation,
             );
           } else {
             return mini.Body(
-              animation: widget.animation,
+              animation: animation,
             );
           }
         },
       ),
       floatingActionButton: Consumer<HomeProvider>(
-        builder: (_, cProvider, __) => cProvider.carts.isEmpty
+        builder: (_, cProvider, __) => provider.carts.isEmpty
             ? Container()
             : FloatingActionButton(
                 onPressed: () =>

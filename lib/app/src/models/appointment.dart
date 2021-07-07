@@ -156,6 +156,15 @@ class Appointment {
   @JsonKey(name: 'PartnerLastName', defaultValue: null, includeIfNull: false)
   String partnerLastName;
 
+  @JsonKey(name: 'SessionStart', defaultValue: null, includeIfNull: false)
+  String sessionStart;
+
+  @JsonKey(name: 'SessionEnd', defaultValue: null, includeIfNull: false)
+  String sessionEnd;
+
+  @JsonKey(name: 'ExpiredDate', defaultValue: null, includeIfNull: false)
+  String expiredDate;
+
   Appointment(
       {this.startDateTime,
       this.endDateTime,
@@ -203,7 +212,10 @@ class Appointment {
       this.userPictureUrl,
       this.partnerPictureUrl,
       this.partnerFirstName,
-      this.partnerLastName});
+      this.partnerLastName,
+      this.sessionStart,
+      this.sessionEnd,
+      this.expiredDate});
 
   factory Appointment.fromJson(Map<String, dynamic> json) =>
       _$AppointmentFromJson(json);

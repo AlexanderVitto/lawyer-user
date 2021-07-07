@@ -13,6 +13,7 @@ StaticData _$StaticDataFromJson(Map<String, dynamic> json) {
     sequence: json['Sequence'] as int,
     description: json['Description'] as String,
     icon: json['Icon'] as String,
+    isSelected: json['isSelected'] as bool,
   );
 }
 
@@ -30,6 +31,7 @@ Map<String, dynamic> _$StaticDataToJson(StaticData instance) {
   writeNotNull('Sequence', instance.sequence);
   writeNotNull('Description', instance.description);
   writeNotNull('Icon', instance.icon);
+  val['isSelected'] = instance.isSelected;
   return val;
 }
 

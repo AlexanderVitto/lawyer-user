@@ -54,7 +54,7 @@ class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
               height: 15,
             ),
             Expanded(
-              child: TabBarView(children: [
+              child: TabBarView(controller: _tabController, children: [
                 SmartRefresher(
                   enablePullDown: true,
                   header: ClassicHeader(),

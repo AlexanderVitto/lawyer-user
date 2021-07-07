@@ -10,7 +10,9 @@ class ScreenArguments {
   final TransactionScreenTab transactionScreenTab;
   final StaticData staticData;
   final Partner partnerData;
+  final User userData;
   final String prevRoute;
+  final DateTime initialDate;
 
   ScreenArguments(
       {this.key,
@@ -18,5 +20,7 @@ class ScreenArguments {
       this.transactionScreenTab = TransactionScreenTab.onGoing,
       this.staticData,
       this.partnerData,
-      this.prevRoute});
+      this.userData,
+      this.prevRoute,
+      this.initialDate});
 }

@@ -7,6 +7,8 @@ import '../utils/utils.dart' as utils;
 
 abstract class ApplicationAPI {
   Future registerDevice(models.ApplicationBody body, String token);
+
+  Future unRegisterDevice(models.ApplicationBody body, String token);
 }
 
 class Production implements ApplicationAPI {
@@ -26,6 +28,28 @@ class Production implements ApplicationAPI {
 
     final url =
         "${config.FlavorConfig.instance.values.host}/api/Application/RegisterDevice";
+    _log.info(method: method, message: 'url $url');
+
+    utils.ApiReturn<HttpClientResponse> response =
+        await _request.postRequest(url, body.toJson(), token);
+
+    if (!response.status) {
+      _log.error(method: method, message: 'response ${response.status}');
+
+      return null;
+    }
+
+    await utils.ResponseParser().from(response, _log, method);
+
+    return null;
+  }
+
+  @override
+  Future unRegisterDevice(models.ApplicationBody body, String token) async {
+    final String method = 'unRegisterDevice';
+
+    final url =
+        "${config.FlavorConfig.instance.values.host}/api/Application/UnregisterDevice";
     _log.info(method: method, message: 'url $url');
 
     utils.ApiReturn<HttpClientResponse> response =

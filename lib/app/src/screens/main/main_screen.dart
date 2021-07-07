@@ -5,13 +5,18 @@ import '../../../../constraint.dart';
 
 import '../../../helpers/helpers.dart' as helpers;
 
+import '../shared/shared.dart';
+
 import 'home/provider/home_provider.dart';
 
 import 'chat/chat_screen.dart';
 import 'home/home_screen.dart';
 import 'profile/profile_screen.dart';
-import 'schedule/schedule_screen.dart';
+import 'appointment/appointment_screen.dart';
 import 'transaction/transaction_screen.dart';
+import 'appointment/provider/appointment_provider.dart';
+import 'transaction/provider/transaction_provider.dart';
+import 'profile/provider/profile_provider.dart';
 
 class MainScreen extends StatefulWidget {
   static const routeName = '/main-screen';
@@ -25,6 +30,8 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
+  bool _isInit = true;
+
   final _tab = TabBar(
     indicator: UnderlineTabIndicator(
       borderSide: BorderSide(color: PsykayGreenColor, width: 3.0),
@@ -77,15 +84,25 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
       parent: _animationController,
       curve: Curves.easeInCubic,
     ));
+  }
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      initialize();
-    });
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (_isInit) {
+      initialize().then((_) {
+        setState(() {
+          _isInit = false;
+        });
+      });
+    }
   }
 
   @override
   void dispose() {
     _animationController.dispose();
+    close();
     super.dispose();
   }
 
@@ -95,20 +112,22 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
       initialIndex: widget.arguments.mainScreenTab.index,
       length: 5,
       child: Scaffold(
-        body: TabBarView(
-          physics: NeverScrollableScrollPhysics(),
-          children: [
-            HomeScreen(
-              animation: _animation,
-            ),
-            ScheduleScreen(),
-            TransactionScreen(
-              tab: widget.arguments.transactionScreenTab,
-            ),
-            ChatScreen(),
-            ProfileScreen()
-          ],
-        ),
+        body: _isInit
+            ? helpers.LoadingPouringHourGlass()
+            : TabBarView(
+                physics: NeverScrollableScrollPhysics(),
+                children: [
+                  HomeScreen(
+                    animation: _animation,
+                  ),
+                  AppointmentScreen(
+                    arguments: widget.arguments,
+                  ),
+                  TransactionScreen(),
+                  ChatScreen(),
+                  ProfileScreen()
+                ],
+              ),
         bottomNavigationBar: Container(
           color: Colors.white,
           child: _tab,
@@ -120,10 +139,18 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   // Functions
 
   Future initialize() async {
-    final homeProvider = Provider.of<HomeProvider>(context, listen: false);
-
-    final futures = <Future>[homeProvider.initialLoad()];
+    final futures = <Future>[
+      Provider.of<HomeProvider>(context, listen: false).initResource(),
+      Provider.of<AppointmentProvider>(context, listen: false).initResource(),
+      Provider.of<TransactionProvider>(context, listen: false)
+          .initResource(widget.arguments.transactionScreenTab),
+      Provider.of<ProfileProvider>(context, listen: false).initResource(),
+    ];
 
     await Future.wait(futures);
+  }
+
+  close() {
+    Provider.of<HomeProvider>(context, listen: false).close();
   }
 }

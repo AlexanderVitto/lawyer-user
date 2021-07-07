@@ -63,7 +63,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       context: context,
                       barrierDismissible: false,
                       iconSize: 72,
-                      title: 'Payment Success!',
+                      title: 'Waiting paymet!',
                       titleFontSize: 14,
                       description:
                           'Click the button to go to transactions page',
@@ -77,7 +77,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   Navigator.of(context).pushNamedAndRemoveUntil(
                       MainScreen.routeName, (route) => false,
                       arguments: helpers.ScreenArguments(
-                          mainScreenTab: MainScreenTab.home));
+                          mainScreenTab: MainScreenTab.transaction));
                 } else {
                   await errorDialog(
                       context: context,

@@ -13,7 +13,6 @@ import 'providers.dart';
 class Financial with ChangeNotifier {
   static const fileName = 'lib/app/src/providers/financial.dart';
 
-  utils.Connection _connection;
   utils.LogUtils _log;
 
   financial.FinancialAPI _financialAPI;
@@ -21,25 +20,24 @@ class Financial with ChangeNotifier {
   Auth _auth;
   Auth get auth => _auth;
 
-  double _balance = 0;
+  double _balance;
   String get balance => NumberFormat('#,##0.00', 'ID').format(_balance);
 
   Financial() {
     this._log = config.locator<utils.LogUtils>(param1: fileName, param2: true);
     this._financialAPI = config.locator<financial.FinancialAPI>();
+
+    this._balance = 0;
   }
 
   update(Auth auth) {
     this._auth = auth;
-    this._connection = auth.connection;
 
     notifyListeners();
   }
 
   Future fetchBalance(Map<String, dynamic> queryParameter) async {
     final String method = 'fetchBalance';
-
-    await _connection.check();
 
     utils.ApiReturn<models.ResponseBalance> apiRequest =
         await _financialAPI.getWalletBalance(queryParameter, _auth.token);
@@ -61,6 +59,11 @@ class Financial with ChangeNotifier {
       }
     }
 
+    notifyListeners();
+  }
+
+  clear() {
+    this._balance = 0;
     notifyListeners();
   }
 }

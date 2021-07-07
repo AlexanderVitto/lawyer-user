@@ -16,7 +16,6 @@ import 'providers.dart';
 class Partner with ChangeNotifier {
   static const fileName = 'lib/app/src/providers/partner.dart';
 
-  utils.Connection _connection;
   utils.LogUtils _log;
 
   partner.PartnerAPI _partnerAPI;
@@ -59,7 +58,6 @@ class Partner with ChangeNotifier {
 
   update(Auth auth) {
     this._auth = auth;
-    this._connection = auth.connection;
 
     notifyListeners();
   }
@@ -70,8 +68,6 @@ class Partner with ChangeNotifier {
 
   Future fetchListPartner(Map<String, dynamic> queryParameter) async {
     final String method = 'fetchListPartner';
-
-    await _connection.check();
 
     utils.ApiReturn<models.ResponseListPartner> apiRequest = await _partnerAPI
         .listPartnerByPreference3(_currentQueryParamLisPartner, _auth.token);
@@ -98,8 +94,6 @@ class Partner with ChangeNotifier {
 
   Future fetchSchedule(Map<String, dynamic> queryParameter) async {
     final String method = 'fetchSchedule';
-
-    await _connection.check();
 
     utils.ApiReturn<models.ResponseScheduleResource> apiRequest =
         await _partnerAPI.scheduleResource(queryParameter, _auth.token);
@@ -141,8 +135,6 @@ class Partner with ChangeNotifier {
     final String method = 'fetchMoreListPartner';
     bool result = false;
 
-    await _connection.check();
-
     utils.ApiReturn<models.ResponseListPartner> apiRequest =
         await _partnerAPI.listPartnerByPreference3(queryParameter, _auth.token);
 
@@ -172,8 +164,6 @@ class Partner with ChangeNotifier {
   Future fetchPartnerDetail(Map<String, dynamic> queryParameter) async {
     final String method = 'fetchPartnerDetail';
 
-    await _connection.check();
-
     utils.ApiReturn<models.ResponsePartner> apiRequest =
         await _partnerAPI.detail(queryParameter, _auth.token);
 
@@ -201,8 +191,6 @@ class Partner with ChangeNotifier {
       Map<String, dynamic> queryParameter) async {
     final String method = 'fetchPartnerDetailByExpertise';
 
-    await _connection.check();
-
     utils.ApiReturn<models.ResponsePartner> apiRequest =
         await _partnerAPI.detailByExpertise(queryParameter, _auth.token);
 
@@ -228,8 +216,6 @@ class Partner with ChangeNotifier {
 
   Future fetchPartnerPrice(Map<String, dynamic> queryParameter) async {
     final String method = 'fetchPartnerPrice';
-
-    await _connection.check();
 
     utils.ApiReturn<models.ResponsePartnerPrice> apiRequest =
         await _partnerAPI.price(queryParameter, _auth.token);
@@ -285,5 +271,17 @@ class Partner with ChangeNotifier {
     });
 
     return result;
+  }
+
+  clear() {
+    this._partnerData = null;
+    this._scheduleResource = null;
+    this._listPartner = [];
+    this._partnerPrice = [];
+    this._listAvailability = [];
+    this._listAvailabilityFull = [];
+    this._listWorkingHour = [];
+    this._currentQueryParamLisPartner = {};
+    notifyListeners();
   }
 }

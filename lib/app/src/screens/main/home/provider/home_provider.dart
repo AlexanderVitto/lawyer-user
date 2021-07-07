@@ -69,7 +69,6 @@ class HomeProvider with ChangeNotifier {
   List<models.Appointment> get todayAppointment {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    _todayAppointment = _appointmentProvider.confirmed.take(2).toList();
 
     _log.info(
         method: 'Get todayAppointment', message: jsonEncode(_todayAppointment));
@@ -81,22 +80,21 @@ class HomeProvider with ChangeNotifier {
   }
 
   List<models.Appointment> get rescheduleAppointment {
-    _rescheduleAppointment = _appointmentProvider.reschedule.take(2).toList();
-
     _log.info(
         method: 'Get rescheduleAppointment',
-        message: jsonEncode(_rescheduleAppointment));
+        message:
+            'AppBar $_appBarPosition  ${jsonEncode(_rescheduleAppointment)}');
 
     return _rescheduleAppointment;
   }
 
-  List<models.Appointment> get freeAppointment =>
-      _appointmentProvider.freeAppointments;
+  List<models.Appointment> _freeAppointment;
+  List<models.Appointment> get freeAppointment => _freeAppointment;
 
+  List<models.Cart> _carts;
   List<models.Cart> get carts {
-    _log.info(method: 'carts', message: _cartProvider.carts.length.toString());
-
-    return _cartProvider.carts;
+    _log.info(method: 'carts', message: 'length ${_carts.length}');
+    return _carts;
   }
 
   String get userFullName =>
@@ -148,11 +146,14 @@ class HomeProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  initResource() {
+  Future initResource() async {
     this._scrollController = ScrollController();
     this._scrollController.addListener(_scrollListener);
 
+    this._carts = [];
     this._todayAppointment = [];
+    this._rescheduleAppointment = [];
+    this._freeAppointment = [];
 
     this._isInit = true;
     this._isBusy = false;
@@ -160,13 +161,11 @@ class HomeProvider with ChangeNotifier {
     this._appBarPosition = 0.0;
     this._pageLength = 0;
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      initialLoad();
-    });
+    await initialLoad();
   }
 
   initSubTree() {
-    this._pageController = PageController();
+    this._pageController = new PageController();
   }
 
   close() {
@@ -180,7 +179,7 @@ class HomeProvider with ChangeNotifier {
   setAppBarPosition(double data) {
     _appBarPosition = data;
 
-    notifyListeners();
+    // notifyListeners();
   }
 
   setFlexible(bool data) {
@@ -237,6 +236,12 @@ class HomeProvider with ChangeNotifier {
     var futures = <Future>[
       _staticDataProvider.fetchExpertise(),
       _staticDataProvider.fetchBank(),
+      _staticDataProvider.fetchCardType(),
+      _staticDataProvider.fetchCountries(),
+      _staticDataProvider.fetchEducation(),
+      _staticDataProvider.fetchExpertise(),
+      _staticDataProvider.fetchOccupation(),
+      _staticDataProvider.fetchReligion(),
       _appointmentProvider.fetchAppointment(queryParamAppointment),
       _appointmentProvider.fetchFreeAppointment(),
       _financialProvider.fetchBalance(queryParamFinancial),
@@ -248,6 +253,11 @@ class HomeProvider with ChangeNotifier {
 
     _mapExpertise();
     _appointmentProvider.filterAppointment();
+
+    _freeAppointment = _appointmentProvider.freeAppointments;
+    _todayAppointment = _appointmentProvider.confirmed.take(2).toList();
+    _rescheduleAppointment = _appointmentProvider.reschedule.take(2).toList();
+    _carts = _cartProvider.carts;
 
     setToIdle();
   }

@@ -48,7 +48,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
       onWillPop: provider.onWillPop,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(localization.translate('Book Appointment')),
+          title: Text(localization.translate('Book appointment'.pascalCase())),
         ),
         backgroundColor: Colors.white,
         body: LayoutBuilder(

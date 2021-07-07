@@ -15,7 +15,8 @@ import '../src/screens/book_appointment/book_appointment_screen.dart';
 import '../src/screens/cart/cart_screen.dart';
 import '../src/screens/checkout/checkout_screen.dart';
 import '../src/screens/manual_payment/manual_payment_screen.dart';
-import '../src/screens/main/transaction/transaction_screen.dart';
+import '../src/screens/account_information/account_information_screen.dart';
+import '../src/screens/update_profile/update_profile_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   // Here we'll handle all the routing
@@ -37,6 +38,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     CartScreen.routeName: (_) => CartScreen(settings.arguments),
     CheckoutScreen.routeName: (_) => CheckoutScreen(),
     ManualPaymentScreen.routeName: (_) => ManualPaymentScreen(),
+    AccountInformationScreen.routeName: (_) => AccountInformationScreen(),
+    UpdateProfileScreen.routeName: (_) => UpdateProfileScreen()
   };
 
   WidgetBuilder builder = routes[settings.name];

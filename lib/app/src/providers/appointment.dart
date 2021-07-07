@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -18,7 +20,6 @@ class Appointment with ChangeNotifier {
   DateTime _endDate;
   DateTime get endDate => _endDate;
 
-  utils.Connection _connection;
   utils.LogUtils _log;
 
   appointment.AppointmentAPI _appointmentAPI;
@@ -30,6 +31,7 @@ class Appointment with ChangeNotifier {
   Auth get auth => _auth;
 
   List<models.Appointment> _appointments;
+  List<models.Appointment> get appointments => _appointments;
   List<models.Appointment> _freeAppointments;
   List<models.Appointment> get freeAppointments => _freeAppointments;
 
@@ -67,7 +69,6 @@ class Appointment with ChangeNotifier {
 
   update(Auth auth) {
     this._auth = auth;
-    this._connection = auth.connection;
 
     notifyListeners();
   }
@@ -86,8 +87,6 @@ class Appointment with ChangeNotifier {
 
   Future booking(models.AppointmentBody body) async {
     final String method = 'booking';
-
-    await _connection.check();
 
     body.userId = _auth.userId;
 
@@ -119,8 +118,6 @@ class Appointment with ChangeNotifier {
   Future updateAppointment(models.AppointmentBody body) async {
     final String method = 'updateAppointment';
 
-    await _connection.check();
-
     utils.ApiReturn<models.ResponseAppointment> apiRequest =
         await _appointmentAPI.updateAppointment(body, _auth.token);
 
@@ -148,8 +145,6 @@ class Appointment with ChangeNotifier {
 
   Future rescheduleAppointment(models.AppointmentBody body) async {
     final String method = 'rescheduleAppointment';
-
-    await _connection.check();
 
     utils.ApiReturn<models.ResponseAppointment> apiRequest =
         await _appointmentAPI.rescheduleAppointment(body, _auth.token);
@@ -181,8 +176,6 @@ class Appointment with ChangeNotifier {
   Future complateAppointment(models.CompleteAppointment body) async {
     final String method = 'complateAppointment';
 
-    await _connection.check();
-
     utils.ApiReturn<models.ResponseAppointment> apiRequest =
         await _appointmentAPI.completeAppointment(body, _auth.token);
 
@@ -211,8 +204,6 @@ class Appointment with ChangeNotifier {
 
   Future rateAppointment(models.RateAppointment body) async {
     final String method = 'rateAppointment';
-
-    await _connection.check();
 
     utils.ApiReturn<models.ResponseAppointment> apiRequest =
         await _appointmentAPI.rateAppointment(body, _auth.token);
@@ -257,8 +248,7 @@ class Appointment with ChangeNotifier {
 
   Future fetchAppointment(Map<String, dynamic> queryParameter) async {
     final String method = 'fetchAppointment';
-
-    await _connection.check();
+    _log.info(method: method, message: jsonEncode(queryParameter));
 
     utils.ApiReturn<models.ResponseListAppointment> apiRequest =
         await _appointmentAPI.getAppointment(queryParameter, _auth.token);
@@ -300,8 +290,6 @@ class Appointment with ChangeNotifier {
   Future fetchFreeAppointment() async {
     final String method = 'fetchFreeAppointment';
 
-    await _connection.check();
-
     Map<String, dynamic> queryParameter = {
       "userId": _auth.userId,
     };
@@ -331,6 +319,8 @@ class Appointment with ChangeNotifier {
 
   Future filterAppointment() async {
     final String method = 'filterAppointment';
+
+    _log.info(method: method, message: '${_appointments.length}');
 
     if (_appointments.isNotEmpty) {
       _payments = [];
@@ -365,11 +355,29 @@ class Appointment with ChangeNotifier {
           case 6:
             _canceled.add(element);
             break;
+          case 7:
+            _reschedule.add(element);
+            break;
           default:
         }
       });
 
       notifyListeners();
     }
+  }
+
+  clear() {
+    this._appointmentStatus = helpers.AuthResultStatus.undefined;
+    this._appointments = [];
+    this._freeAppointments = [];
+    this._payments = [];
+    this._partnerConfrimations = [];
+    this._confirmed = [];
+    this._onProgress = [];
+    this._complated = [];
+    this._canceled = [];
+    this._reschedule = [];
+
+    notifyListeners();
   }
 }

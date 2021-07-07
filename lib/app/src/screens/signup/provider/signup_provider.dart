@@ -241,7 +241,7 @@ class SignUpProvider with ChangeNotifier {
 
           await _authProvider.emailSignup(_userController.text,
               _nameController.text, _passwordController.text);
-
+          setToIdle();
           switch (screenSize) {
             case ScreenSize.mini:
               if (_authProvider.authStatus ==
@@ -350,8 +350,6 @@ class SignUpProvider with ChangeNotifier {
         }
       }
     }
-
-    setToIdle();
   }
 
   Future signupWithFacebook(BuildContext context, ScreenSize screenSize) async {
@@ -474,6 +472,7 @@ class SignUpProvider with ChangeNotifier {
 
     await _authProvider.googleSignin();
 
+    setToIdle();
     switch (screenSize) {
       case ScreenSize.mini:
         if (_authProvider.authStatus == helpers.AuthResultStatus.successful) {
@@ -576,7 +575,5 @@ class SignUpProvider with ChangeNotifier {
         }
         break;
     }
-
-    setToIdle();
   }
 }

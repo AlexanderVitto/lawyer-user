@@ -5,6 +5,7 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -235,11 +236,19 @@ void main() {
     DateTime date = DateTime.parse("2021-06-25");
     DateTime today =
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    print(date);
 
     expect(date.isAtSameMomentAs(today), true);
   });
 
-  test('Pascal case', () {
-    expect('test saja'.capitalize(), 'Test saja');
+  test('IsNull', () {
+    String text = 'String';
+    expect(text?.split('T')[0], 'String');
+  });
+
+  test('Contains', () {
+    String data = 'TEST ';
+    String reg = r'+ data+';
+    expect('Test Saja'.contains(new RegExp(data, caseSensitive: false)), true);
   });
 }

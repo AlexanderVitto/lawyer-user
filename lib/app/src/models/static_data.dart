@@ -21,7 +21,15 @@ class StaticData {
   @JsonKey(name: 'Icon', defaultValue: null, includeIfNull: false)
   final String icon;
 
-  StaticData({this.id, this.name, this.sequence, this.description, this.icon});
+  bool isSelected;
+
+  StaticData(
+      {this.id,
+      this.name,
+      this.sequence,
+      this.description,
+      this.icon,
+      this.isSelected = false});
 
   factory StaticData.fromJson(Map<String, dynamic> json) =>
       _$StaticDataFromJson(json);

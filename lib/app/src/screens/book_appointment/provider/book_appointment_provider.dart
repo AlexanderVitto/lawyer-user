@@ -111,6 +111,7 @@ class BookAppointmentProvider with ChangeNotifier {
     this._text2Color = PsykayGreyLightColor;
     this._text3Color = PsykayGreyLightColor;
 
+    this._mapWorkingHour = {};
     this._holidays = {};
 
     this._selectedEvents = [];
@@ -170,6 +171,7 @@ class BookAppointmentProvider with ChangeNotifier {
   }
 
   setToIdle() {
+    _isInit = false;
     _isBusy = false;
 
     notifyListeners();
@@ -185,6 +187,8 @@ class BookAppointmentProvider with ChangeNotifier {
       'startDate': DateFormat('MM/dd/yyyy').format(now),
       'endDate': DateFormat('MM/dd/yyyy').format(now.add(Duration(days: 90)))
     };
+
+    setToBusy();
 
     final futures = <Future>[
       _partnerProvider.fetchPartnerDetail(queryParameter),
@@ -202,13 +206,8 @@ class BookAppointmentProvider with ChangeNotifier {
     _listPartnerPrice = _partnerDetail.partnerPrices
         .where((element) => element.priceSchema.isEnabled)
         .toList();
-    // _listPartnerPrice = _partnerProvider.partnerPrice
-    //     .where((value) => value.serviceCategoryId == 0)
-    //     .toList();
 
-    _isInit = false;
-
-    notifyListeners();
+    setToIdle();
   }
 
   Future onSubmit(BuildContext context) async {

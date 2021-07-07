@@ -41,8 +41,6 @@ class Auth with ChangeNotifier {
   SharedPreferences _sharedPreferences;
   User _firebaseUser;
 
-  utils.Connection _connection;
-  utils.Connection get connection => _connection;
   utils.LogUtils _log;
 
   application.ApplicationAPI _applicationAPI;
@@ -55,11 +53,11 @@ class Auth with ChangeNotifier {
   models.User _userData;
   models.User get userData => _userData;
 
-  bool _isAuth = false;
+  bool _isAuth;
   bool get isAuth => _isAuth;
   bool _isRegister;
   bool get isRegister => _isRegister;
-  bool _isAuthorized = true;
+  bool _isAuthorized;
   bool get isAuthorized => _isAuthorized;
   String _language;
   String get language => _language;
@@ -126,7 +124,7 @@ class Auth with ChangeNotifier {
     notifyListeners();
   }
 
-  Auth(utils.Connection connection) {
+  Auth() {
     this._facebook = FacebookLogin();
     this._google = GoogleSignIn();
     this._log = config.locator<utils.LogUtils>(param1: fileName, param2: true);
@@ -134,22 +132,16 @@ class Auth with ChangeNotifier {
     this._identityAPI = config.locator<identity.IdentityAPI>();
     this._userProfileAPI = config.locator<userProfile.UserProfileAPI>();
 
-    this._connection = connection;
+    // Nanti diganti dengan value dari share preferences
     this._language = 'en';
-  }
-
-  update(utils.Connection connection) {
-    this._connection = connection;
-
-    notifyListeners();
+    this._isAuth = false;
+    this._isAuthorized = true;
   }
 
   Future emailSignin(String email, String password) async {
     assert(email != null && password != null);
     final String method = 'emailSignin';
     _loginMethod = LoginMethod.EMAIL;
-
-    await _connection.check();
 
     try {
       _firebaseUser = (await _firebaseAuth.signInWithEmailAndPassword(
@@ -177,10 +169,10 @@ class Auth with ChangeNotifier {
     final String method = 'emailSignup';
     _loginMethod = LoginMethod.EMAIL;
 
-    await _connection.check();
+    Map<String, dynamic> queryParameter = {'email': email};
 
-    utils.ApiReturn<models.ResponseString> apiRequest =
-        await _userProfileAPI.checkEmail(email, _token);
+    utils.ApiReturn<models.ResponseBool> apiRequest =
+        await _userProfileAPI.checkRegistered(queryParameter, _token);
 
     if (!apiRequest.status) {
       // Problem with connection to API
@@ -192,7 +184,7 @@ class Auth with ChangeNotifier {
 
       _authStatus = helpers.AuthResultStatus.apiConnectionError;
     } else {
-      if (apiRequest.value.status) {
+      if (!apiRequest.value.result) {
         _authStatus = helpers.AuthResultStatus.emailAlreadyExists;
       } else {
         try {
@@ -235,8 +227,6 @@ class Auth with ChangeNotifier {
     final method = 'signinWithMobileNumber';
     _loginMethod = LoginMethod.MOBILENUMBER;
 
-    await _connection.check();
-
     try {
       final AuthCredential credential = PhoneAuthProvider.credential(
           verificationId: _verificationId, smsCode: smsCode);
@@ -263,8 +253,6 @@ class Auth with ChangeNotifier {
     assert(_isRegister != null);
     final String method = 'facebookSignIn';
     _loginMethod = LoginMethod.FACEBOOK;
-
-    await _connection.check();
 
     try {
       _log.info(method: method, message: 'start');
@@ -317,8 +305,6 @@ class Auth with ChangeNotifier {
     final String method = 'googleSignin';
     _loginMethod = LoginMethod.GOOGLE;
 
-    await _connection.check();
-
     try {
       _log.info(method: method, message: 'start');
 
@@ -328,11 +314,22 @@ class Auth with ChangeNotifier {
         _authStatus = helpers.AuthResultStatus.kSignInCanceledError;
       } else {
         if (_isRegister) {
-          utils.ApiReturn<models.ResponseString> apiRequest =
-              await _userProfileAPI.checkEmail(googleSignin.email, _token);
+          Map<String, dynamic> queryParameter = {'email': googleSignin.email};
 
-          if (apiRequest.value.status) {
+          utils.ApiReturn<models.ResponseBool> apiRequest =
+              await _userProfileAPI.checkRegistered(queryParameter, _token);
+
+          if (!apiRequest.value.result) {
             throw 'email_already_axists';
+          }
+        } else {
+          Map<String, dynamic> queryParameter = {'email': googleSignin.email};
+
+          utils.ApiReturn<models.ResponseBool> apiRequest =
+              await _userProfileAPI.checkAccount(queryParameter, _token);
+
+          if (!apiRequest.value.result) {
+            throw 'email_locked';
           }
         }
 
@@ -381,8 +378,6 @@ class Auth with ChangeNotifier {
     final String method = 'mobilePhoneSignin';
     _loginMethod = LoginMethod.MOBILENUMBER;
 
-    await _connection.check();
-
     try {
       final AuthCredential authCredential = PhoneAuthProvider.credential(
           verificationId: verificationId, smsCode: smsCode);
@@ -409,8 +404,6 @@ class Auth with ChangeNotifier {
   Future resetPassword(String email) async {
     final String method = 'resetPassword';
 
-    await _connection.check();
-
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
       _authStatus = helpers.AuthResultStatus.successful;
@@ -423,13 +416,11 @@ class Auth with ChangeNotifier {
     notifyListeners();
   }
 
-  Future checkMobileNumber(String number) async {
-    final String method = 'checkMobileNumber';
-
-    await _connection.check();
+  Future updateProfile() async {
+    final String method = 'updateProfile';
 
     utils.ApiReturn<models.ResponseString> apiRequest =
-        await _userProfileAPI.checkMobileNumber(number, _token);
+        await _userProfileAPI.update(_userData, _token);
 
     if (!apiRequest.status) {
       // Problem with connection to API
@@ -442,6 +433,34 @@ class Auth with ChangeNotifier {
       _authStatus = helpers.AuthResultStatus.apiConnectionError;
     } else {
       if (apiRequest.value.status) {
+        _authStatus = helpers.AuthResultStatus.updateProfileSuccess;
+      } else {
+        _authStatus = helpers.AuthResultStatus.updateProfileFailed;
+      }
+    }
+
+    notifyListeners();
+  }
+
+  Future checkMobileNumber(String number) async {
+    final String method = 'checkMobileNumber';
+
+    Map<String, dynamic> queryParameter = {'mobileNumber': number};
+
+    utils.ApiReturn<models.ResponseBool> apiRequest =
+        await _userProfileAPI.checkRegistered(queryParameter, _token);
+
+    if (!apiRequest.status) {
+      // Problem with connection to API
+
+      if (apiRequest.value.code == '401') {
+        // Refresh token
+        setToken();
+      }
+
+      _authStatus = helpers.AuthResultStatus.apiConnectionError;
+    } else {
+      if (!apiRequest.value.result) {
         _authStatus = helpers.AuthResultStatus.mobileNumberAlreadyExists;
       } else {
         _authStatus = helpers.AuthResultStatus.mobileNumberNotRegistered;
@@ -492,6 +511,33 @@ class Auth with ChangeNotifier {
       _verificationId = verId;
       print(_verificationId);
     };
+    if (_isRegister) {
+      Map<String, dynamic> queryParameter = {'mobileNumber': phoneNumber};
+
+      utils.ApiReturn<models.ResponseBool> apiRequest =
+          await _userProfileAPI.checkRegistered(queryParameter, _token);
+
+      if (!apiRequest.value.result) {
+        _authStatus = helpers.AuthResultStatus.mobileNumberAlreadyExists;
+
+        notifyListeners();
+
+        return;
+      }
+    } else {
+      Map<String, dynamic> queryParameter = {'mobileNumber': phoneNumber};
+
+      utils.ApiReturn<models.ResponseBool> apiRequest =
+          await _userProfileAPI.checkAccount(queryParameter, _token);
+
+      if (!apiRequest.value.result) {
+        _authStatus = helpers.AuthResultStatus.accountLocked;
+
+        notifyListeners();
+
+        return;
+      }
+    }
 
     try {
       if (resend) {
@@ -523,13 +569,17 @@ class Auth with ChangeNotifier {
 
   Future tryAutoLogin() async {
     final String method = 'tryAutoLogin';
+    _log.info(method: method, message: 'Start');
 
+    _log.debug(method: method, message: 'Check _sharedPreferences null');
     if (_sharedPreferences == null)
       _sharedPreferences = await SharedPreferences.getInstance();
 
+    _log.debug(method: method, message: 'Check _sharedPreferences language');
     if (_sharedPreferences.containsKey('language'))
       _language = _sharedPreferences.getString('language');
 
+    _log.debug(method: method, message: 'Check _sharedPreferences userSession');
     if (!_sharedPreferences.containsKey('userSession') ||
         !_sharedPreferences.containsKey('userData')) {
       _isAuth = false;
@@ -540,6 +590,7 @@ class Auth with ChangeNotifier {
     final Map extractedUserSession =
         jsonDecode(_sharedPreferences.getString('userSession'));
 
+    _log.debug(method: method, message: 'Check _sharedPreferences userData');
     if (_sharedPreferences.getString('userData') == null) {
       await logout();
       _isAuth = false;
@@ -547,6 +598,7 @@ class Auth with ChangeNotifier {
       return false;
     }
 
+    _log.debug(method: method, message: 'Check _firebaseAuth.currentUser');
     if (_firebaseAuth.currentUser == null) {
       _isAuth = false;
 
@@ -558,6 +610,8 @@ class Auth with ChangeNotifier {
         _token = result;
       })
     ];
+    _log.debug(
+        method: method, message: 'Check _firebaseAuth.getIdToken $_token');
 
     await Future.wait(futures);
 
@@ -581,7 +635,6 @@ class Auth with ChangeNotifier {
     _isAuth = true;
 
     notifyListeners();
-    return true;
   }
 
   Future setToken() async {
@@ -598,6 +651,37 @@ class Auth with ChangeNotifier {
     notifyListeners();
   }
 
+  Future getUserData() async {
+    final String method = '_fetchUserData';
+
+    if (_sharedPreferences == null)
+      _sharedPreferences = await SharedPreferences.getInstance();
+
+    utils.ApiReturn<models.UserResponse> apiRequest =
+        await _userProfileAPI.getUserProfile(_userId, _token);
+
+    if (!apiRequest.status) {
+      // Problem with connection to API
+
+      if (apiRequest.value.code == '401') {
+        // Refresh token
+        setToken();
+      }
+
+      _authStatus = helpers.AuthResultStatus.apiConnectionError;
+    } else {
+      if (apiRequest.value.status) {
+        _userData = apiRequest.value.result;
+        _authStatus = helpers.AuthResultStatus.successful;
+
+        // Store userData to shared preferences
+        _sharedPreferences.setString('userData', jsonEncode(_userData));
+      } else {
+        _authStatus = helpers.AuthResultStatus.userNotFound;
+      }
+    }
+  }
+
   Future logout() async {
     final String method = 'logout';
 
@@ -608,6 +692,14 @@ class Auth with ChangeNotifier {
         final extractedUserSession =
             jsonDecode(_sharedPreferences.getString('userSession'))
                 as Map<String, Object>;
+
+        final Map extractedDeviceData =
+            jsonDecode(_sharedPreferences.getString('deviceData'));
+
+        models.ApplicationBody applicationBody =
+            models.ApplicationBody.fromJson(extractedDeviceData);
+
+        futures.add(_applicationAPI.unRegisterDevice(applicationBody, _token));
 
         switch (extractedUserSession['method']) {
           case LoginMethod.FACEBOOK:
@@ -623,11 +715,9 @@ class Auth with ChangeNotifier {
 
     await Future.wait(futures);
 
-    _resetField();
-
     if (_sharedPreferences != null) _sharedPreferences.clear();
 
-    notifyListeners();
+    clear();
   }
 
   Future _authentication() async {
@@ -682,9 +772,11 @@ class Auth with ChangeNotifier {
       };
     }
 
+    _sharedPreferences.setString('deviceData', jsonEncode(applicationBody));
+
     final future2 = <Future>[
       _applicationAPI.registerDevice(applicationBody, _token),
-      _getUserData()
+      getUserData()
       // Get general token twilio [later]
     ];
 
@@ -705,37 +797,6 @@ class Auth with ChangeNotifier {
     }
   }
 
-  Future _getUserData() async {
-    final String method = '_fetchUserData';
-
-    if (_sharedPreferences == null)
-      _sharedPreferences = await SharedPreferences.getInstance();
-
-    utils.ApiReturn<models.UserResponse> apiRequest =
-        await _userProfileAPI.getUserProfile(_userId, _token);
-
-    if (!apiRequest.status) {
-      // Problem with connection to API
-
-      if (apiRequest.value.code == '401') {
-        // Refresh token
-        setToken();
-      }
-
-      _authStatus = helpers.AuthResultStatus.apiConnectionError;
-    } else {
-      if (apiRequest.value.status) {
-        _userData = apiRequest.value.result;
-        _authStatus = helpers.AuthResultStatus.successful;
-
-        // Store userData to shared preferences
-        _sharedPreferences.setString('userData', jsonEncode(_userData));
-      } else {
-        _authStatus = helpers.AuthResultStatus.userNotFound;
-      }
-    }
-  }
-
   Future _generateUserData() async {
     final String method = '_generateUserData';
     try {
@@ -752,29 +813,34 @@ class Auth with ChangeNotifier {
       final name = responseData['users'][0]['displayName'];
       final photoUrl = responseData['users'][0]['photoUrl'];
 
-      // Check email in database
-      utils.ApiReturn<models.ResponseString> apiRequest =
-          await _userProfileAPI.checkEmail(email, _token);
+      models.User userModel = models.User(
+          id: userId, email: email, firstName: name, pictureUrl: photoUrl);
 
-      if (!apiRequest.status) {
-        // Problem with connection to API
+      await _createUserData(userModel);
 
-        if (apiRequest.value.code == '401') {
-          // Refresh token
-          setToken();
-        }
+      // // Check email in database
+      // utils.ApiReturn<models.ResponseString> apiRequest =
+      //     await _userProfileAPI.checkEmail(email, _token);
 
-        _authStatus = helpers.AuthResultStatus.apiConnectionError;
-      } else {
-        if (apiRequest.value.status) {
-          _authStatus = helpers.AuthResultStatus.emailAlreadyExists;
-        } else {
-          models.User userModel = models.User(
-              id: userId, email: email, firstName: name, pictureUrl: photoUrl);
+      // if (!apiRequest.status) {
+      //   // Problem with connection to API
 
-          await _createUserData(userModel);
-        }
-      }
+      //   if (apiRequest.value.code == '401') {
+      //     // Refresh token
+      //     setToken();
+      //   }
+
+      //   _authStatus = helpers.AuthResultStatus.apiConnectionError;
+      // } else {
+      //   if (apiRequest.value.status) {
+      //     _authStatus = helpers.AuthResultStatus.emailAlreadyExists;
+      //   } else {
+      //     models.User userModel = models.User(
+      //         id: userId, email: email, firstName: name, pictureUrl: photoUrl);
+
+      //     await _createUserData(userModel);
+      //   }
+      // }
     } catch (error) {
       _log.error(method: method, message: error.toString());
 
@@ -863,20 +929,26 @@ class Auth with ChangeNotifier {
     };
   }
 
-  _resetField() {
-    _userData = null;
-    _isAuth = false;
-    _isRegister = null;
-    _deviceToken = null;
-    _firstName = null;
-    _lastName = null;
-    _loginMethod = null;
+  clear() {
+    this._facebook = FacebookLogin();
+    this._google = GoogleSignIn();
 
-    _callingCode = null;
-    _mobileNumber = null;
-    _token = null;
-    _userId = null;
-    _verificationId = null;
-    _resendToken = null;
+    // Nanti diganti dengan value dari share preferences
+    this._language = 'en';
+    this._userData = null;
+    this._authStatus = null;
+    this._isAuth = false;
+    this._isRegister = null;
+    this._isAuthorized = true;
+    this._deviceToken = null;
+    this._firstName = null;
+    this._lastName = null;
+    this._loginMethod = null;
+    this._callingCode = null;
+    this._mobileNumber = null;
+    this._token = null;
+    this._userId = null;
+    this._verificationId = null;
+    this._resendToken = null;
   }
 }

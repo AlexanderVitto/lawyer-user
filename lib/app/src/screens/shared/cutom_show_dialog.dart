@@ -45,7 +45,7 @@ Future<T> successDialog<T>(
                     height: sizedBox1,
                   ),
                   Text(
-                    localization.translate(title),
+                    localization.translate(title.pascalCase()),
                     style: TextStyle(
                         fontSize: titleFontSize, fontWeight: FontWeight.w600),
                   ),
@@ -53,7 +53,7 @@ Future<T> successDialog<T>(
                     height: sizedBox2,
                   ),
                   Text(
-                    localization.translate(description),
+                    localization.translate(description.capitalize()),
                     style: TextStyle(
                         fontSize: descriptionFontSize,
                         color: Colors.black54,
@@ -148,6 +148,8 @@ Future<T> errorDialog<T>(
 Future<bool> questionDialog(
     {@required BuildContext context,
     bool barrierDismissible = false,
+    String icon,
+    double iconSize,
     String title,
     double titleFontSize = 16,
     String description = '',
@@ -176,6 +178,15 @@ Future<bool> questionDialog(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  if (icon != null)
+                    Image.asset(
+                      icon,
+                      height: iconSize,
+                      width: iconSize,
+                    ),
                   const SizedBox(
                     height: 10,
                   ),

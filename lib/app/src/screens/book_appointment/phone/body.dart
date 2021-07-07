@@ -94,248 +94,254 @@ class _SubmitTabView extends StatelessWidget {
     return Consumer<BookAppointmentProvider>(
       builder: (_, provider, __) => provider.isInit
           ? helpers.LoadingPouringHourGlass()
-          : ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+          : Stack(
+              fit: StackFit.expand,
               children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                Row(
+                ListView(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   children: [
-                    Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            localization.translate('Psychologist'),
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.black45,
-                                fontWeight: FontWeight.w600),
-                          ),
-                          const SizedBox(
-                            height: 3,
-                          ),
-                          Text(
-                            '${provider.partnerDetail.firstName} ${provider.partnerDetail.lastName}',
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.black87,
-                                fontWeight: FontWeight.w400),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Icon(
-                      Icons.person_outline,
-                      color: Colors.black45,
-                      size: 30,
-                    ),
                     const SizedBox(
-                      width: 10,
-                    )
-                  ],
-                ),
-                const Divider(
-                  height: 25,
-                  color: Colors.black45,
-                  indent: 10,
-                  endIndent: 10,
-                ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      localization.translate('Expertise'),
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.black45,
-                          fontWeight: FontWeight.w600),
+                      height: 10,
                     ),
-                    const SizedBox(
-                      height: 3,
-                    ),
-                    Text(
-                      '${provider.expertise.name}',
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w400),
-                    ),
-                  ],
-                ),
-                const Divider(
-                  height: 25,
-                  color: Colors.black45,
-                  indent: 10,
-                  endIndent: 10,
-                ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      localization.translate('Package'),
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.black45,
-                          fontWeight: FontWeight.w600),
-                    ),
-                    const SizedBox(
-                      height: 3,
-                    ),
-                    Text(
-                      '${provider.partnerPrice.priceName}',
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w400),
-                    ),
-                  ],
-                ),
-                const Divider(
-                  height: 25,
-                  color: Colors.black45,
-                  indent: 10,
-                  endIndent: 10,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            localization.translate('Date'),
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.black45,
-                                fontWeight: FontWeight.w600),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                localization.translate('Psychologist'),
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black45,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              const SizedBox(
+                                height: 3,
+                              ),
+                              Text(
+                                '${provider.partnerDetail.firstName} ${provider.partnerDetail.lastName}',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ],
                           ),
-                          const SizedBox(
-                            height: 3,
-                          ),
-                          Text(
-                            '${DateFormat.yMMMEd(provider.partnerProvider.auth.language).format(provider.selectedWorkingHour.dateTime)}',
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.black87,
-                                fontWeight: FontWeight.w400),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Icon(
-                      Icons.date_range_outlined,
-                      color: Colors.black45,
-                      size: 30,
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    )
-                  ],
-                ),
-                const Divider(
-                  height: 25,
-                  color: Colors.black45,
-                  indent: 10,
-                  endIndent: 10,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            localization.translate('Time'),
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.black45,
-                                fontWeight: FontWeight.w600),
-                          ),
-                          const SizedBox(
-                            height: 3,
-                          ),
-                          Text(
-                            '${provider.selectedWorkingHour.startTime} - ${provider.selectedWorkingHour.endTime}',
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.black87,
-                                fontWeight: FontWeight.w400),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Icon(
-                      Icons.alarm,
-                      color: Colors.black45,
-                      size: 30,
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    )
-                  ],
-                ),
-                const SizedBox(
-                  height: 25,
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: Colors.white,
-                    border: Border.all(color: PsykayGreenColor),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '${localization.translate('Rp')} ${currencyFormatter.format(provider.partnerPrice.priceSchema.basePrice)}',
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  color: PsykayGreenColor,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              '${localization.translate('For consultation')}',
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  color: PsykayOrangeColor,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ],
                         ),
+                        Icon(
+                          Icons.person_outline,
+                          color: Colors.black45,
+                          size: 30,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        )
+                      ],
+                    ),
+                    const Divider(
+                      height: 25,
+                      color: Colors.black45,
+                      indent: 10,
+                      endIndent: 10,
+                    ),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          localization.translate('Expertise'),
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.black45,
+                              fontWeight: FontWeight.w600),
+                        ),
+                        const SizedBox(
+                          height: 3,
+                        ),
+                        Text(
+                          '${provider.expertise.name}',
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black87,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ],
+                    ),
+                    const Divider(
+                      height: 25,
+                      color: Colors.black45,
+                      indent: 10,
+                      endIndent: 10,
+                    ),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          localization.translate('Package'),
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.black45,
+                              fontWeight: FontWeight.w600),
+                        ),
+                        const SizedBox(
+                          height: 3,
+                        ),
+                        Text(
+                          '${provider.partnerPrice.priceSchema.name}',
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black87,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ],
+                    ),
+                    const Divider(
+                      height: 25,
+                      color: Colors.black45,
+                      indent: 10,
+                      endIndent: 10,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                localization.translate('Date'),
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black45,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              const SizedBox(
+                                height: 3,
+                              ),
+                              Text(
+                                '${DateFormat.yMMMEd(provider.partnerProvider.auth.language).format(provider.selectedWorkingHour.dateTime)}',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(
+                          Icons.date_range_outlined,
+                          color: Colors.black45,
+                          size: 30,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        )
+                      ],
+                    ),
+                    const Divider(
+                      height: 25,
+                      color: Colors.black45,
+                      indent: 10,
+                      endIndent: 10,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                localization.translate('Time'),
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black45,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              const SizedBox(
+                                height: 3,
+                              ),
+                              Text(
+                                '${provider.selectedWorkingHour.startTime} - ${provider.selectedWorkingHour.endTime}',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(
+                          Icons.alarm,
+                          color: Colors.black45,
+                          size: 30,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.white,
+                        border: Border.all(color: PsykayGreenColor),
                       ),
-                      Icon(
-                        Icons.credit_card,
-                        color: PsykayGreenColor,
-                        size: 30,
-                      )
-                    ],
-                  ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${localization.translate('Rp')} ${currencyFormatter.format(provider.partnerPrice.priceSchema.basePrice)}',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: PsykayGreenColor,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  '${localization.translate('For consultation')}',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      color: PsykayOrangeColor,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Icon(
+                            Icons.credit_card,
+                            color: PsykayGreenColor,
+                            size: 30,
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: size.height * 0.19,
+                      constraints: BoxConstraints(minHeight: 70),
+                    ),
+                    CustomElevatedButton(
+                      onPresses: () => provider.onSubmit(context),
+                      localization: localization,
+                      fontSize: 14,
+                      text: 'Proceed to payment',
+                    )
+                  ],
                 ),
-                Container(
-                  height: size.height * 0.19,
-                  constraints: BoxConstraints(minHeight: 70),
-                ),
-                CustomElevatedButton(
-                  onPresses: () => provider.onSubmit(context),
-                  localization: localization,
-                  fontSize: 14,
-                  text: 'Proceed to payment',
-                )
+                if (provider.isBusy) helpers.LoadingPouringHourGlass()
               ],
             ),
     );

@@ -18,6 +18,7 @@ class Body extends StatelessWidget {
   Widget build(BuildContext context) {
     final localization = helpers.AppLocalizations.of(context);
     final currencyFormatter = NumberFormat('#,##0.00', 'ID');
+    final size = MediaQuery.of(context).size;
 
     return Consumer<CheckoutProvider>(
       builder: (_, provider, __) => Stack(
@@ -31,6 +32,9 @@ class Body extends StatelessWidget {
                 height: 10,
               ),
               _summaryBuilder(provider, currencyFormatter, localization),
+              SizedBox(
+                height: size.height * 0.2,
+              )
             ],
           ),
           Positioned(

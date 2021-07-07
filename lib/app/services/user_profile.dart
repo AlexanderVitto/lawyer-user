@@ -20,6 +20,12 @@ abstract class UserProfileAPI {
 
   Future<utils.ApiReturn<models.ResponseString>> checkMobileNumber(
       String mobileNumber, String token);
+
+  Future<utils.ApiReturn<models.ResponseBool>> checkRegistered(
+      Map<String, dynamic> queryParameter, String token);
+
+  Future<utils.ApiReturn<models.ResponseBool>> checkAccount(
+      Map<String, dynamic> queryParameter, String token);
 }
 
 class Production implements UserProfileAPI {
@@ -211,5 +217,77 @@ class Production implements UserProfileAPI {
     _log.info(method: method, message: 'result status: ${result.status}');
 
     return utils.ApiReturn<models.ResponseString>(status: true, value: result);
+  }
+
+  @override
+  Future<utils.ApiReturn<models.ResponseBool>> checkAccount(
+      Map<String, dynamic> queryParameter, String token) async {
+    final String method = 'checkAccount';
+    models.ResponseBool result;
+
+    final url =
+        '${config.FlavorConfig.instance.values.host}/api/UserProfile/checkAccount';
+    _log.info(method: method, message: 'url $url');
+
+    utils.ApiReturn<HttpClientResponse> response =
+        await _request.getRequest(url, token, queryParameter: queryParameter);
+
+    if (!response.status) {
+      _log.error(method: method, message: 'response ${response.status}');
+
+      if (response.value != null) {
+        return utils.ApiReturn<models.ResponseBool>(
+            status: false,
+            value: models.ResponseBool(
+                code: response.value.statusCode.toString()));
+      } else {
+        return utils.ApiReturn<models.ResponseBool>(
+            status: false,
+            value: models.ResponseBool(message: response.message));
+      }
+    }
+
+    Map responseMap = await utils.ResponseParser().from(response, _log, method);
+    result = models.ResponseBool.fromJson(responseMap);
+
+    _log.info(method: method, message: 'result status: ${result.status}');
+
+    return utils.ApiReturn<models.ResponseBool>(status: true, value: result);
+  }
+
+  @override
+  Future<utils.ApiReturn<models.ResponseBool>> checkRegistered(
+      Map<String, dynamic> queryParameter, String token) async {
+    final String method = 'checkRegistered';
+    models.ResponseBool result;
+
+    final url =
+        '${config.FlavorConfig.instance.values.host}/api/UserProfile/checkRegistered';
+    _log.info(method: method, message: 'url $url');
+
+    utils.ApiReturn<HttpClientResponse> response =
+        await _request.getRequest(url, token, queryParameter: queryParameter);
+
+    if (!response.status) {
+      _log.error(method: method, message: 'response ${response.status}');
+
+      if (response.value != null) {
+        return utils.ApiReturn<models.ResponseBool>(
+            status: false,
+            value: models.ResponseBool(
+                code: response.value.statusCode.toString()));
+      } else {
+        return utils.ApiReturn<models.ResponseBool>(
+            status: false,
+            value: models.ResponseBool(message: response.message));
+      }
+    }
+
+    Map responseMap = await utils.ResponseParser().from(response, _log, method);
+    result = models.ResponseBool.fromJson(responseMap);
+
+    _log.info(method: method, message: 'result status: ${result.status}');
+
+    return utils.ApiReturn<models.ResponseBool>(status: true, value: result);
   }
 }

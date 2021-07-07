@@ -20,7 +20,6 @@ class Notification with ChangeNotifier {
         id: 3, name: "Transaction", isFilterActive: false, ignore: true)
   ];
 
-  utils.Connection _connection;
   utils.LogUtils _log;
 
   notification.NotificationAPI _notificationAPI;
@@ -47,15 +46,12 @@ class Notification with ChangeNotifier {
 
   update(Auth auth) {
     this._auth = auth;
-    this._connection = auth.connection;
 
     notifyListeners();
   }
 
   Future fetchNotification() async {
     final String method = 'fetchNotification';
-
-    await _connection.check();
 
     Map<String, dynamic> queryParameter = {'userId': _auth.userId};
 
@@ -115,10 +111,15 @@ class Notification with ChangeNotifier {
   Future readNotification(models.NotificationBody body) async {
     final String method = 'readNotification';
 
-    await _connection.check();
-
     await _notificationAPI.readNotification(body, _auth.token);
 
     // notifyListeners();
+  }
+
+  clear() {
+    this._notificationInfos = [];
+    this._notificationPromos = [];
+    this._notificationTransactions = [];
+    notifyListeners();
   }
 }

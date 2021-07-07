@@ -18,7 +18,7 @@ Future<void> main() async {
               'https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyAvz02RmKRJUPDVidwhT9iPQh2COFOg99I',
           enableBearerToken: true,
           timeout: 30,
-          bookingTimeThreshold: 6,
+          bookingTimeThreshold: 1,
           operationTimeStart: [8, 0],
           operationalTimeOff: [21, 0]));
 

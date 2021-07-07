@@ -54,18 +54,18 @@ class MyApp extends StatelessWidget {
           buttonColor: PsykayOrangeColor,
           fontFamily: 'Roboto',
         ),
-        home: Consumer<providers.Auth>(
-            builder: (_, provider, __) => provider.isAuth
-                ?
-                // SplashScreen()
-                MainScreen(
-                    helpers.ScreenArguments(mainScreenTab: MainScreenTab.home))
-                : FutureBuilder(
-                    future: provider.tryAutoLogin(),
-                    builder: (_, snapshot) =>
-                        snapshot.connectionState == ConnectionState.waiting
-                            ? SplashAnimation()
-                            : SplashScreen())),
+        home: Consumer<providers.Auth>(builder: (_, provider, __) {
+          print('======> [APP]');
+          return provider.isAuth
+              ? MainScreen(
+                  helpers.ScreenArguments(mainScreenTab: MainScreenTab.home))
+              : FutureBuilder(
+                  future: provider.tryAutoLogin(),
+                  builder: (_, snapshot) =>
+                      snapshot.connectionState == ConnectionState.waiting
+                          ? SplashAnimation()
+                          : SplashScreen());
+        }),
         onGenerateRoute: config.generateRoute,
       ),
     );

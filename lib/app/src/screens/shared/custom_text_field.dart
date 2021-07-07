@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
+  final int maxLines;
+  final double textSize;
+  final Color textColor;
   final Color inputBorderColor;
   final TextEditingController controller;
   final TextInputType keyboardType;
@@ -17,12 +20,16 @@ class CustomTextField extends StatelessWidget {
   final Color hintColor;
   final String helperText;
   final double helperFontSize;
+  final EdgeInsetsGeometry contentPadding;
   final Color helperColor;
   final Color borderColor;
   final Widget suffixIcon;
 
   const CustomTextField(
       {Key key,
+      this.maxLines = 1,
+      this.textSize = 14,
+      this.textColor = Colors.black87,
       this.inputBorderColor = Colors.white,
       this.controller,
       this.keyboardType = TextInputType.emailAddress,
@@ -39,6 +46,7 @@ class CustomTextField extends StatelessWidget {
       this.hintColor = Colors.grey,
       this.helperText = '',
       this.helperFontSize = 12,
+      this.contentPadding,
       this.helperColor = Colors.white,
       this.borderColor = Colors.white,
       this.suffixIcon})
@@ -52,6 +60,9 @@ class CustomTextField extends StatelessWidget {
         primaryColorDark: Colors.blue,
       ),
       child: TextField(
+        maxLines: maxLines,
+        style: TextStyle(
+            fontSize: textSize, color: textColor, fontWeight: FontWeight.w600),
         controller: controller,
         keyboardType: keyboardType,
         onChanged: onChanged,
@@ -71,8 +82,7 @@ class CustomTextField extends StatelessWidget {
                 color: hintColor,
                 fontSize: hintFontSize,
                 fontWeight: FontWeight.w600),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+            contentPadding: contentPadding,
             helperText: helperText,
             helperStyle: TextStyle(
                 color: helperColor,

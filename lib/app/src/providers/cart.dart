@@ -13,7 +13,6 @@ import 'providers.dart';
 class Cart with ChangeNotifier {
   static const fileName = 'lib/app/src/providers/cart.dart';
 
-  utils.Connection _connection;
   utils.LogUtils _log;
 
   cart.CartAPI _cartAPI;
@@ -33,15 +32,12 @@ class Cart with ChangeNotifier {
 
   update(Auth auth) {
     this._auth = auth;
-    this._connection = auth.connection;
 
     notifyListeners();
   }
 
   Future fetchCart() async {
     final String method = 'fetchCart';
-
-    await _connection.check();
 
     Map<String, dynamic> queryParameter = {"userId": _auth.userId};
 
@@ -60,10 +56,6 @@ class Cart with ChangeNotifier {
     } else {
       if (apiRequest.value.status) {
         _carts = apiRequest.value.result;
-        // _carts = apiRequest.value.result
-        //     .where((value) =>
-        //         DateTime.now().isBefore(DateTime.tryParse(value.expiredIn)))
-        //     .toList();
 
         _carts.sort((a, b) => a.appointmentId.compareTo(b.appointmentId));
       } else {
@@ -71,6 +63,11 @@ class Cart with ChangeNotifier {
       }
     }
 
+    notifyListeners();
+  }
+
+  clear() {
+    this._carts = [];
     notifyListeners();
   }
 }

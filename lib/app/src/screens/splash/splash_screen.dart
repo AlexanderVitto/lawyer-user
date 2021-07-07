@@ -42,6 +42,19 @@ class _SplashScreenState extends State<SplashScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+
+    _controller = new PageController(initialPage: _page);
+  }
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -49,8 +62,6 @@ class _SplashScreenState extends State<SplashScreen> {
           builder: (BuildContext context, BoxConstraints constraints) {
         print('Width ${constraints.maxWidth}');
         print('Height ${constraints.maxHeight}');
-
-        _controller = PageController(initialPage: _page);
 
         if (constraints.maxWidth > TabletThreshold) {
           return tablet.Body(

@@ -12,7 +12,6 @@ import 'providers.dart';
 class Payment with ChangeNotifier {
   static const fileName = 'lib/app/src/providers/payment.dart';
 
-  utils.Connection _connection;
   utils.LogUtils _log;
 
   payment.PaymentAPI _paymentAPI;
@@ -51,15 +50,12 @@ class Payment with ChangeNotifier {
 
   update(Auth auth) {
     this._auth = auth;
-    this._connection = auth.connection;
 
     notifyListeners();
   }
 
   Future initPayment(models.InitPaymentBody body) async {
     final String method = 'initPayment';
-
-    await _connection.check();
 
     utils.ApiReturn<models.ResponseInvoice> apiRequest =
         await _paymentAPI.initPayment(body, _auth.token);
@@ -91,8 +87,6 @@ class Payment with ChangeNotifier {
 
   Future initMidtransPayment(models.InitPaymentMidtransBody body) async {
     final String method = 'initMidtransPayment';
-
-    await _connection.check();
 
     utils.ApiReturn<models.ResponseInvoice> apiRequest =
         await _paymentAPI.initPaymentMidtrans(body, _auth.token);
@@ -137,8 +131,6 @@ class Payment with ChangeNotifier {
   Future fetchOpenPayment() async {
     final String method = 'fetchOpenPayment';
 
-    await _connection.check();
-
     Map<String, dynamic> queryParameter = {'userId': _auth.userId};
 
     utils.ApiReturn<models.ResponseListInvoice> apiRequest =
@@ -167,8 +159,6 @@ class Payment with ChangeNotifier {
 
   Future fetchPendingPayment() async {
     final String method = 'fetchPendingPayment';
-
-    await _connection.check();
 
     Map<String, dynamic> queryParameter = {'userId': _auth.userId};
 
@@ -199,8 +189,6 @@ class Payment with ChangeNotifier {
   Future fetchSettledPayment() async {
     final String method = 'fetchSettledPayment';
 
-    await _connection.check();
-
     Map<String, dynamic> queryParameter = {'userId': _auth.userId};
 
     utils.ApiReturn<models.ResponseListInvoice> apiRequest =
@@ -229,8 +217,6 @@ class Payment with ChangeNotifier {
 
   Future fetchCanceledPayment() async {
     final String method = 'fetchCanceledPayment';
-
-    await _connection.check();
 
     Map<String, dynamic> queryParameter = {'userId': _auth.userId};
 
@@ -261,8 +247,6 @@ class Payment with ChangeNotifier {
   Future fetchExpiredPayment() async {
     final String method = 'fetchExpiredPayment';
 
-    await _connection.check();
-
     Map<String, dynamic> queryParameter = {'userId': _auth.userId};
 
     utils.ApiReturn<models.ResponseListInvoice> apiRequest =
@@ -286,6 +270,17 @@ class Payment with ChangeNotifier {
       }
     }
 
+    notifyListeners();
+  }
+
+  clear() {
+    this._initPaymentResult = null;
+    this._paymentStatus = helpers.AuthResultStatus.undefined;
+    this._open = [];
+    this._pending = [];
+    this._settled = [];
+    this._canceled = [];
+    this._expired = [];
     notifyListeners();
   }
 }

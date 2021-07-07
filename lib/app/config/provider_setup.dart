@@ -15,6 +15,10 @@ import '../src/screens/cart/provider/cart_provider.dart';
 import '../src/screens/checkout/provider/checkout_provider.dart';
 import '../src/screens/manual_payment/provider/manual_payment_provider.dart';
 import '../src/screens/main/transaction/provider/transaction_provider.dart';
+import '../src/screens/main/appointment/provider/appointment_provider.dart';
+import '../src/screens/main/profile/provider/profile_provider.dart';
+import '../src/screens/account_information/provider/account_information_provider.dart';
+import '../src/screens/update_profile/provider/update_profile_provider.dart';
 
 import '../utils/utils.dart' as utils;
 
@@ -43,11 +47,7 @@ List<SingleChildWidget> topLevelProviders() {
 
 List<SingleChildWidget> secondLinerProviders() {
   List<SingleChildWidget> providers = [
-    ChangeNotifierProxyProvider<utils.Connection, Auth>(
-        create: (ctx) => Auth(ctx.read<utils.Connection>()),
-        update: (_, connection, prevProvider) =>
-            prevProvider..update(connection),
-        lazy: false),
+    ChangeNotifierProvider(create: (_) => Auth(), lazy: false),
     ChangeNotifierProxyProvider<Auth, Appointment>(
         create: (ctx) => Appointment(),
         update: (_, auth, prevProvider) => prevProvider..update(auth),
@@ -158,6 +158,27 @@ List<SingleChildWidget> stateProviders() {
           TransactionProvider(ctx.read<Payment>(), ctx.read<StaticData>()),
       update: (_, payment, staticData, prevProvider) =>
           prevProvider..update(payment, staticData),
+    ),
+    ChangeNotifierProxyProvider<Appointment, AppointmentProvider>(
+      create: (ctx) => AppointmentProvider(ctx.read<Appointment>()),
+      update: (_, appointment, prevProvider) =>
+          prevProvider..update(appointment),
+    ),
+    ChangeNotifierProxyProvider<Auth, ProfileProvider>(
+      create: (ctx) => ProfileProvider(ctx.read<Auth>()),
+      update: (_, auth, prevProvider) => prevProvider..update(auth),
+    ),
+    ChangeNotifierProxyProvider2<Auth, StaticData, AccountInformationProvider>(
+      create: (ctx) =>
+          AccountInformationProvider(ctx.read<Auth>(), ctx.read<StaticData>()),
+      update: (_, auth, staticData, prevProvider) =>
+          prevProvider..update(auth, staticData),
+    ),
+    ChangeNotifierProxyProvider2<Auth, StaticData, UpdateProfileProvider>(
+      create: (ctx) =>
+          UpdateProfileProvider(ctx.read<Auth>(), ctx.read<StaticData>()),
+      update: (_, auth, staticData, prevProvider) =>
+          prevProvider..update(auth, staticData),
     ),
   ];
 

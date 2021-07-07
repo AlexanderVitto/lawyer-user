@@ -23,7 +23,7 @@ class TransactionProvider with ChangeNotifier {
     models.TransactionType(
         name: 'History',
         image: 'assets/icons/completed.png',
-        filterBy: TransactionScreenTab.onGoing)
+        filterBy: TransactionScreenTab.history)
   ];
 
   utils.LogUtils _log;
@@ -59,7 +59,7 @@ class TransactionProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  initResource(TransactionScreenTab tab) {
+  Future initResource(TransactionScreenTab tab) async {
     this._listOnGoing = [];
     this._listHistory = [];
     this._namaRek = 'PT Psykay Persona Perkasa';
@@ -67,10 +67,8 @@ class TransactionProvider with ChangeNotifier {
 
     _isBusy = false;
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      initialLoad();
-      onSelectTab(tab);
-    });
+    await initialLoad();
+    onSelectTab(tab);
   }
 
   setToBusy() {
@@ -117,7 +115,7 @@ class TransactionProvider with ChangeNotifier {
       _paymentProvider.fetchExpiredPayment(),
     ];
 
-    if (_staticDataProvider.bankData.isNotEmpty)
+    if (_staticDataProvider.bankData.isEmpty)
       futures.add(_staticDataProvider.fetchBank());
 
     await Future.wait(futures);
@@ -130,6 +128,9 @@ class TransactionProvider with ChangeNotifier {
   }
 
   _generateTransaction() {
+    _listOnGoing = [];
+    _listHistory = [];
+
     _listOnGoing.addAll(_paymentProvider.open);
     _listOnGoing.addAll(_paymentProvider.pending);
 

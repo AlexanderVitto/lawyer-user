@@ -63,6 +63,9 @@ Appointment _$AppointmentFromJson(Map<String, dynamic> json) {
     partnerPictureUrl: json['PartnerPictureUrl'] as String,
     partnerFirstName: json['PartnerFirstName'] as String,
     partnerLastName: json['PartnerLastName'] as String,
+    sessionStart: json['SessionStart'] as String,
+    sessionEnd: json['SessionEnd'] as String,
+    expiredDate: json['ExpiredDate'] as String,
   );
 }
 
@@ -123,6 +126,9 @@ Map<String, dynamic> _$AppointmentToJson(Appointment instance) {
   writeNotNull('PartnerPictureUrl', instance.partnerPictureUrl);
   writeNotNull('PartnerFirstName', instance.partnerFirstName);
   writeNotNull('PartnerLastName', instance.partnerLastName);
+  writeNotNull('SessionStart', instance.sessionStart);
+  writeNotNull('SessionEnd', instance.sessionEnd);
+  writeNotNull('ExpiredDate', instance.expiredDate);
   return val;
 }
 

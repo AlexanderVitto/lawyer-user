@@ -6,6 +6,7 @@ enum AuthResultStatus {
   complateAppointmentSuccess,
   rateAppointmentSuccess,
   initPaymentSuccess,
+  updateProfileSuccess,
   phoneVerified,
   emailAlreadyExists,
   mobileNumberAlreadyExists,
@@ -34,12 +35,14 @@ enum AuthResultStatus {
   initPaymentFailed,
   confirmPaymentFailed,
   createChannelFailed,
+  updateProfileFailed,
   kFailedToRecoverAuthError,
   kUserRecoverableAuthError,
   kSignInRequiredError,
   kSignInCanceledError,
   kNetworkError,
-  kSignInFailedError
+  kSignInFailedError,
+  accountLocked
 }
 
 enum UserProfileStatus {
@@ -128,6 +131,9 @@ class AuthExceptionHandler {
       case 'email_already_axists':
         status = AuthResultStatus.emailAlreadyExists;
         break;
+      case 'email_locked':
+        status = AuthResultStatus.accountLocked;
+        break;
     }
 
     return status;
@@ -206,6 +212,9 @@ class AuthExceptionHandler {
       case AuthResultStatus.initPaymentSuccess:
         errorMessage = "Init payment success";
         break;
+      case AuthResultStatus.updateProfileSuccess:
+        errorMessage = "Update user profile success";
+        break;
       case AuthResultStatus.bookAppointmentFailed:
         errorMessage = "Book appointment failed";
         break;
@@ -233,6 +242,9 @@ class AuthExceptionHandler {
       case AuthResultStatus.createChannelFailed:
         errorMessage = "Create channel failed";
         break;
+      case AuthResultStatus.updateProfileFailed:
+        errorMessage = "Update user profile failed";
+        break;
       case AuthResultStatus.firebaseUserNull:
         errorMessage = 'Firebase user null';
         break;
@@ -258,6 +270,9 @@ class AuthExceptionHandler {
         break;
       case AuthResultStatus.kSignInFailedError:
         errorMessage = 'Error code indicating that attempt to sign in failed';
+        break;
+      case AuthResultStatus.accountLocked:
+        errorMessage = 'Account has been locked, please contact admin!';
         break;
       default:
         errorMessage = "An undefined Error happened.";

@@ -54,6 +54,12 @@ setuptLocator() {
       () => userProfile.Production());
 
   // Singleton
+  locator.registerLazySingleton<helpers.MinioStorage>(() =>
+      helpers.MinioStorage(
+          endPoint: 's3.psykay.co.id',
+          accessKey: 'a52083d32a66aae6',
+          secretKey: '31328a6f23e8498ba5d093e2e75ce4b9',
+          bucket: 'pub'));
   locator
       .registerLazySingleton<utils.AnalyticUtils>(() => utils.AnalyticUtils());
   // locator.registerLazySingleton<utils.ConnectivityUtils>(
