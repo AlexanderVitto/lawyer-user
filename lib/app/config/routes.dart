@@ -1,45 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import '../src/screens/mobile_number_verification/mobile_number_verification_scree.dart';
+import '../src/screens/otp/otp_screen.dart';
 import '../src/screens/signin/signin_screen.dart';
 import '../src/screens/signup/signup_screen.dart';
-import '../src/screens/forgot_password/forgot_password_screen.dart';
-import '../src/screens/mobile_number_verification/mobile_number_verification_screen.dart';
-import '../src/screens/otp/otp_screen.dart';
-import '../src/screens/main/main_screen.dart';
-import '../src/screens/preference/preference_screen.dart';
-import '../src/screens/psychologist/psychologist_screen.dart';
-import '../src/screens/psychologist/sorting/sorting_screen.dart';
-import '../src/screens/psychologist_profile/psychologist_profile_screen.dart';
-import '../src/screens/book_appointment/book_appointment_screen.dart';
-import '../src/screens/cart/cart_screen.dart';
-import '../src/screens/checkout/checkout_screen.dart';
-import '../src/screens/manual_payment/manual_payment_screen.dart';
-import '../src/screens/account_information/account_information_screen.dart';
-import '../src/screens/update_profile/update_profile_screen.dart';
+import '../src/screens/reset_password/reset_password_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   // Here we'll handle all the routing
   var routes = <String, WidgetBuilder>{
     SignInScreen.routeName: (_) => SignInScreen(),
-    SignUpScreen.routeName: (_) => SignUpScreen(),
-    ForgotPasswordScreen.routeName: (_) => ForgotPasswordScreen(),
     MobileNumberVerificationScreen.routeName: (_) =>
-        MobileNumberVerificationScreen(),
-    OTPScreen.routeName: (_) => OTPScreen(),
-    MainScreen.routeName: (_) => MainScreen(settings.arguments),
-    PreferenceScreen.routeName: (_) => PreferenceScreen(settings.arguments),
-    PsychologistScreen.routeName: (_) => PsychologistScreen(settings.arguments),
-    SortingScreen.routeName: (_) => SortingScreen(),
-    PsychologistProfileScreen.routeName: (_) =>
-        PsychologistProfileScreen(settings.arguments),
-    BookAppointmentScreen.routeName: (_) =>
-        BookAppointmentScreen(settings.arguments),
-    CartScreen.routeName: (_) => CartScreen(settings.arguments),
-    CheckoutScreen.routeName: (_) => CheckoutScreen(),
-    ManualPaymentScreen.routeName: (_) => ManualPaymentScreen(),
-    AccountInformationScreen.routeName: (_) => AccountInformationScreen(),
-    UpdateProfileScreen.routeName: (_) => UpdateProfileScreen()
+        MobileNumberVerificationScreen(settings.arguments),
+    OTPScreen.routeName: (_) => OTPScreen(settings.arguments),
+    SignUpScreen.routeName: (_) => SignUpScreen(),
+    ResetPassword.routeName: (_) => ResetPassword(),
   };
 
   WidgetBuilder builder = routes[settings.name];

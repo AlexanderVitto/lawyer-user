@@ -239,13 +239,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
-  enum_to_string:
-    dependency: transitive
+  expandable:
+    dependency: "direct main"
     description:
-      name: enum_to_string
+      name: expandable
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.14"
+    version: "4.1.4"
   fake_async:
     dependency: transitive
     description:
@@ -384,13 +384,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_facebook_login:
-    dependency: "direct main"
-    description:
-      name: flutter_facebook_login
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.0"
   flutter_localizations:
     dependency: "direct main"
     description: flutter
@@ -922,13 +915,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.1+3"
-  twilio_programmable_chat:
-    dependency: "direct main"
-    description:
-      path: "../programmable-chat"
-      relative: true
-    source: path
-    version: "0.1.1+8"
   typed_data:
     dependency: transitive
     description:

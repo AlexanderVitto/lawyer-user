@@ -1,13 +1,7 @@
 enum AuthResultStatus {
   successful,
-  bookAppointmentSuccess,
-  updateAppointmentSuccess,
-  rescheduleAppointmentSuccess,
-  complateAppointmentSuccess,
-  rateAppointmentSuccess,
-  initPaymentSuccess,
-  updateProfileSuccess,
   phoneVerified,
+  smsSent,
   emailAlreadyExists,
   mobileNumberAlreadyExists,
   mobileNumberNotRegistered,
@@ -27,15 +21,6 @@ enum AuthResultStatus {
   requiresRecentLogin,
   zipCodeNotFound,
   getTokenFailed,
-  bookAppointmentFailed,
-  updateAppointmentFailed,
-  rescheduleAppointmentFailed,
-  complateAppointmentFailed,
-  rateAppointmentFailed,
-  initPaymentFailed,
-  confirmPaymentFailed,
-  createChannelFailed,
-  updateProfileFailed,
   kFailedToRecoverAuthError,
   kUserRecoverableAuthError,
   kSignInRequiredError,
@@ -86,7 +71,7 @@ class AuthExceptionHandler {
           case "operation-not-allowed":
             status = AuthResultStatus.operationNotAllowed;
             break;
-          case "email-already-exists":
+          case "email-already-in-use":
             status = AuthResultStatus.emailAlreadyExists;
             break;
           case "requires-recent-login":
@@ -194,57 +179,11 @@ class AuthExceptionHandler {
       case AuthResultStatus.zipCodeNotFound:
         errorMessage = "Zip code not found";
         break;
-      case AuthResultStatus.bookAppointmentSuccess:
-        errorMessage = "Booking appointment success";
-        break;
-      case AuthResultStatus.updateAppointmentSuccess:
-        errorMessage = "Update appointment success";
-        break;
-      case AuthResultStatus.rescheduleAppointmentSuccess:
-        errorMessage = "Reschedule appointment success";
-        break;
-      case AuthResultStatus.complateAppointmentSuccess:
-        errorMessage = "Complate appointment success";
-        break;
-      case AuthResultStatus.rateAppointmentSuccess:
-        errorMessage = "Rate appointment success";
-        break;
-      case AuthResultStatus.initPaymentSuccess:
-        errorMessage = "Init payment success";
-        break;
-      case AuthResultStatus.updateProfileSuccess:
-        errorMessage = "Update user profile success";
-        break;
-      case AuthResultStatus.bookAppointmentFailed:
-        errorMessage = "Book appointment failed";
-        break;
-      case AuthResultStatus.updateAppointmentFailed:
-        errorMessage = "Update appointment failed";
-        break;
-      case AuthResultStatus.rescheduleAppointmentFailed:
-        errorMessage = "Reschedule appointment failed";
-        break;
-      case AuthResultStatus.complateAppointmentFailed:
-        errorMessage = "Complate appointment failed";
-        break;
-      case AuthResultStatus.rateAppointmentFailed:
-        errorMessage = "Rate appointment failed";
-        break;
-      case AuthResultStatus.initPaymentFailed:
-        errorMessage = "Init payment failed";
-        break;
-      case AuthResultStatus.confirmPaymentFailed:
-        errorMessage = "Confirm payment failed";
-        break;
+
       case AuthResultStatus.getTokenFailed:
         errorMessage = 'Get twilio token failed';
         break;
-      case AuthResultStatus.createChannelFailed:
-        errorMessage = "Create channel failed";
-        break;
-      case AuthResultStatus.updateProfileFailed:
-        errorMessage = "Update user profile failed";
-        break;
+
       case AuthResultStatus.firebaseUserNull:
         errorMessage = 'Firebase user null';
         break;

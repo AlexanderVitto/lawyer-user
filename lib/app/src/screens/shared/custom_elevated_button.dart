@@ -21,9 +21,9 @@ class CustomElevatedButton extends StatelessWidget {
       this.foregroundColor = Colors.white,
       this.backgroundColor,
       this.borderSideColor,
-      this.fontSize = 18,
+      this.fontSize = 14,
       this.fontWeight = FontWeight.w800,
-      this.padding = const EdgeInsets.fromLTRB(16, 10, 16, 10)})
+      this.padding = const EdgeInsets.fromLTRB(23, 7, 23, 7)})
       : super(key: key);
 
   final helpers.AppLocalizations localization;

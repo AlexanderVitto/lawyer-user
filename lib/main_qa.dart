@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app/config/config.dart' as config;
 import 'app/app.dart';
@@ -12,20 +14,25 @@ Future<void> main() async {
       flavor: config.Flavor.QA,
       color: Colors.deepPurpleAccent,
       values: config.FlavorValues(
-          host: 'https://userapi-dev.psykay.co.id',
-          chatHost: 'https://twillio-dev.psykay.co.id',
-          googleApiUrl:
-              'https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyAvz02RmKRJUPDVidwhT9iPQh2COFOg99I',
-          enableBearerToken: true,
-          bookingTimeThreshold: 6,
-          operationTimeStart: [8, 0],
-          operationalTimeOff: [21, 0]));
+        host: 'https://userapi-dev.psykay.co.id',
+        enableBearerToken: true,
+      ));
 
-  await Firebase.initializeApp();
+  SharedPreferences sharedPreferences;
+
+  SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+
+  final futures = <Future>[
+    Firebase.initializeApp(),
+    SharedPreferences.getInstance().then((value) => sharedPreferences = value),
+  ];
+
+  await Future.wait(futures);
 
   config.setuptLocator();
 
   runZonedGuarded(() {
-    runApp(MyApp());
+    runApp(MyApp(sharedPreferences));
   }, FirebaseCrashlytics.instance.recordError);
 }

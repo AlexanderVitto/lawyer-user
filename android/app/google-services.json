@@ -1,90 +1,34 @@
 {
   "project_info": {
-    "project_number": "738581135396",
-    "firebase_url": "https://psiko-app.firebaseio.com",
-    "project_id": "psiko-app",
-    "storage_bucket": "psiko-app.appspot.com"
+    "project_number": "888598720555",
+    "project_id": "bpt-lawyer-app",
+    "storage_bucket": "bpt-lawyer-app.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:738581135396:android:dec566a3f0d7043ece18b1",
+        "mobilesdk_app_id": "1:888598720555:android:1dd5561a086a2960433a6e",
         "android_client_info": {
-          "package_name": "com.example.my_psycho"
+          "package_name": "com.example.lawyer_user_app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "738581135396-1l7dciadr224kgfdjr9g17pekrlo4135.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.my_psycho",
-            "certificate_hash": "4813b0a8db814186c8ce6e6299a4e8a23671ca97"
-          }
-        },
-        {
-          "client_id": "738581135396-46p2lla7eo73o9u80silg4e7lnlo12j0.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.my_psycho",
-            "certificate_hash": "558a5344c994348c283861fd24a1346f3aef9bce"
-          }
-        },
-        {
-          "client_id": "738581135396-a2tpkfug27ab45adrcthdisuh2rao36h.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.my_psycho",
-            "certificate_hash": "56986128946fe457af6fa7ee79767d3b2586175d"
-          }
-        },
-        {
-          "client_id": "738581135396-aqa9gtpkedfm3i0bffe0692rgfn9518a.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.my_psycho",
-            "certificate_hash": "479a42b06590e88df1f29b416aa0bc87780d0c1f"
-          }
-        },
-        {
-          "client_id": "738581135396-n875aojknv7nf6tajaokk4k6oppbv8ej.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.my_psycho",
-            "certificate_hash": "ffafe02c883ded7e0b508aa422795d52908d7cd3"
-          }
-        },
-        {
-          "client_id": "738581135396-ocu5dhld28945vr164qvt0mb62k5gcrn.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.my_psycho",
-            "certificate_hash": "2a909b7b3dee551d0a77261802a8c5b760321938"
-          }
-        },
-        {
-          "client_id": "738581135396-dp8cm65fhg5h4sib055vig3bvr64fqj3.apps.googleusercontent.com",
+          "client_id": "888598720555-1b760nvvpk53te8hvqd8t9qjgul6bgid.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAvz02RmKRJUPDVidwhT9iPQh2COFOg99I"
+          "current_key": "AIzaSyD55weER8kgiOXYeJVVjIGzhfBj_07zma8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "738581135396-dp8cm65fhg5h4sib055vig3bvr64fqj3.apps.googleusercontent.com",
+              "client_id": "888598720555-1b760nvvpk53te8hvqd8t9qjgul6bgid.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "738581135396-hbm0qhb5uiec2kmld95gkimatbh5b53e.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.myPsychoPartner"
-              }
             }
           ]
         }
@@ -92,59 +36,28 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:738581135396:android:427cea77158c89f0ce18b1",
+        "mobilesdk_app_id": "1:888598720555:android:aaf24f8c71b490da433a6e",
         "android_client_info": {
-          "package_name": "com.example.my_psycho.dev"
+          "package_name": "com.example.lawyer_user_app.dev"
         }
       },
       "oauth_client": [
         {
-          "client_id": "738581135396-fju4fhmiqs64h4hlnlrgp5pk0abp9197.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.my_psycho.dev",
-            "certificate_hash": "4813b0a8db814186c8ce6e6299a4e8a23671ca97"
-          }
-        },
-        {
-          "client_id": "738581135396-jo8ja2ou8aq99uftfcqmli4q9sod50us.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.my_psycho.dev",
-            "certificate_hash": "56986128946fe457af6fa7ee79767d3b2586175d"
-          }
-        },
-        {
-          "client_id": "738581135396-ufos3vpsu8lvc5aug4jjuf1jkqt1phoc.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.my_psycho.dev",
-            "certificate_hash": "479a42b06590e88df1f29b416aa0bc87780d0c1f"
-          }
-        },
-        {
-          "client_id": "738581135396-dp8cm65fhg5h4sib055vig3bvr64fqj3.apps.googleusercontent.com",
+          "client_id": "888598720555-1b760nvvpk53te8hvqd8t9qjgul6bgid.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAvz02RmKRJUPDVidwhT9iPQh2COFOg99I"
+          "current_key": "AIzaSyD55weER8kgiOXYeJVVjIGzhfBj_07zma8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "738581135396-dp8cm65fhg5h4sib055vig3bvr64fqj3.apps.googleusercontent.com",
+              "client_id": "888598720555-1b760nvvpk53te8hvqd8t9qjgul6bgid.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "738581135396-hbm0qhb5uiec2kmld95gkimatbh5b53e.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.myPsychoPartner"
-              }
             }
           ]
         }
@@ -152,187 +65,28 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:738581135396:android:05f72c3ac34a0a24ce18b1",
+        "mobilesdk_app_id": "1:888598720555:android:f9ee8ce43faf9416433a6e",
         "android_client_info": {
-          "package_name": "com.example.my_psycho.qa"
+          "package_name": "com.example.lawyer_user_app.qa"
         }
       },
       "oauth_client": [
         {
-          "client_id": "738581135396-40tp84ko4on94h8gbh5ri5ha8j2933lq.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.my_psycho.qa",
-            "certificate_hash": "479a42b06590e88df1f29b416aa0bc87780d0c1f"
-          }
-        },
-        {
-          "client_id": "738581135396-7p70pi2ah94kde6i3i0qm768dpga9gg8.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.my_psycho.qa",
-            "certificate_hash": "56986128946fe457af6fa7ee79767d3b2586175d"
-          }
-        },
-        {
-          "client_id": "738581135396-j839eh2p8rr297ff8e4ra351c88vsp8h.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.my_psycho.qa",
-            "certificate_hash": "4813b0a8db814186c8ce6e6299a4e8a23671ca97"
-          }
-        },
-        {
-          "client_id": "738581135396-dp8cm65fhg5h4sib055vig3bvr64fqj3.apps.googleusercontent.com",
+          "client_id": "888598720555-1b760nvvpk53te8hvqd8t9qjgul6bgid.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAvz02RmKRJUPDVidwhT9iPQh2COFOg99I"
+          "current_key": "AIzaSyD55weER8kgiOXYeJVVjIGzhfBj_07zma8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "738581135396-dp8cm65fhg5h4sib055vig3bvr64fqj3.apps.googleusercontent.com",
+              "client_id": "888598720555-1b760nvvpk53te8hvqd8t9qjgul6bgid.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "738581135396-hbm0qhb5uiec2kmld95gkimatbh5b53e.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.myPsychoPartner"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:738581135396:android:200ca847c0ec5642ce18b1",
-        "android_client_info": {
-          "package_name": "com.example.my_psycho_partner"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "738581135396-8hna1eh15bo25i28bkjqj99mkcue8m12.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.my_psycho_partner",
-            "certificate_hash": "e10dc9c2bbe2d8dd47a9912864b73f14f8331341"
-          }
-        },
-        {
-          "client_id": "738581135396-dpa20312bg5rsc0nfgt78s8hpajk7gec.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.my_psycho_partner",
-            "certificate_hash": "25623ce887f907772858427dca3d4df91b246c3c"
-          }
-        },
-        {
-          "client_id": "738581135396-hkae9mi0tim2nk7a52rucs2r7qketjcn.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.my_psycho_partner",
-            "certificate_hash": "ee35eaf0cb1e1cc0ab3d865aff67156871b95ae5"
-          }
-        },
-        {
-          "client_id": "738581135396-i26ag6mou194rti4hblhv7gvu8bg05o5.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.my_psycho_partner",
-            "certificate_hash": "558a5344c994348c283861fd24a1346f3aef9bce"
-          }
-        },
-        {
-          "client_id": "738581135396-j3brgur4t2sc8h7qbm2pcc5r6am6kv5i.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.my_psycho_partner",
-            "certificate_hash": "40a0889ed3cff0b6d9c96ee4c32d382df186c543"
-          }
-        },
-        {
-          "client_id": "738581135396-jkhusna0a6a0b6micb5trf0g38sg1eqg.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.my_psycho_partner",
-            "certificate_hash": "37c0da03c8a1231a1a59c61b04f198d29d72a28a"
-          }
-        },
-        {
-          "client_id": "738581135396-dp8cm65fhg5h4sib055vig3bvr64fqj3.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAvz02RmKRJUPDVidwhT9iPQh2COFOg99I"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "738581135396-dp8cm65fhg5h4sib055vig3bvr64fqj3.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "738581135396-hbm0qhb5uiec2kmld95gkimatbh5b53e.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.myPsychoPartner"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:738581135396:android:8919884f062bbe97ce18b1",
-        "android_client_info": {
-          "package_name": "twilio.flutter.programmable_chat_example"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "738581135396-tbguhg3b3nnqt1nve45gfrn9i8k1c2rp.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "twilio.flutter.programmable_chat_example",
-            "certificate_hash": "25623ce887f907772858427dca3d4df91b246c3c"
-          }
-        },
-        {
-          "client_id": "738581135396-dp8cm65fhg5h4sib055vig3bvr64fqj3.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAvz02RmKRJUPDVidwhT9iPQh2COFOg99I"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "738581135396-dp8cm65fhg5h4sib055vig3bvr64fqj3.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "738581135396-hbm0qhb5uiec2kmld95gkimatbh5b53e.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.myPsychoPartner"
-              }
             }
           ]
         }

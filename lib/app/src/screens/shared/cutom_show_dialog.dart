@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:psykay_userapp_v2/constraint.dart';
 
 import '../../../helpers/helpers.dart' as helpers;
 import 'custom_elevated_button.dart';
@@ -36,28 +35,38 @@ Future<T> successDialog<T>(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    'assets/icons/success.png',
-                    height: iconSize,
-                    width: iconSize,
+                  Container(
+                    width: 60,
+                    height: 60,
+                    padding: const EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: helpers.LawyerMainLightColor.withOpacity(0.5)),
+                    child: Image.asset(
+                      'assets/icons/success.png',
+                      height: iconSize,
+                      width: iconSize,
+                    ),
                   ),
                   SizedBox(
                     height: sizedBox1,
                   ),
                   Text(
-                    localization.translate(title.pascalCase()),
+                    localization.translate(title).pascalCase(),
                     style: TextStyle(
                         fontSize: titleFontSize, fontWeight: FontWeight.w600),
+                    textAlign: TextAlign.center,
                   ),
                   SizedBox(
                     height: sizedBox2,
                   ),
                   Text(
-                    localization.translate(description.capitalize()),
+                    localization.translate(description).capitalize(),
                     style: TextStyle(
                         fontSize: descriptionFontSize,
                         color: Colors.black54,
                         fontWeight: FontWeight.w400),
+                    textAlign: TextAlign.center,
                   ),
                   SizedBox(
                     height: sizedBox3,
@@ -116,18 +125,20 @@ Future<T> errorDialog<T>(
                     height: sizedBox1,
                   ),
                   Text(
-                    localization.translate(title),
+                    localization.translate(title).pascalCase(),
                     style: TextStyle(
                         fontSize: titleFontSize, fontWeight: FontWeight.w600),
+                    textAlign: TextAlign.center,
                   ),
                   SizedBox(
                     height: sizedBox2,
                   ),
                   Text(
-                    localization.translate(description),
+                    localization.translate(description).capitalize(),
                     style: TextStyle(
                         fontSize: descriptionFontSize,
                         fontWeight: FontWeight.w400),
+                    textAlign: TextAlign.center,
                   ),
                   SizedBox(
                     height: sizedBox3,
@@ -195,6 +206,7 @@ Future<bool> questionDialog(
                       localization.translate(title),
                       style: TextStyle(
                           fontSize: titleFontSize, fontWeight: FontWeight.w600),
+                      textAlign: TextAlign.center,
                     ),
                   SizedBox(
                     height: sizedBox2,
@@ -205,6 +217,7 @@ Future<bool> questionDialog(
                         fontSize: descriptionFontSize,
                         color: Colors.black54,
                         fontWeight: FontWeight.w400),
+                    textAlign: TextAlign.center,
                   ),
                   SizedBox(
                     height: sizedBox3,
@@ -217,7 +230,7 @@ Future<bool> questionDialog(
                         text: buttonYesText,
                         localization: localization,
                         fontSize: buttonFontSize,
-                        backgroundColor: PsykayGreenColor,
+                        backgroundColor: helpers.LawyerMainColor,
                         fontWeight: FontWeight.w400,
                         onPresses: () => Navigator.of(context).pop(true),
                       ),
@@ -228,7 +241,7 @@ Future<bool> questionDialog(
                         text: buttonNoText,
                         localization: localization,
                         fontSize: buttonFontSize,
-                        backgroundColor: PsykayOrangeColor,
+                        backgroundColor: Colors.white,
                         fontWeight: FontWeight.w400,
                         onPresses: () => Navigator.of(context).pop(false),
                       ),
@@ -278,6 +291,7 @@ Future<bool> popDialog(
                         fontSize: descriptionFontSize,
                         color: Colors.black54,
                         fontWeight: FontWeight.w400),
+                    textAlign: TextAlign.center,
                   ),
                   SizedBox(
                     height: sizedBox3,
@@ -297,7 +311,7 @@ Future<bool> popDialog(
                     localization: localization,
                     fontSize: buttonFontSize,
                     backgroundColor: Colors.white,
-                    foregroundColor: PsykayOrangeColor,
+                    foregroundColor: helpers.LawyerMainColor,
                     fontWeight: FontWeight.w400,
                     onPresses: () => Navigator.of(context).pop(false),
                   ),

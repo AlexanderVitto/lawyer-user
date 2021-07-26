@@ -49,6 +49,7 @@ class Request {
       if (response.statusCode != HttpStatus.ok) {
         print(response.statusCode);
 
+        httpClient.close();
         return utils.ApiReturn<HttpClientResponse>(
             status: false, value: response);
       }
@@ -93,7 +94,33 @@ class Request {
 
       HttpClientResponse response = await request.close();
 
-      if (response.statusCode != HttpStatus.ok) {
+      if (response.statusCode == HttpStatus.unauthorized) {
+        // Get firebase token
+
+        request =
+            await httpClient.postUrl(uri).timeout(Duration(seconds: _timeout));
+
+        request.headers.set('content-type', 'application/json');
+
+        if (_enableBearerToken)
+          request.headers.set(HttpHeaders.authorizationHeader, 'Bearer $token');
+
+        request.add(utf8.encode(_body));
+
+        _log.info(
+            method: method,
+            message:
+                'Uri ${uri.path} Body ${jsonEncode(json.encode(_body))} Token $token');
+
+        response = await request.close();
+
+        if (response.statusCode != HttpStatus.ok) {
+          print(response.statusCode);
+
+          return utils.ApiReturn<HttpClientResponse>(
+              status: false, value: response);
+        }
+      } else if (response.statusCode != HttpStatus.ok) {
         print(response.statusCode);
 
         return utils.ApiReturn<HttpClientResponse>(

@@ -8,10 +8,10 @@ class PaymentGateway {
   static const String STATUS_CANCELED = "canceled";
 
   static const MethodChannel _channel =
-      const MethodChannel('com.example.local_psykay.payment_gateway');
+      const MethodChannel('com.example.lawyer_user_app.payment_gateway');
 
   static const EventChannel _eventChannel =
-      const EventChannel('com.example.local_psykay.payment_gateway/status');
+      const EventChannel('com.example.lawyer_user_app.payment_gateway/status');
 
   static Stream<dynamic> _paymentStatus;
 

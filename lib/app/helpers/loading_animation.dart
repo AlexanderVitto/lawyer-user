@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-import '../../constraint.dart';
+import 'constraint.dart';
 
 class LoadingPouringHourGlass extends StatelessWidget {
   final double iconSize;
@@ -20,7 +20,7 @@ class LoadingPouringHourGlass extends StatelessWidget {
         child: Center(
             child: SpinKitPouringHourglass(
                 size: iconSize,
-                color: PsykayOrangeColor,
+                color: Colors.blue,
                 duration: const Duration(milliseconds: 1200))));
   }
 }
@@ -41,7 +41,7 @@ class LoadingPumpingHeart extends StatelessWidget {
         child: Center(
             child: SpinKitPumpingHeart(
                 size: iconSize,
-                color: PsykayOrangeColor,
+                color: Colors.blue,
                 duration: const Duration(milliseconds: 1200))));
   }
 }
