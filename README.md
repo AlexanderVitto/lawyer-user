@@ -1,4 +1,4 @@
-# psykay_userapp_v2
+# lawyer_user_app
 
 A new Flutter project.
 
