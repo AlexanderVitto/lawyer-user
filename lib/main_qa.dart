@@ -11,7 +11,7 @@ import 'app/app.dart';
 
 Future<void> main() async {
   config.FlavorConfig(
-      flavor: config.Flavor.QA,
+      flavor: config.Flavor.DEV,
       color: Colors.deepPurpleAccent,
       values: config.FlavorValues(
         host: 'https://userapi-dev.psykay.co.id',
